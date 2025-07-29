@@ -1,5 +1,6 @@
 import React from "react";
 import "../styles/css/Login.css";
+import InputField from "../components/common/InputField";
 
 const LoginPage = () => {
   return (
@@ -20,12 +21,8 @@ const LoginPage = () => {
 
         {/* 폼 */}
         <form className="login-form">
-          <input type="email" placeholder="이메일" className="login-input" />
-          <input
-            type="password"
-            placeholder="비밀번호"
-            className="login-input"
-          />
+          <InputField type="email" placeholder="이메일" name="email" />
+          <InputField type="password" placeholder="비밀번호" name="password" />
 
           <div className="login-remember">
             <input type="checkbox" id="remember" />
@@ -37,8 +34,6 @@ const LoginPage = () => {
             <a href="#">이메일 찾기</a>
             <span>|</span>
             <a href="#">비밀번호 찾기</a>
-            <span>|</span>
-            <a href="#">회원가입</a>
           </div>
           <button type="submit" className="btn-login">
             로그인
