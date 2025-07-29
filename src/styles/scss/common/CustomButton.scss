@@ -1,0 +1,22 @@
+@import "../colors";
+@import "../typography";
+
+
+.custom-button {
+    width: 320px;
+    height: 48px;
+    border-radius: 8px;
+    border: none;
+    @include font-style("title4");
+    box-sizing: border-box;
+    @include bg-color("bg-strong");
+    @include text-color("text-disabled");
+    pointer-events: none;
+  
+    &.isValid {
+        @include bg-color("primary200");
+        @include text-color("text-main");
+        cursor: pointer;
+        pointer-events: auto;
+    }
+  }

@@ -1,6 +1,7 @@
 import React from "react";
 import "../styles/css/Login.css";
 import InputField from "../components/common/InputField";
+import { Link } from "react-router-dom";
 
 const LoginPage = () => {
   return (
@@ -42,9 +43,9 @@ const LoginPage = () => {
 
         <div className="login-register">
           아직 계정이 없으신가요?{" "}
-          <a href="#" className="link-signup">
+          <Link to="/auth/signup" className="link-signup">
             회원가입
-          </a>
+          </Link>
         </div>
       </div>
     </div>

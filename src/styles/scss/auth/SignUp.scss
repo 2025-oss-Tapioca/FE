@@ -1,0 +1,161 @@
+@import "../typography";
+@import "../colors";
+
+.signup-page {
+  min-height: 100vh;
+  width: 100%;
+  background-color: #ECF1FF;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .signup-card {
+    background-color: #fff;
+    width: 100%;
+    max-width: 400px;
+    padding: 40px 24px;
+    border-radius: 20px;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.25);
+
+    .back-button {
+        display: flex;
+        position: relative;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 24px;
+        cursor: pointer;
+        border: 0px;
+        @include bg-color("white");
+
+        img {
+            width: 32px;
+            height: auto;
+        }
+    }
+
+    .signup-form {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin: 10px;
+      .error-text {
+        @include font-style("body4");
+        @include text-color("status-destructive");
+        margin-top: 0px;
+        padding-left: 4px;
+      }
+
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+
+        label {
+          margin-left: 6px;
+          @include font-style("body2");
+          @include text-color("text-main");
+        }
+      }
+
+      .input-wrapper {
+        position: relative;
+
+        .toggle-visibility {
+          position: absolute;
+          top: 50%;
+          right: 12px;
+          transform: translateY(-50%);
+          background: none;
+          border: none;
+          cursor: pointer;
+          width: 20px;
+          height: 20px;
+          padding: 0;
+
+          img {
+            width: 100%;
+            height: auto;
+          }
+        }
+      }
+
+      .terms-box {
+        margin-top: 20px;
+        padding: 16px;
+        border: 0px;
+        @include bg-color("white");
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      
+        .checkbox-all {
+          display: flex;
+          align-items: flex-start;
+          gap: 4px;
+      
+          input[type="checkbox"] {
+            accent-color: #3F7FFF;
+            margin-right: 8px;
+          }
+      
+          label {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            font-weight: 600;
+            @include font-style("body2");
+            @include text-color("text-main");
+      
+            .subtext {
+                @include font-style("body4");
+                @include text-color("text-sub1");
+            }
+          }
+        }
+      
+        .checkbox-item {
+          display: flex;
+          align-items: center;
+      
+          input[type="checkbox"] {
+            accent-color: #3F7FFF;
+            margin-right: 8px;
+          }
+      
+          label {
+            font-size: 14px;
+            @include text-color("text-main");
+            @include font-style("body4");
+          }
+        }
+      }
+
+      .btn-next {
+        width: 100%;
+        margin-top: 24px;
+        background-color: #F1F1F5;
+        color: white;
+        padding: 12px;
+        border: none;
+        border-radius: 8px;
+        @include font-style("button2");
+        @include text-color("text-disabled");
+        cursor: not-allowed;
+
+        &:enabled {
+          background-color: #3F7FFF;
+          cursor: pointer;
+          @include text-color("white");
+
+          &:hover {
+            background-color: #2563eb;
+          }
+
+          &:active {
+            background-color: #1e40af;
+          }
+        }
+      }
+    }
+  }
+}

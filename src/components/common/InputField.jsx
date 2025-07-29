@@ -1,15 +1,18 @@
-import React, { useState } from "react";
+import React from "react";
 import "../../styles/css/InputField.css";
 
-const InputField = ({ type, placeholder, name }) => {
-  const [showPassword, setShowPassword] = useState(false);
-
+const InputField = ({
+  type,
+  placeholder,
+  name,
+  value,
+  onChange,
+  hasError = false,
+  toggleVisibility,
+  showPassword,
+}) => {
   const isPassword = type === "password";
   const inputType = isPassword && showPassword ? "text" : type;
-
-  const handleToggle = () => {
-    setShowPassword((prev) => !prev);
-  };
 
   return (
     <div className="input-wrapper">
@@ -17,14 +20,16 @@ const InputField = ({ type, placeholder, name }) => {
         type={inputType}
         placeholder={placeholder}
         name={name}
-        className="input-field"
+        value={value}
+        onChange={onChange}
+        className={`input-field ${hasError ? "input-error" : ""}`}
         autoComplete={type === "password" ? "current-password" : "off"}
       />
       {isPassword && (
         <button
           type="button"
           className="toggle-visibility"
-          onClick={handleToggle}
+          onClick={toggleVisibility}
           aria-label={showPassword ? "비밀번호 숨기기" : "비밀번호 보기"}
         >
           <img

@@ -1,0 +1,20 @@
+.custom-button {
+  width: 320px;
+  height: 48px;
+  border-radius: 8px;
+  border: none;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 500;
+  letter-spacing: -2.5%;
+  box-sizing: border-box;
+  background-color: #F1F1F5;
+  color: #999999;
+  pointer-events: none;
+}
+.custom-button.isValid {
+  background-color: #FFE788;
+  color: #111111;
+  cursor: pointer;
+  pointer-events: auto;
+}
