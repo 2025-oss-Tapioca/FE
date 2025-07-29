@@ -1,0 +1,43 @@
+$colors: (
+    "white": #FFFFFF,
+    "black": #000000,
+
+    "primary50": #FFFCF2,
+    "primary100": #FFF5C9,
+    "primary200": #FFE788,
+    "primary300": #FFD773,
+    "primary400": #FFCC4C,
+    "primary500": #FAAC25,
+    "primary600": #3F7FFF,
+    "primary700": #BF7704,
+    "primary800": #8F5800,
+    "primary900": #5D4013,
+
+    "text-disabled": #999999,
+    "text-sub1": #767676,
+    "text-sub2": #505050,
+    "text-main": #111111,
+
+    "bg-weak": #F7F7FB,
+    "bg-strong": #F1F1F5,
+
+    "line-weak": #F1F1F5,
+    "line-medium": #E5E5EC,
+    "line-strong": #111111,
+
+    "status-destructive": #FF4242,
+    "status-positive": #00BF40,
+    "status-cautionary": #FF9200
+);
+
+@mixin text-color($color-name: "text-main") {
+    color: map-get($colors, $color-name);
+}
+
+@mixin bg-color($color-name) {
+    background-color: map-get($colors , $color-name);
+}
+
+@mixin border-color($color-name) {
+    border-color: map-get($colors, $color-name);
+}
