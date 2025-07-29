@@ -1,0 +1,144 @@
+@import "../typography";
+@import "../colors";
+
+.login-page {
+  min-height: 100vh;
+  width: 100%;
+  background-color: #ECF1FF;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .login-card {
+    background-color: white;
+    width: 100%;
+    max-width: 400px;
+    padding: 40px 60px 24px 60px;
+    border-radius: 20px;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.25);
+
+    .login-header {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+
+      .signin-text {
+        @include font-style("title3");
+        color: #000;
+        margin: 0;
+      }
+
+      .logo-title {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+
+        .login-logo {
+          width: 40px;
+          height: 40px;
+        }
+
+        .highlight {
+          color: #65418B;
+          @include font-style("title1");
+        }
+      }
+    }
+
+    form {
+      margin-top: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+
+      .login-remember {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        @include font-style("body2");
+        @include text-color("text-main");
+        margin-top: 8px;
+
+        input[type="checkbox"] {
+          width: 16px;
+          height: 16px;
+          accent-color: #3b82f6;
+          cursor: pointer;
+        }
+
+        label {
+          cursor: pointer;
+          padding-top: 2px;
+        }
+      }
+
+      .label {
+        @include font-style("body2");
+      }
+
+      .btn-login {
+        width: 100%;
+        margin: 4px 0 24px 0;
+        background-color: #3F7FFF;
+        color: white;
+        padding: 12px;
+        border: none;
+        border-radius: 20px;
+        @include font-style("button2");
+        @include text-color("white");
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+
+        &:hover {
+          background-color: #2563eb;
+        }
+
+        &:active {
+          background-color: #1e40af;
+        }
+
+        &:disabled {
+          background-color: #93c5fd;
+          cursor: not-allowed;
+        }
+      }
+    }
+
+    .login-links {
+      margin-top: 8px;
+      display: flex;
+      justify-content: center;
+      font-size: 0.85rem;
+      color: #666;
+      gap: 60px;
+
+      a {
+        @include font-style("body2");
+        @include text-color("text-main");
+        text-decoration: none;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+
+    .login-register {
+      text-align: center;
+      @include font-style("body2");
+      @include text-color("text-sub1");
+      margin-top: 12px;
+
+      a {
+        color: #3F7FFF;
+        font-weight: 600;
+        text-decoration: none;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}
