@@ -1,0 +1,129 @@
+// 폰트 크기 정의 (Map)
+$font-size-map: (
+  "display1": 56px,
+  "display2": 48px,
+  "display3": 40px,
+  "display4": 36px,
+  "display5": 32px,
+  "display6": 28px,
+
+  "headline1": 32px,
+  "headline2": 28px,
+  "headline3": 24px,
+  "headline4": 20px,
+  "headline5": 18px,
+  "headline6": 16px,
+
+  "title1": 24px,
+  "title2": 20px,
+  "title3": 18px,
+  "title4": 16px,
+
+  "body1": 15px,
+  "body2": 14px,
+  "body3": 13px,
+  "body4": 12px,
+
+  "caption1": 13px,
+  "caption2": 12px,
+  "caption3": 11px,
+
+  "button1": 16px,
+  "button2": 14px,
+  "button3": 13px,
+  "button4": 12px
+);
+
+// 폰트 라인 높이 정의 (Map)
+$line-height-map: (
+  "display1": 72px,
+  "display2": 62px,
+  "display3": 52px,
+  "display4": 48px,
+  "display5": 42px,
+  "display6": 38px,
+
+  "headline1": 42px,
+  "headline2": 38px,
+  "headline3": 32px,
+  "headline4": 28px,
+  "headline5": 26px,
+  "headline6": 24px,
+
+  "title1": 32px,
+  "title2": 28px,
+  "title3": 26px,
+  "title4": 24px,
+
+  "body1": 22px,
+  "body2": 20px,
+  "body3": 18px,
+  "body4": 18px,
+
+  "caption1": 18px,
+  "caption2": 18px,
+  "caption3": 16px,
+
+  "button1": 24px,
+  "button2": 20px,
+  "button3": 18px,
+  "button4": 18px
+);
+
+// 폰트 굵기 정의 (Map)
+$font-weight-map: (
+  "display1": 600,
+  "display2": 600,
+  "display3": 600,
+  "display4": 600,
+  "display5": 600,
+  "display6": 600,
+
+  "headline1": 500,
+  "headline2": 500,
+  "headline3": 500,
+  "headline4": 500,
+  "headline5": 500,
+  "headline6": 500,
+
+  "title1": 600,
+  "title2": 600,
+  "title3": 500,
+  "title4": 500,
+
+  "body1": 400,
+  "body2": 400,
+  "body3": 400,
+  "body4": 400,
+
+  "caption1": 500,
+  "caption2": 500,
+  "caption3": 500,
+
+  "button1": 500,
+  "button2": 500,
+  "button3": 500,
+  "button4": 500
+);
+
+
+// 폰트 가져오는 함수
+@function font-size($name) {
+  @return map-get($font-size-map, $name);
+}
+
+@function line-height($name) {
+  @return map-get($line-height-map, $name);
+}
+
+@function font-weight($name) {
+    @return map-get($font-weight-map, $name);
+}
+
+// 폰트 스타일 믹스인
+@mixin font-style($name) {
+  font-size: font-size($name);
+  line-height: line-height($name);
+  font-weight: font-weight($name);
+  letter-spacing: -2.5%;
+}
