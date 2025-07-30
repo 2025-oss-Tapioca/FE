@@ -11,7 +11,7 @@ const InputField = ({
   toggleVisibility,
   showPassword,
 }) => {
-  const isPassword = type === "password";
+  const isPassword = name === "password" || name === "passwordConfirm";
   const inputType = isPassword && showPassword ? "text" : type;
 
   return (

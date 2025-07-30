@@ -1,9 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import "../styles/css/Login.css";
 import InputField from "../components/common/InputField";
 import { Link } from "react-router-dom";
 
 const LoginPage = () => {
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handlePasswordChange = (e) => setPassword(e.target.value);
+  const togglePasswordVisibility = () => setShowPassword((prev) => !prev);
+
   return (
     <div className="login-page">
       <div className="login-card">
@@ -23,7 +29,15 @@ const LoginPage = () => {
         {/* 폼 */}
         <form className="login-form">
           <InputField type="email" placeholder="이메일" name="email" />
-          <InputField type="password" placeholder="비밀번호" name="password" />
+          <InputField
+            type="password"
+            name="password"
+            placeholder="비밀번호"
+            value={password}
+            onChange={handlePasswordChange}
+            showPassword={showPassword}
+            toggleVisibility={togglePasswordVisibility}
+          />
 
           <div className="login-remember">
             <input type="checkbox" id="remember" />
