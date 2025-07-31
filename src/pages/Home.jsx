@@ -7,7 +7,7 @@ const Home = () => {
 
   return (
     <div className="container">
-      <SideBar activeTab={activeTab} setActiveTab={setActiveTab} />
+      <SideBar className="side-bar" activeTab={activeTab} setActiveTab={setActiveTab} />
       <main className="main-content">
         <h2 className="page-title">{activeTab}</h2>
         {/* 이곳에 콘텐츠 렌더링 */}

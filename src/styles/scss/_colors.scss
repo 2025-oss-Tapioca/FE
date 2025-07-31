@@ -14,7 +14,7 @@ $colors: (
     "primary900": #5D4013,
 
     "text-disabled": #999999,
-    "text-sub1": #767676,
+    "text-sub1": #666666,
     "text-sub2": #505050,
     "text-main": #111111,
 
@@ -27,7 +27,9 @@ $colors: (
 
     "status-destructive": #FF4242,
     "status-positive": #00BF40,
-    "status-cautionary": #FF9200
+    "status-cautionary": #FF9200,
+
+    "text-logo": #65418B
 );
 
 @mixin text-color($color-name: "text-main") {
