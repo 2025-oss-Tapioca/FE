@@ -1,17 +1,17 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import SideBar from "../components/common/sideBar";
+import "../styles/css/home.css";
 
 const Home = () => {
+  const [activeTab, setActiveTab] = useState("대시보드");
+
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center">
-      <h1 className="text-3xl font-bold mb-4">Welcome to TAPIOCA</h1>
-      <p className="text-gray-600 mb-6">당신의 하루를 더 편하게</p>
-      <Link
-        to="/auth/login"
-        className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600 transition"
-      >
-        로그인하러 가기 →
-      </Link>
+    <div className="container">
+      <SideBar className="side-bar" activeTab={activeTab} setActiveTab={setActiveTab} />
+      <main className="main-content">
+        <h2 className="page-title">{activeTab}</h2>
+        {/* 이곳에 콘텐츠 렌더링 */}
+      </main>
     </div>
   );
 };
