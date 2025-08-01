@@ -1,0 +1,110 @@
+@import "../../typography";
+@import "../../colors";
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 16px;
+  padding: 28px;
+  width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: relative;
+}
+
+.modal-close {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  font-size: 30px;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.modal-title {
+  @include font-style("title2");
+  @include text-color("text-main");
+  margin-bottom: 8px;
+}
+
+/* 라벨 + input 묶음 */
+.modal-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  label {
+    @include font-style("body2");
+    @include text-color("text-sub1");
+    margin-left: 2px;
+    font-weight: 600;
+  }
+
+  input {
+    padding: 10px 12px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    @include text-color("text-main");
+    margin-bottom: 12px;
+
+    &::placeholder {
+      color: #bbb;
+      font-style: normal;
+    }
+
+    &:focus {
+      border-color: #3b82f6;
+      outline: none;
+    }
+  }
+}
+
+.modal-input-row {
+  display: flex;
+  gap: 20px;
+
+  .modal-group {
+    flex: 1;
+  }
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-start;
+  gap: 8px;
+
+  .cancel-btn {
+    background: white;
+    border: 1px solid #ccc;
+    padding: 10px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    @include font-style("body2");
+  }
+
+  .submit-btn {
+    background: #3b82f6;
+    color: white;
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    @include font-style("body2");
+
+    &:hover {
+      background: #2563eb;
+    }
+  }
+}

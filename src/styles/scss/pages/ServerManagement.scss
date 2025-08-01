@@ -2,15 +2,20 @@
 @import "../colors";
 
 .server-management-container {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 32px); // 상단 여백 고려
   background-color: #ffffff;
   border: 0px;
   padding: 16px 12px;
+  overflow: hidden;
 }
 
 .server-management-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-shrink: 0; // 고정 높이
   margin-bottom: 24px;
 }
 
@@ -40,88 +45,86 @@
 }
 
 .server-list {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-  
-    max-height: calc(100vh - 160px);
-    overflow-y: auto;
-    padding-right: 4px; 
-  
-    scrollbar-width: thin;
-    scrollbar-color: #ccc transparent;
-  
-    &::-webkit-scrollbar {
-      width: 6px;
-    }
-  
-    &::-webkit-scrollbar-thumb {
-      background-color: #ccc;
-      border-radius: 3px;
-    }
+  flex: 1 1 auto; // 나머지 공간 모두 차지
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding-right: 4px;
+
+  scrollbar-width: thin;
+  scrollbar-color: #ccc transparent;
+
+  &::-webkit-scrollbar {
+    width: 6px;
   }
 
+  &::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 3px;
+  }
+}
+
 .server-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #F9F9F9;
+  padding: 20px;
+  border-radius: 12px;
+}
+
+.server-info {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  .server-info-header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    background-color: #F9F9F9;
-    padding: 20px;
-    border-radius: 12px;
-  }
-  
-  .server-info {
-    display: flex;
-    flex-direction: column;
     gap: 16px;
-  
-    .server-info-header {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-  
-      .server-name {
-        @include font-style("title2");
-        @include text-color("text-main");
-      }
-  
-      .server-status {
-        @include font-style("body2");
-        @include text-color("text-sub1");
-        padding: 6px 12px;
-        font-weight: bold;
-        border-radius: 12px;
-  
-        &.status-connected {
-          background-color: #D6FFDF;
-          color: #00b82b;
-          font-weight: bold;
-        }
-  
-        &.status-disconnected {
-          background-color: #d9d9d9;
-          color: #666666;
-        }
-      }
+
+    .server-name {
+      @include font-style("title2");
+      @include text-color("text-main");
     }
-  
-    .server-url {
-        @include font-style("body2");
-        @include text-color("text-sub1");
-    }   
-  }
-  
-  .server-controls {
-    display: flex;
-    align-items:flex-start;
-    gap: 12px;
-  
-    .server-icon {
-      cursor: pointer;
-      color: #bebaba;
-  
-      &:hover {
+
+    .server-status {
+      @include font-style("body2");
+      @include text-color("text-sub1");
+      padding: 6px 12px;
+      font-weight: bold;
+      border-radius: 12px;
+
+      &.status-connected {
+        background-color: #D6FFDF;
+        color: #00b82b;
+      }
+
+      &.status-disconnected {
+        background-color: #d9d9d9;
         color: #666666;
       }
     }
   }
+
+  .server-url {
+    @include font-style("body2");
+    @include text-color("text-sub1");
+  }
+}
+
+.server-controls {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+
+  .server-icon {
+    cursor: pointer;
+    color: #bebaba;
+
+    &:hover {
+      color: #666666;
+    }
+  }
+}

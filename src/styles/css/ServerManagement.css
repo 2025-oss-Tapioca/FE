@@ -1,13 +1,18 @@
 .server-management-container {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 32px);
   background-color: #ffffff;
   border: 0px;
   padding: 16px 12px;
+  overflow: hidden;
 }
 
 .server-management-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-shrink: 0;
   margin-bottom: 24px;
 }
 
@@ -41,11 +46,11 @@
 }
 
 .server-list {
+  flex: 1 1 auto;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 24px;
-  max-height: calc(100vh - 160px);
-  overflow-y: auto;
   padding-right: 4px;
   scrollbar-width: thin;
   scrollbar-color: #ccc transparent;
@@ -97,7 +102,6 @@
 .server-info .server-info-header .server-status.status-connected {
   background-color: #D6FFDF;
   color: #00b82b;
-  font-weight: bold;
 }
 .server-info .server-info-header .server-status.status-disconnected {
   background-color: #d9d9d9;
