@@ -6,7 +6,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 999;
+  -webkit-backdrop-filter: blur(4px);
+          backdrop-filter: blur(4px);
+  z-index: 1000;
 }
 
 .modal-content {
@@ -16,6 +18,7 @@
   width: 480px;
   display: flex;
   flex-direction: column;
+  z-index: 1001;
   gap: 20px;
   position: relative;
 }
@@ -71,7 +74,7 @@
   font-style: normal;
 }
 .modal-group input:focus {
-  border-color: #3b82f6;
+  border-color: #111111;
   outline: none;
 }
 
@@ -87,8 +90,18 @@
   display: flex;
   justify-content: flex-start;
   gap: 8px;
+  width: 100%;
+}
+.modal-actions button {
+  flex: 1;
+  padding: 12px 0;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
 }
 .modal-actions .cancel-btn {
+  flex: 0 0 20%;
   background: white;
   border: 1px solid #ccc;
   padding: 10px 16px;

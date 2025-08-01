@@ -18,42 +18,6 @@ const ServerManagement = () => {
       url: "http://localhost:5152",
       status: "disconnected",
     },
-    {
-      id: 2,
-      name: "Server 2",
-      url: "http://localhost:5152",
-      status: "disconnected",
-    },
-    {
-      id: 2,
-      name: "Server 2",
-      url: "http://localhost:5152",
-      status: "disconnected",
-    },
-    {
-      id: 2,
-      name: "Server 2",
-      url: "http://localhost:5152",
-      status: "disconnected",
-    },
-    {
-      id: 2,
-      name: "Server 2",
-      url: "http://localhost:5152",
-      status: "disconnected",
-    },
-    {
-      id: 2,
-      name: "Server 2",
-      url: "http://localhost:5152",
-      status: "disconnected",
-    },
-    {
-      id: 2,
-      name: "Server 2",
-      url: "http://localhost:5152",
-      status: "disconnected",
-    },
   ]);
   const [showModal, setShowModal] = useState(false);
 
