@@ -44,6 +44,18 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
+  max-height: calc(100vh - 160px);
+  overflow-y: auto;
+  padding-right: 4px;
+  scrollbar-width: thin;
+  scrollbar-color: #ccc transparent;
+}
+.server-list::-webkit-scrollbar {
+  width: 6px;
+}
+.server-list::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 3px;
 }
 
 .server-card {
