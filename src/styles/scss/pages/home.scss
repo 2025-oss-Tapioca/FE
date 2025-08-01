@@ -1,6 +1,12 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 .container {
     display: flex;
-    height: 100vh;
+    height: 100%;
     padding: 23px 162px;
     background-color: #ECF1FF;
     gap: 28px
@@ -17,9 +23,12 @@
   
   .main-content {
     flex: 1;
+    display: flex;
+    flex-direction: column;
     padding: 24px;
     background-color: #FFFFFF;
     border-radius: 12px;
+    height: 100%;
   }
   
   .page-title {

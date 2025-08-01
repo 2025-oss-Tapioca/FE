@@ -1,0 +1,129 @@
+@charset "UTF-8";
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-backdrop-filter: blur(4px);
+          backdrop-filter: blur(4px);
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 16px;
+  padding: 28px;
+  width: 480px;
+  display: flex;
+  flex-direction: column;
+  z-index: 1001;
+  gap: 20px;
+  position: relative;
+}
+
+.modal-close {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  font-size: 30px;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.modal-title {
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: 600;
+  letter-spacing: -2.5%;
+  color: #111111;
+  margin-bottom: 8px;
+}
+
+/* 라벨 + input 묶음 */
+.modal-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.modal-group label {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+  letter-spacing: -2.5%;
+  color: #666666;
+  margin-left: 2px;
+  font-weight: 600;
+}
+.modal-group input {
+  padding: 10px 12px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  color: #111111;
+  margin-bottom: 12px;
+}
+.modal-group input::-moz-placeholder {
+  color: #bbb;
+  font-style: normal;
+}
+.modal-group input::placeholder {
+  color: #bbb;
+  font-style: normal;
+}
+.modal-group input:focus {
+  border-color: #111111;
+  outline: none;
+}
+
+.modal-input-row {
+  display: flex;
+  gap: 20px;
+}
+.modal-input-row .modal-group {
+  flex: 1;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-start;
+  gap: 8px;
+  width: 100%;
+}
+.modal-actions button {
+  flex: 1;
+  padding: 12px 0;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+}
+.modal-actions .cancel-btn {
+  flex: 0 0 20%;
+  background: white;
+  border: 1px solid #ccc;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+  letter-spacing: -2.5%;
+}
+.modal-actions .submit-btn {
+  background: #3b82f6;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+  letter-spacing: -2.5%;
+}
+.modal-actions .submit-btn:hover {
+  background: #2563eb;
+}

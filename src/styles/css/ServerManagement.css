@@ -1,0 +1,129 @@
+.server-management-container {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 32px);
+  background-color: #ffffff;
+  border: 0px;
+  padding: 16px 12px;
+  overflow: hidden;
+}
+
+.server-management-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+  margin-bottom: 24px;
+}
+
+.server-management-title {
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 600;
+  letter-spacing: -2.5%;
+}
+
+.add-server-button {
+  display: flex;
+  align-items: center;
+  background-color: #3F7FFF;
+  color: #FFFFFF;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+  letter-spacing: -2.5%;
+  padding: 12px 20px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+.add-server-button svg {
+  margin-right: 6px;
+}
+.add-server-button:hover {
+  background-color: #2563eb;
+}
+
+.server-list {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding-right: 4px;
+  scrollbar-width: thin;
+  scrollbar-color: #ccc transparent;
+}
+.server-list::-webkit-scrollbar {
+  width: 6px;
+}
+.server-list::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 3px;
+}
+
+.server-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #F9F9F9;
+  padding: 20px;
+  border-radius: 12px;
+}
+
+.server-info {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.server-info .server-info-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.server-info .server-info-header .server-name {
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: 600;
+  letter-spacing: -2.5%;
+  color: #111111;
+}
+.server-info .server-info-header .server-status {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+  letter-spacing: -2.5%;
+  color: #666666;
+  padding: 6px 12px;
+  font-weight: bold;
+  border-radius: 12px;
+}
+.server-info .server-info-header .server-status.status-connected {
+  background-color: #D6FFDF;
+  color: #00b82b;
+}
+.server-info .server-info-header .server-status.status-disconnected {
+  background-color: #d9d9d9;
+  color: #666666;
+}
+.server-info .server-url {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+  letter-spacing: -2.5%;
+  color: #666666;
+}
+
+.server-controls {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.server-controls .server-icon {
+  cursor: pointer;
+  color: #bebaba;
+}
+.server-controls .server-icon:hover {
+  color: #666666;
+}
