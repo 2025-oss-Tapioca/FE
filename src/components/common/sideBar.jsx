@@ -1,6 +1,8 @@
 import React from 'react';
 import NavButton from './navButton';
 import ServerButton from './serverButton';
+import AddServerButton from './addServerButton';
+
 
 import "../../styles/css/sideBar.css";
 
@@ -53,8 +55,8 @@ export default function Sidebar({ activeTab, setActiveTab }) {
         <div className="server-buttons">
             <ServerButton label="Server1" />
             <ServerButton label="Server2" />
+            <AddServerButton />
         </div>
-
       </div>
     </div>
   );
