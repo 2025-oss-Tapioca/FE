@@ -39,6 +39,16 @@
             color: #000000;
           }
     }
+    .connected-server-header{
+        @include text-color("text-sub1");
+        @include font-style("headline6");
+        margin: 28px 0 16px 8px;
+    }
+    .server-buttons{
+      gap: 8px;
+      display: flex;
+      flex-direction: column;
+    }
     
       
 

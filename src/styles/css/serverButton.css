@@ -1,0 +1,36 @@
+.server {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+  letter-spacing: -2.5%;
+  color: #666666;
+  width: 100%;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  border-radius: 16px;
+  background: #F9F9F9;
+  text-align: left;
+  border: none;
+  gap: 12px;
+  transition: background-color 0.2s ease;
+}
+.server.connected .light {
+  background-color: #00EB37;
+}
+.server.disconnected .light {
+  background-color: #D3D3D3;
+}
+.server .light {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  transition: background-color 0.3s ease;
+}
+.server .connect-button {
+  color: #3F7FFF;
+  cursor: pointer;
+  margin-left: auto;
+  font-size: 13px;
+}
