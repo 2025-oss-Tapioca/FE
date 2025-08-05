@@ -36,3 +36,16 @@
 .side-bar .nav-buttons .nav-icon.active {
   color: #000000;
 }
+.side-bar .connected-server-header {
+  color: #666666;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 500;
+  letter-spacing: -2.5%;
+  margin: 28px 0 16px 8px;
+}
+.side-bar .server-buttons {
+  gap: 8px;
+  display: flex;
+  flex-direction: column;
+}

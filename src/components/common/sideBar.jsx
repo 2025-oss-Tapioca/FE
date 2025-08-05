@@ -1,5 +1,7 @@
 import React from 'react';
 import NavButton from './navButton';
+import ServerButton from './serverButton';
+
 import "../../styles/css/sideBar.css";
 
 export default function Sidebar({ activeTab, setActiveTab }) {
@@ -44,6 +46,15 @@ export default function Sidebar({ activeTab, setActiveTab }) {
             />
           );
         })}
+      </div>
+      <div>
+        {/* 서버 연결 상태 버튼 */}
+        <div className='connected-server-header'>연결된 서버</div>
+        <div className="server-buttons">
+            <ServerButton label="Server1" />
+            <ServerButton label="Server2" />
+        </div>
+
       </div>
     </div>
   );
