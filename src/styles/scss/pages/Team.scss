@@ -1,0 +1,71 @@
+@import "../typography";
+@import "../colors";
+
+.team-card-container {
+    @include font-style("body2");
+    @include text-color("text-sub1");
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 0 60px;
+}
+.team-top-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 32px 60px 20px;
+  }
+  
+  .team-header-text {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .team-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  
+  .team-subtitle {
+    font-size: 14px;
+    color: #6b7280;
+  }
+  
+  .team-header-buttons {
+    display: flex;
+    gap: 12px;
+  }
+  
+  .team-button {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    font-size: 14px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .team-button.create {
+    background-color: #3b82f6;
+    color: white;
+  }
+  
+  .team-button.create:hover {
+    background-color: #2563eb;
+  }
+  
+  .team-button.join {
+    background-color: #f3f4f6;
+    color: #374151;
+  }
+  
+  .team-button.join:hover {
+    background-color: #e5e7eb;
+  }
+  
+  
