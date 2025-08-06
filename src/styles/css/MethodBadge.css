@@ -1,11 +1,13 @@
 .badge {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 4px;
   padding: 4px 10px;
   font-size: 13px;
   font-weight: bold;
   border-radius: 8px;
+  white-space: nowrap;
+  line-height: 1;
 }
 
 .badge.status.success {

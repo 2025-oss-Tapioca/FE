@@ -1,0 +1,68 @@
+@import "../../colors";
+@import "../../typography";
+
+.api-spec-card {
+    display: grid;
+    grid-template-columns: 64px 160px 1fr 80px 80px 100px 60px;
+    align-items: center;
+    gap: 52px;
+    background-color: #f9f9f9;
+    border-radius: 12px;
+    padding: 12px 20px;
+    font-family: 'Pretendard', sans-serif;
+    @include font-style("body2");
+
+    .badge {
+        width: fit-content;
+      }
+  
+    .name {
+        @include font-style("body2");
+        @include text-color("text-main");
+    }
+  
+    .endpoint {
+      color: #666;
+    }
+  
+    .tag {
+      padding: 4px 8px;
+      text-align: center;
+    }
+  
+    .status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+  
+      .dot {
+        width: 8px;
+        height: 8px;
+        background-color: #00EB37;
+        border-radius: 50%;
+        display: inline-block;
+      }
+    }
+  
+    .date {
+      font-size: 13px;
+      color: #999;
+    }
+  
+    .actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: center;
+      color: #333;
+      cursor: pointer;
+  
+      svg {
+        opacity: 0.7;
+        transition: 0.2s;
+        &:hover {
+          opacity: 1;
+        }
+      }
+    }
+  }
