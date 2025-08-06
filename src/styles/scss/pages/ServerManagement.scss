@@ -15,7 +15,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-shrink: 0; // 고정 높이
+  flex-shrink: 0;
   margin-bottom: 24px;
 }
 
@@ -24,7 +24,8 @@
 }
 
 .add-server-button {
-  display: flex;
+  display: inline-flex;
+  width: auto;
   align-items: center;
   @include bg-color("primary600");
   @include text-color("white");

@@ -24,7 +24,8 @@
 }
 
 .add-server-button {
-  display: flex;
+  display: inline-flex;
+  width: auto;
   align-items: center;
   background-color: #3F7FFF;
   color: #FFFFFF;
