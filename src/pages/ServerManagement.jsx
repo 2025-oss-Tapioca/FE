@@ -38,7 +38,7 @@ const ServerManagement = () => {
       <div className="server-management-header">
         <h2 className="server-management-title">서버 관리</h2>
         <button
-          className="add-server-button"
+          className="add-server-management-button"
           onClick={() => setShowModal(true)}
         >
           <Plus size={16} /> 새 서버 추가

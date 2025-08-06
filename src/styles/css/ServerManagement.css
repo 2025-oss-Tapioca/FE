@@ -23,7 +23,7 @@
   letter-spacing: -2.5%;
 }
 
-.add-server-button {
+.add-server-management-button {
   display: inline-flex;
   width: auto;
   align-items: center;
@@ -39,10 +39,10 @@
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
-.add-server-button svg {
+.add-server-management-button svg {
   margin-right: 6px;
 }
-.add-server-button:hover {
+.add-server-management-button:hover {
   background-color: #2563eb;
 }
 
