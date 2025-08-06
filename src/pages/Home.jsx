@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import SideBar from "../components/common/sideBar";
 import ServerManagement from "./ServerManagement";
+import PerformanceTest from "./PerformanceTest";
 import "../styles/css/home.css";
 
 const Home = () => {
@@ -17,9 +18,7 @@ const Home = () => {
         {activeTab === "대시보드" && <h2 className="page-title">대시보드</h2>}
         {activeTab === "서버관리" && <ServerManagement />}
         {activeTab === "개발도구" && <h2 className="page-title">개발도구</h2>}
-        {activeTab === "성능 테스트" && (
-          <h2 className="page-title">성능 테스트</h2>
-        )}
+        {activeTab === "성능 테스트" && <PerformanceTest />}
         {activeTab === "로그 모니터링" && (
           <h2 className="page-title">로그 모니터링</h2>
         )}
