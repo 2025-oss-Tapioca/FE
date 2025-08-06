@@ -8,58 +8,41 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  backdrop-filter: blur(4px); 
-  z-index: 1000; 
+  backdrop-filter: blur(4px);
+  z-index: 1000;
 }
 
-.modal-content {
+.modal {
   background: white;
   border-radius: 16px;
   padding: 28px;
   width: 480px;
   display: flex;
   flex-direction: column;
+  gap: 10px;
   z-index: 1001;
-  gap: 20px;
   position: relative;
-}
 
-.modal-close {
-  position: absolute;
-  right: 20px;
-  top: 20px;
-  font-size: 30px;
-  border: none;
-  background: none;
-  cursor: pointer;
-}
-
-.modal-title {
-  @include font-style("title2");
-  @include text-color("text-main");
-  margin-bottom: 8px;
-}
-
-/* 라벨 + input 묶음 */
-.modal-group {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+  h2 {
+    @include font-style("title2");
+    @include text-color("text-main");
+    margin-bottom: 8px;
+  }
 
   label {
     @include font-style("body2");
     @include text-color("text-sub1");
-    margin-left: 2px;
     font-weight: 600;
+    margin-left: 2px;
   }
 
-  input {
+  input,
+  select {
     padding: 10px 12px;
     font-size: 14px;
     border: 1px solid #ddd;
     border-radius: 8px;
     @include text-color("text-main");
-    margin-bottom: 12px;
 
     &::placeholder {
       color: #bbb;
@@ -76,48 +59,48 @@
 .modal-input-row {
   display: flex;
   gap: 20px;
+  align-items: flex-start;
 
   .modal-group {
     flex: 1;
-  }
+    display: flex;
+    flex-direction: column;
+    gap: 6px;  }
 }
 
 .modal-actions {
   display: flex;
-  justify-content: flex-start;
+  justify-content: flex-end;
   gap: 8px;
-  width: 100%;
+  margin-top: 12px;
 
   button {
-    flex: 1;
-    padding: 12px 0;
+    padding: 10px 16px;
     border-radius: 8px;
     font-weight: bold;
-    font-size: 16px;
+    font-size: 14px;
     cursor: pointer;
-  }
-
-  .cancel-btn {
-    flex: 0 0 20%;
-    background: white;
-    border: 1px solid #ccc;
-    padding: 10px 16px;
-    border-radius: 8px;
-    cursor: pointer;
-    @include font-style("body2");
-  }
-
-  .submit-btn {
-    background: #3b82f6;
-    color: white;
-    padding: 10px 16px;
-    border-radius: 8px;
     border: none;
-    cursor: pointer;
     @include font-style("body2");
 
-    &:hover {
-      background: #2563eb;
+    &:first-of-type {
+      background: white;
+      border: 1px solid #ccc;
+      color: #333;
+    }
+
+    &:last-of-type {
+      background: #3b82f6;
+      color: white;
+
+      &:hover {
+        background: #2563eb;
+      }
+
+      &:disabled {
+        background: #cbd5e1;
+        cursor: not-allowed;
+      }
     }
   }
 }
