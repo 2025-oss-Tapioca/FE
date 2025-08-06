@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import SideBar from "../components/common/sideBar";
+import Dashboard from "./Dashboard";
 import ServerManagement from "./ServerManagement";
 import DevTools from "./DevTools";
 import PerformanceTest from "./PerformanceTest";
@@ -18,7 +19,7 @@ const Home = () => {
           setActiveTab={setActiveTab}
         />
         <main className="main-content">
-          {activeTab === "대시보드" && <h2 className="page-title">대시보드</h2>}
+          {activeTab === "대시보드" && <Dashboard />}
           {activeTab === "서버관리" && <ServerManagement />}
           {activeTab === "개발도구" && <DevTools />}
           {activeTab === "성능 테스트" && <PerformanceTest />}
