@@ -1,0 +1,39 @@
+.badge {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    font-size: 13px;
+    font-weight: bold;
+    border-radius: 8px;
+  }
+  
+  .badge.status.success {
+    background-color: #D6FFDF;
+    color: #00B82B;
+  }
+  
+  .badge.status.failure {
+    background-color: #FFC3BF;
+    color: #E54F47;
+  }
+  
+  .badge.method.get {
+    background-color: #D6E4FF;
+    color: #3F7FFF;
+  }
+
+  .badge.method.post {
+    background-color: #B9FFD5;
+    color: #52916C;
+  }
+
+  .badge.method.put {
+    background-color: #FFD8A6;
+    color: #D4790C;
+  }
+  
+  .badge.method.delete {
+    background-color: #FFC3BF;
+    color: #E54F47;
+  }
