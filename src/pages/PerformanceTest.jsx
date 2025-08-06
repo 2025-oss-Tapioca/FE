@@ -5,7 +5,7 @@ import PerformanceCard from "../components/PerformaceTest/PerformanceCard";
 import { Play } from "lucide-react";
 
 const PerformanceTest = () => {
-  const [results, setResults] = useState([
+  const [results] = useState([
     {
       id: 1,
       method: "GET",
