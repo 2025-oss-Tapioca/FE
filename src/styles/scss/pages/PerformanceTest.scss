@@ -89,45 +89,6 @@
     align-items: center;
   }
   
-  .badge {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    padding: 4px 10px;
-    font-size: 13px;
-    font-weight: bold;
-    border-radius: 8px;
-  }
-  
-  .badge.status.success {
-    background-color: #D6FFDF;
-    color: #00B82B;
-  }
-  
-  .badge.status.failure {
-    background-color: #FFC3BF;
-    color: #E54F47;
-  }
-  
-  .badge.method.get {
-    background-color: #D6E4FF;
-    color: #3F7FFF;
-  }
-
-  .badge.method.post {
-    background-color: #B9FFD5;
-    color: #52916C;
-  }
-
-  .badge.method.put {
-    background-color: #fef3c7;
-    color: #b45309;
-  }
-  
-  .badge.method.delete {
-    background-color: #fee2e2;
-    color: #b91c1c;
-  }
   
   .control-icons {
     display: flex;

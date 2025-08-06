@@ -1,4 +1,5 @@
 import React from "react";
+import MethodBadge from "../common/MethodBadge";
 import { CheckCircle, AlertCircle } from "lucide-react";
 import "../../styles/css/performanceTest.css";
 
@@ -13,10 +14,8 @@ const PerformanceCard = ({ method, url, responseTime, statusCode }) => {
             {isSuccess ? <CheckCircle size={14} /> : <AlertCircle size={14} />}
             <span className="status-text">{isSuccess ? "완료" : "실패"}</span>
           </span>
-
-          <span className={`badge method ${method.toLowerCase()}`}>
-            {method}
-          </span>
+          {/* badge */}
+          <MethodBadge type="method" value={method} />
         </div>
       </div>
 
