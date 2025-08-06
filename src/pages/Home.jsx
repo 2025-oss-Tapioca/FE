@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import SideBar from "../components/common/sideBar";
+import Dashboard from "./Dashboard";
 import ServerManagement from "./ServerManagement";
 import DevTools from "./DevTools";
 import PerformanceTest from "./PerformanceTest";
@@ -11,20 +12,22 @@ const Home = () => {
 
   return (
     <div className="container">
-      <SideBar
-        className="side-bar"
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-      />
-      <main className="main-content">
-        {activeTab === "대시보드" && <h2 className="page-title">대시보드</h2>}
-        {activeTab === "서버관리" && <ServerManagement />}
-        {activeTab === "개발도구" && <DevTools />}
-        {activeTab === "성능 테스트" && <PerformanceTest />}
-        {activeTab === "로그 모니터링" && (
-          <h2 className="page-title">로그 모니터링</h2>
-        )}
-      </main>
+      <div className="layout-inner">
+        <SideBar
+          className="side-bar"
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+        />
+        <main className="main-content">
+          {activeTab === "대시보드" && <Dashboard />}
+          {activeTab === "서버관리" && <ServerManagement />}
+          {activeTab === "개발도구" && <DevTools />}
+          {activeTab === "성능 테스트" && <PerformanceTest />}
+          {activeTab === "로그 모니터링" && (
+            <h2 className="page-title">로그 모니터링</h2>
+          )}
+        </main>
+      </div>
     </div>
   );
 };

@@ -124,4 +124,6 @@ html, body, #root {
   body {
     @apply bg-background text-foreground;
   }
+input, textarea, button {
+  font-family: 'Pretendard Variable', sans-serif;
 }
