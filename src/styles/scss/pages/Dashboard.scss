@@ -86,7 +86,7 @@
     border-radius: 16px;
     @include font-style("body2");  
     color: #D9D9D9;
-    font-weight: 200;
+    color: #111;
 
     &:focus {
       border-color: #111;
