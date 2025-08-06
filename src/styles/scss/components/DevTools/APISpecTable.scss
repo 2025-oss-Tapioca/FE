@@ -1,0 +1,90 @@
+@import "../../colors";
+@import "../../typography";
+
+.api-spec-container {
+  font-family: 'Pretendard', sans-serif;
+
+  .table-section {
+    margin-bottom: 16px;
+
+    .api-table-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+
+      h2 {
+        @include font-style("title2");
+        @include text-color("text-main");
+        font-weight: bold;
+      }
+
+      .table-actions {
+        display: flex;
+        gap: 8px;
+
+        button {
+          border: none;
+          border-radius: 12px;
+          @include font-style("body2");
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          font-weight: 500;
+        }
+
+        .sort-btn {
+          background-color: #D9D9D9;
+          color: #666;
+          padding: 12px 16px;
+          gap: 4px;
+        }
+
+        .notion-btn {
+          background-color: #fff;
+          border: 1px solid #D9D9D9;
+          color: #333;
+          padding: 12px 16px;
+          gap: 10px;
+        }
+
+        .add-btn {
+          background-color: #3F7FFF;
+          color: white;
+          padding: 12px 20px;
+        }
+      }
+    }
+
+    .api-table {
+      width: 100%;
+      border-collapse: collapse;
+
+      thead {
+        tr {
+          display: grid;
+          grid-template-columns: 120px 210px 195px 110px 125px 150px 100px;
+          padding: 12px 0;
+          border-radius: 12px;
+        }
+
+        th {
+          padding: 0 16px;
+          width: fit-content;
+          text-align: left;
+          @include font-style("body2");
+          @include text-color("text-sub");
+          font-weight: 600;
+        }
+      }
+    }
+  }
+
+  .card-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    
+  }
+}

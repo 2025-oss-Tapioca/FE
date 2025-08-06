@@ -1,0 +1,80 @@
+.api-spec-container {
+  font-family: "Pretendard", sans-serif;
+}
+.api-spec-container .table-section {
+  margin-bottom: 16px;
+}
+.api-spec-container .table-section .api-table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.api-spec-container .table-section .api-table-header h2 {
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: 600;
+  letter-spacing: -2.5%;
+  color: #111111;
+  font-weight: bold;
+}
+.api-spec-container .table-section .api-table-header .table-actions {
+  display: flex;
+  gap: 8px;
+}
+.api-spec-container .table-section .api-table-header .table-actions button {
+  border: none;
+  border-radius: 12px;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+  letter-spacing: -2.5%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+}
+.api-spec-container .table-section .api-table-header .table-actions .sort-btn {
+  background-color: #D9D9D9;
+  color: #666;
+  padding: 12px 16px;
+  gap: 4px;
+}
+.api-spec-container .table-section .api-table-header .table-actions .notion-btn {
+  background-color: #fff;
+  border: 1px solid #D9D9D9;
+  color: #333;
+  padding: 12px 16px;
+  gap: 10px;
+}
+.api-spec-container .table-section .api-table-header .table-actions .add-btn {
+  background-color: #3F7FFF;
+  color: white;
+  padding: 12px 20px;
+}
+.api-spec-container .table-section .api-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.api-spec-container .table-section .api-table thead tr {
+  display: grid;
+  grid-template-columns: 120px 210px 195px 110px 125px 150px 100px;
+  padding: 12px 0;
+  border-radius: 12px;
+}
+.api-spec-container .table-section .api-table thead th {
+  padding: 0 16px;
+  width: -moz-fit-content;
+  width: fit-content;
+  text-align: left;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+  letter-spacing: -2.5%;
+  font-weight: 600;
+}
+.api-spec-container .card-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}

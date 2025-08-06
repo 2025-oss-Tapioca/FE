@@ -1,11 +1,14 @@
 .badge {
-    display: flex;
+    display: inline-flex; // inline-block 대신 정렬 정확하게
     align-items: center;
     gap: 4px;
     padding: 4px 10px;
     font-size: 13px;
     font-weight: bold;
     border-radius: 8px;
+    white-space: nowrap;
+    line-height: 1;
+    
   }
   
   .badge.status.success {
