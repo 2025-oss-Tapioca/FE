@@ -36,11 +36,18 @@
   gap: 8px;
 }
 .api-spec-card .status .dot {
+  display: inline-block;
   width: 8px;
   height: 8px;
-  background-color: #00EB37;
   border-radius: 50%;
-  display: inline-block;
+  margin-right: 8px;
+  background-color: #00EB37;
+}
+.api-spec-card .status .dot.connected {
+  background-color: #00EB37;
+}
+.api-spec-card .status .dot.disconnected {
+  background-color: #666666;
 }
 .api-spec-card .date {
   font-size: 13px;

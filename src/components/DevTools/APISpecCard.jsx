@@ -12,7 +12,7 @@ const APISpecCard = ({ method, name, endpoint, tag, status, date }) => {
       <span className="endpoint">{endpoint}</span>
       <span className="tag">{tag}</span>
       <span className="status">
-        <span className="dot" /> {status}
+        <span className={`dot ${status.toLowerCase()}`} /> {status}
       </span>
       <span className="date">{date}</span>
       <div className="actions">
