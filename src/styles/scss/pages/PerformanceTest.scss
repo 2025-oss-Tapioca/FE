@@ -1,0 +1,175 @@
+@import "../typography";
+@import "../colors";
+
+.performance-test-container {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 32px);
+  background-color: #ffffff;
+  border: 0px;
+  padding: 16px 12px;
+  overflow: hidden;
+}
+
+.performance-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0; 
+  margin-bottom: 24px;
+}
+
+.performance-title {
+  @include font-style("title1");
+}
+
+.test-button {
+  display: flex;
+  align-items: center;
+  @include bg-color("primary600");
+  @include text-color("white");
+  @include font-style("body2");
+  padding: 12px 20px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+
+  svg {
+    margin-right: 6px;
+  }
+
+  &:hover {
+    @include bg-color("primary700");
+  }
+}
+
+.performance-result-list {
+  flex: 1 1 auto; 
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding-right: 4px;
+
+  scrollbar-width: thin;
+  scrollbar-color: #ccc transparent;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 3px;
+  }
+}
+
+
+// 퍼포먼스 카드 스타일
+.performance-card {
+    background: #f9f9f9;
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    @include font-style("body1");
+}
+  
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .badges {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  
+  .badge {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    font-size: 13px;
+    font-weight: bold;
+    border-radius: 8px;
+  }
+  
+  .badge.status.success {
+    background-color: #D6FFDF;
+    color: #00B82B;
+  }
+  
+  .badge.status.failure {
+    background-color: #FFC3BF;
+    color: #E54F47;
+  }
+  
+  .badge.method.get {
+    background-color: #D6E4FF;
+    color: #3F7FFF;
+  }
+
+  .badge.method.post {
+    background-color: #B9FFD5;
+    color: #52916C;
+  }
+
+  .badge.method.put {
+    background-color: #fef3c7;
+    color: #b45309;
+  }
+  
+  .badge.method.delete {
+    background-color: #fee2e2;
+    color: #b91c1c;
+  }
+  
+  .control-icons {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .performance-icon {
+    color: #666;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  
+  .performance-icon:hover {
+    color: #333;
+  }
+  
+  .request-url {
+    @include font-style("body1");
+    @include text-color("gray-600");
+
+  }
+  
+  .response-meta {
+    display: flex;
+    gap: 16px;
+    @include font-style("body2");
+    @include text-color("gray-600");
+  }
+  
+  .response-time strong {
+    color: #D4790C;
+    @include font-style("body2");
+  }
+
+  
+  .status-code strong.code {
+    color: #00B82B;
+    @include font-style("body2");
+  }
+
+  .response-time.error strong,
+  .status-code.error strong.code {
+    color: #E54F47; 
+    @include font-style("body2");
+}
