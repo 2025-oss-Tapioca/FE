@@ -4,6 +4,7 @@ import Dashboard from "./Dashboard";
 import ServerManagement from "./ServerManagement";
 import DevTools from "./DevTools";
 import PerformanceTest from "./PerformanceTest";
+import LogMonitoring from "./LogMonitoring";
 
 import "../styles/css/home.css";
 
@@ -23,9 +24,7 @@ const Home = () => {
           {activeTab === "서버관리" && <ServerManagement />}
           {activeTab === "개발도구" && <DevTools />}
           {activeTab === "성능 테스트" && <PerformanceTest />}
-          {activeTab === "로그 모니터링" && (
-            <h2 className="page-title">로그 모니터링</h2>
-          )}
+          {activeTab === "로그 모니터링" && <LogMonitoring />}
         </main>
       </div>
     </div>
