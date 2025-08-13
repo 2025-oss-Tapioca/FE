@@ -14,21 +14,23 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
-export default function AddTeamButton({ onCreate }) {
+
+
+export default function AddTeamButton({ onCreate, isCreating }) {
+
     const [teamName, setTeamName] = useState("");
     const [teamDesc, setTeamDesc] = useState("");
 
     const handleSubmit = () => {
         if (!teamName.trim()) return;
         onCreate({
-            id: Date.now(),
             name: teamName,
-            description: teamDesc,
-            memberCount: 1,
+            description: teamDesc
         });
         setTeamName("");
         setTeamDesc("");
     };
+
 
     return (
         <Dialog>
@@ -67,7 +69,12 @@ export default function AddTeamButton({ onCreate }) {
                         <Button variant="outline">취소</Button>
                     </DialogClose>
                     <DialogClose asChild>
-                        <Button variant="default" onClick={handleSubmit}>생성</Button>
+                        <Button
+                            onClick={handleSubmit}
+                            disabled={!teamName.trim() || isCreating}
+                        >
+                            {isCreating ? '생성 중...' : '생성'}
+                        </Button>
                     </DialogClose>
                 </DialogFooter>
             </DialogContent>

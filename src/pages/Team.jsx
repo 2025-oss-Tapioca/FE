@@ -1,20 +1,26 @@
-import React, { useState } from "react";
-import "../styles/css/Team.css";
+import React from 'react';
+import '../styles/css/Team.css';
 
-import TeamCard from "../components/common/teamCard";
-import AddTeamDialog from "../components/Team/addTeamButton";
-import JoinTeamDialog from "../components/Team/joinTeamButton";
+import TeamCard from '../components/common/teamCard';
+import AddTeamDialog from '../components/Team/addTeamButton';
+import JoinTeamDialog from '../components/Team/joinTeamButton';
+
+import * as team from '../api/hooks/team';
 
 export default function TeamPage() {
-  const [teams, setTeams] = useState([]);
+  // 각 훅을 호출하여 필요한 데이터, 함수, 상태를 가져옵니다.
+  const { data: teams = [], isLoading, error } = team.useGetTeam();
+  const { mutate: createTeam, isPending: isCreating } = team.useCreateTeam();
+  const { mutate: deleteTeam, isPending: isDeleting } = team.useDeleteTeam();
+  const { mutate: joinTeam, isPending: isJoining } = team.useJoinTeam();
+  
 
-  const handleAddTeam = (newTeam) => {
-    setTeams((prev) => [...prev, newTeam]);
-  };
+  console.log('React Query Result:', teams);
 
-  const handleJoinTeam = (joinedTeam) => {
-    setTeams((prev) => [...prev, joinedTeam]);
-  };
+
+  // 로딩 및 에러 상태는 이전과 동일하게 처리합니다.
+  if (isLoading) return <div>팀 목록을 불러오는 중입니다...</div>;
+  if (error) return <div>에러가 발생했습니다: {error.message}</div>;
 
   return (
     <div>
@@ -24,25 +30,42 @@ export default function TeamPage() {
           <div className="team-subtitle">내가 속한 팀을 확인하고 새로 만들어보세요.</div>
         </div>
         <div className="team-header-buttons">
-          <AddTeamDialog onCreate={handleAddTeam} />
-          <JoinTeamDialog onJoin={handleJoinTeam} />
+          {/* 각 액션에 맞는 함수와 로딩 상태를 전달합니다. */}
+          <AddTeamDialog onCreate={createTeam} isCreating={isCreating} />
+          <JoinTeamDialog onJoin={joinTeam} isJoining={isJoining} />
         </div>
       </div>
 
       <div className="team-card-container">
-        <TeamCard
-          name="타피오카"
-          description="타피오카 플랫폼 개발 및 유지보수"
-          memberCount={5}
-        />
-        {teams.map((team) => (
-          <TeamCard
-            key={team.id}
-            name={team.name}
-            description={team.description}
-            memberCount={team.memberCount}
-          />
+        {/* 배열에 팀이 있을 때만 이 부분이 렌더링됩니다. */}
+        {teams.length > 0 && teams.map((team) => (
+          <div key={team.id} className="team-card-wrapper">
+            <TeamCard
+              name={team.name}
+              description={team.description}
+              memberCount={team.memberCount}
+            />
+            <button
+              className="team-delete-button"
+              onClick={() => {
+                if (window.confirm(`'${team.name}' 팀을 정말로 삭제하시겠습니까?`)) {
+                  deleteTeam(team.id);
+                }
+              }}
+              disabled={isDeleting}
+            >
+              {isDeleting ? '삭제 중...' : '삭제'}
+            </button>
+          </div>
         ))}
+
+        {/* 배열이 비어있을 때만 이 부분이 렌더링됩니다. */}
+        {teams.length === 0 && (
+          <div className="no-teams-message">
+            <p>소속된 팀이 없습니다.</p>
+            <p>새로운 팀을 만들거나 기존 팀에 참여해 보세요!</p>
+          </div>
+        )}
       </div>
     </div>
   );

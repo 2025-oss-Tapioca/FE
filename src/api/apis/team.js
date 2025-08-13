@@ -1,6 +1,6 @@
 import client from '../utils/axios.jsx';
 
-export const getTeams = () => {
+export const getTeam = () => {
     return client.get('/team');
 };
 
