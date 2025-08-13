@@ -13,26 +13,21 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-export default function JoinTeamDialog({ onJoin }) {
+// 1. 부모로부터 함수와 로딩 상태를 props로 받습니다.
+export default function JoinTeamDialog({ onJoin, isJoining }) {
+    // 2. 다이얼로그의 열림/닫힘 상태를 직접 제어하기 위해 useState를 사용합니다.
+    const [open, setOpen] = useState(false);
     const [teamCode, setTeamCode] = useState("");
 
     const handleJoin = () => {
         if (!teamCode.trim()) return;
-
-        // 임시 데이터: 실제 사용 시 API 요청을 통해 팀 정보를 조회해야 함
-        const mockTeamData = {
-            id: Date.now(),
-            name: `코드 ${teamCode}`, // 서버 응답값으로 대체 가능
-            description: "팀 코드로 참가한 팀입니다.",
-            memberCount: Math.floor(Math.random() * 10 + 1),
-        };
-
-        onJoin(mockTeamData);
+        onJoin(teamCode);
         setTeamCode("");
     };
 
     return (
-        <Dialog>
+        // 4. open과 onOpenChange prop으로 다이얼로그 상태를 제어합니다.
+        <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 <Button variant="secondary">
                     <UserPlus size={16} />
@@ -51,6 +46,7 @@ export default function JoinTeamDialog({ onJoin }) {
                             value={teamCode}
                             onChange={(e) => setTeamCode(e.target.value)}
                             placeholder="예: 4F7K92"
+                            disabled={isJoining}
                         />
                     </div>
                 </div>
@@ -59,7 +55,12 @@ export default function JoinTeamDialog({ onJoin }) {
                         <Button variant="outline">취소</Button>
                     </DialogClose>
                     <DialogClose asChild>
-                        <Button onClick={handleJoin}>참가</Button>
+                        <Button
+                            onClick={handleJoin}
+                            disabled={!teamCode.trim() || isJoining}
+                        >
+                            {isJoining ? '생성 중...' : '생성'}
+                        </Button>
                     </DialogClose>
                 </DialogFooter>
             </DialogContent>
