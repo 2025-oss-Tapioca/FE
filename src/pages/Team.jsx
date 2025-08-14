@@ -7,13 +7,15 @@ import JoinTeamDialog from '../components/Team/joinTeamButton';
 
 import * as team from '../api/hooks/team';
 
+
 export default function TeamPage() {
   // 각 훅을 호출하여 필요한 데이터, 함수, 상태를 가져옵니다.
   const { data: teams = [], isLoading, error } = team.useGetTeam();
+
   const { mutate: createTeam, isPending: isCreating } = team.useCreateTeam();
   const { mutate: deleteTeam, isPending: isDeleting } = team.useDeleteTeam();
   const { mutate: joinTeam, isPending: isJoining } = team.useJoinTeam();
-  
+
 
   console.log('React Query Result:', teams);
 
@@ -41,21 +43,13 @@ export default function TeamPage() {
         {teams.length > 0 && teams.map((team) => (
           <div key={team.id} className="team-card-wrapper">
             <TeamCard
-              name={team.name}
-              description={team.description}
-              memberCount={team.memberCount}
+              teamCode={team.teamCode}
+              name={team.teamName}
+              description={team.teamDescription}
+              memberCount={team.member.length}
+              onDelete={deleteTeam}
+              isDeleting={isDeleting}
             />
-            <button
-              className="team-delete-button"
-              onClick={() => {
-                if (window.confirm(`'${team.name}' 팀을 정말로 삭제하시겠습니까?`)) {
-                  deleteTeam(team.id);
-                }
-              }}
-              disabled={isDeleting}
-            >
-              {isDeleting ? '삭제 중...' : '삭제'}
-            </button>
           </div>
         ))}
 

@@ -1,5 +1,6 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueries, useMutation, useQueryClient } from '@tanstack/react-query';
 import * as teamAPI from '../apis/team'; // api/index.js 배럴 패턴을 사용한다고 가정
+
 
 // --- 쿼리 훅 ---
 
@@ -7,12 +8,35 @@ import * as teamAPI from '../apis/team'; // api/index.js 배럴 패턴을 사용
  * 팀 목록을 조회하는 쿼리 훅
  */
 export const useGetTeam = () => {
-    return useQuery({
-    queryKey: ['teams'],
-    queryFn: teamAPI.getTeam,
-    select: (response) => response.data,
-  });
+
+    const { data: teamList = [], isSuccess: isListSuccess } = useQuery({
+        queryKey: ['teams'],
+        queryFn: teamAPI.getTeam,
+        select: (response) => response.data,
+    });
+
+    const detailQueries = useQueries({
+        queries: teamList.map((team) => {
+            return {
+                queryKey: ['team', team.teamCode],
+                queryFn: () => teamAPI.getTeamByCode(team.teamCode),
+                enabled: isListSuccess,
+                select: (response) => response.data,
+            };
+        }),
+    });
+
+    const isDetailsLoading = detailQueries.some(query => query.isLoading);
+    const teamDetails = detailQueries
+        .filter(query => query.isSuccess)
+        .map(query => query.data);
+
+    return {
+        isLoading: isListSuccess ? isDetailsLoading : true,
+        data: teamDetails,
+    };
 };
+
 
 
 // --- 뮤테이션 훅 (수정 완료) ---
@@ -22,15 +46,31 @@ export const useGetTeam = () => {
  */
 export const useCreateTeam = () => {
     const queryClient = useQueryClient();
+
     return useMutation({
         mutationFn: teamAPI.createTeam,
-        onSuccess: (response) => {
+        onSuccess: async (createResponse) => {
             queryClient.invalidateQueries({ queryKey: ['teams'] });
-            alert(`'${response.data.teamName}' 팀이 성공적으로 생성되었습니다!`);
+            const newTeamCode = createResponse.data.teamCode;
+
+            try {
+                const detailResponse = await queryClient.fetchQuery({
+                    queryKey: ['team', newTeamCode],
+                    queryFn: () => teamAPI.getTeamByCode(newTeamCode),
+                });
+                console.log("팀 상세 정보 조회 성공:", detailResponse.data);
+
+                // ✅ 조회한 상세 정보를 return 합니다.
+                return detailResponse.data;
+            } catch (error) {
+                console.error("팀 상세 정보 조회 실패:", error);
+                // 실패 시 에러를 다시 던져서 컴포넌트의 onError에서 잡을 수 있게 합니다.
+                throw error;
+            }
         },
         onError: (error) => {
-            const errorMessage = error.response?.data?.message || '팀 생성에 실패했습니다.';
-            alert(errorMessage);
+            // 이 onError는 훅 레벨의 공통 에러 처리
+            console.error("Mutation Error:", error);
         },
     });
 };
