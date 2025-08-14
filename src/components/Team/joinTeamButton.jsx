@@ -21,7 +21,7 @@ export default function JoinTeamDialog({ onJoin, isJoining }) {
 
     const handleJoin = () => {
         if (!teamCode.trim()) return;
-        onJoin(teamCode);
+        onJoin({ teamCode: teamCode });
         setTeamCode("");
     };
 
