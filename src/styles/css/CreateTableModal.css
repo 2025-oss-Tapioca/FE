@@ -1,0 +1,174 @@
+@charset "UTF-8";
+/* CreateTableModal.css */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.3); /* 흐린 어두운 배경 */
+  -webkit-backdrop-filter: blur(4px);
+          backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.modal-container {
+  background-color: white;
+  color: #1f2937; /* 텍스트 - 진한 회색 */
+  padding: 1.5rem;
+  border-radius: 8px;
+  width: 700px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.modal-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.modal-label {
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+  display: block;
+  color: #1f2937;
+}
+
+.modal-required {
+  color: #ef4444;
+  margin-left: 0.25rem;
+}
+
+.modal-subtext {
+  font-size: 0.8rem;
+  color: #6b7280;
+  margin-top: 4px;
+}
+
+.modal-input {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  background-color: white;
+  color: #1f2937;
+}
+
+.column-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.column-input {
+  flex: 1 1 140px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  background-color: white;
+  color: #1f2937;
+}
+
+.column-select {
+  flex: 1 1 120px;
+  padding: 6px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  background-color: white;
+  color: #1f2937;
+}
+
+.column-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: #374151;
+}
+
+.column-options label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.btn-remove {
+  background-color: #ef4444;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-remove:hover {
+  background-color: #dc2626;
+}
+
+.btn-reset {
+  background-color: #2563eb;
+  color: white;
+  padding: 6px 12px;
+  margin-bottom: 0.75rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-reset:hover {
+  background-color: #1d4ed8;
+}
+
+.modal-footer {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.modal-btn-add {
+  background-color: #0ea5e9;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+.modal-btn-add:hover {
+  background-color: #0284c7;
+}
+
+.modal-btn-cancel {
+  background-color: #e5e7eb;
+  color: #374151;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+.modal-btn-cancel:hover {
+  background-color: #d1d5db;
+}
+
+.modal-btn-save {
+  background-color: #22c55e;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+.modal-btn-save:hover {
+  background-color: #16a34a;
+}
+
+.spacer {
+  flex-grow: 1;
+}

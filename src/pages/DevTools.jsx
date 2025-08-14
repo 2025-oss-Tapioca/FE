@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import ERDEditor from "../components/DevTools/ERDEditor";
+import ERDEditor from "../components/DevTools/ERD/ERDEditor";
 import APISpecTable from "../components/DevTools/APISpecTable";
 import "../styles/css/DevTools.css";
 
