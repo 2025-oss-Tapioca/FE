@@ -118,12 +118,13 @@ html, body, #root {
 }
 
 @layer base {
-  * {
-    @apply border-border outline-ring/50;
+    * {
+      @apply border-border outline-ring/50;
+    }
+    body {
+      @apply bg-background text-foreground;
+    }
+  input, textarea, button {
+    font-family: 'Pretendard Variable', sans-serif;
   }
-  body {
-    @apply bg-background text-foreground;
-  }
-input, textarea, button {
-  font-family: 'Pretendard Variable', sans-serif;
 }
