@@ -1,0 +1,164 @@
+@import "../../colors";
+@import "../../typography";
+
+.erd-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 24px;
+  margin-bottom: 16px;
+}
+
+h2 {
+    @include font-style("title2");
+    @include text-color("text-main");
+    font-weight: bold;
+}
+
+button {
+    border: none;
+    border-radius: 12px;
+    @include font-style("body2");
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+}
+
+.table-button {
+    background-color: #3F7FFF;
+    color: white;
+    padding: 12px 20px;
+}
+
+.erd-canvas{
+  width: 100%;
+  height: 560px;
+  background-color: #f5f5f5; /* 연회색 */
+  border-radius: 8px;
+  margin-top: 12px;
+  position: relative; /* 테이블 노드를 절대 위치로 배치 가능하게 함 */
+}
+
+.erd-legend {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    background-color: #f5f5f5; // canvas와 동일 배경
+    border-radius: 12px;
+    padding: 12px 16px;
+    margin-top: 12px;
+    /* ✅ canvas와 너비 맞추기 */
+    box-sizing: border-box;
+}
+
+.icon {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.icon-table {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 4px;
+  opacity: 0.8;
+  filter: brightness(0.9);
+  transition: opacity 0.2s, filter 0.2s;
+}
+
+.icon-table:hover {
+  opacity: 1;
+  filter: brightness(1.1);
+}
+
+.erd-column-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+  gap: 6px;
+}
+
+.column-name {
+  flex: 1;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.column-type {
+  color: #999;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+
+.erd-table-box {
+  background: white;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  width: 200px;
+  overflow: hidden;
+  font-size: 13px;
+  position: relative;
+  margin: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* 파란색 헤더 */
+.erd-table-header {
+  background-color: #3F7FFF;
+  color: white;
+  padding: 10px 12px;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+}
+
+/* 편집 및 삭제 아이콘 */
+.erd-table-header .icon-actions {
+  display: flex;
+  gap: 6px;
+}
+.erd-table-header .icon-button {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+/* 컬럼 리스트 */
+.erd-column-list {
+  list-style: none;
+  margin: 0;
+  padding: 10px 12px;
+}
+
+.erd-column-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 6px;
+  gap: 6px;
+}
+
+.erd-column-name {
+  font-weight: 500;
+}
+
+.erd-column-type {
+  color: #999;
+  font-size: 12px;
+}
+
+
