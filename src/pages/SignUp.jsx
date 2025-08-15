@@ -3,10 +3,12 @@ import InputField from "../components/common/InputField";
 import { useNavigate } from "react-router-dom";
 import CustomButton from "../components/common/CustomButton";
 import { validatePassword } from "../utils/validator";
+import { useSignup } from "../api/hooks/auth";
 import "../styles/css/Signup.css";
 
 const SignupPage = () => {
   const nav = useNavigate();
+  const { mutate: signupUser } = useSignup();
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -97,9 +99,13 @@ const SignupPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (isFormValid) nav("/verify");
+    signupUser({
+      loginId: form.loginId,
+      password: form.password,
+      name: form.name,
+      email: form.email,
+    });
   };
-
   return (
     <div className="signup-page">
       <div className="signup-card">
@@ -115,6 +121,17 @@ const SignupPage = () => {
               name="name"
               placeholder="이름"
               value={form.name}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="name">아이디</label>
+            <InputField
+              type="text"
+              name="loginId"
+              placeholder="아이디"
+              value={form.loginId}
               onChange={handleChange}
             />
           </div>
