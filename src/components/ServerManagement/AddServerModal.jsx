@@ -3,25 +3,19 @@ import "../../styles/css/AddServerModal.css";
 
 const SERVER_TYPES = ["frontend", "backend", "database"];
 
-const AddServerModal = ({ onClose, onSubmit }) => {
+const AddServerModal = ({ onClose, onSubmit, teamCode }) => {
   const [serverType, setServerType] = useState("");
 
+  // ✅ teamCode prop을 초기값으로 설정합니다.
   const [formData, setFormData] = useState({
-    // 공통
-    teamCode: "",
+    teamCode: teamCode || "",
     ec2Host: "",
     auth_token: "",
-
-    // 프론트, 백엔드
     entryPoint: "/",
     os: "ubuntu",
     env: "prod",
     protocol: "http",
-
-    // 백엔드 전용
     login_path: "",
-
-    // DB
     dbAddress: "",
     dbUser: "",
     password: "",
@@ -37,46 +31,12 @@ const AddServerModal = ({ onClose, onSubmit }) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  // ✅ handleSubmit 로직을 간소화합니다.
   const handleSubmit = () => {
     if (!serverType) return alert("서버 유형을 선택해주세요.");
 
-    let payload = { type: serverType };
-
-    if (serverType === "frontend") {
-      payload = {
-        teamCode: formData.teamCode,
-        ec2Host: formData.ec2Host,
-        auth_token: formData.auth_token,
-        entryPoint: formData.entryPoint,
-        os: formData.os,
-        env: formData.env,
-        protocol: formData.protocol,
-        type: "frontend",
-      };
-    } else if (serverType === "backend") {
-      payload = {
-        login_path: formData.login_path,
-        ec2_url: formData.ec2Host,
-        auth_token: formData.auth_token,
-        os: formData.os,
-        env: formData.env,
-        type: "backend",
-      };
-    } else if (serverType === "database") {
-      payload = {
-        teamCode: formData.teamCode,
-        dbAddress: formData.dbAddress,
-        dbUser: formData.dbUser,
-        password: formData.password,
-        dbName: formData.dbName,
-        dbPort: formData.dbPort,
-        rdsInstanceId: formData.rdsInstanceId,
-        awsRegion: formData.awsRegion,
-        roleArn: formData.roleArn,
-        type: "database",
-      };
-    }
-
+    // formData에 type만 추가하여 onSubmit에 전달합니다.
+    const payload = { ...formData, type: serverType };
     onSubmit(payload);
     onClose();
   };
@@ -85,8 +45,6 @@ const AddServerModal = ({ onClose, onSubmit }) => {
     <div className="modal-overlay">
       <div className="modal">
         <h2>새 서버 추가</h2>
-
-        {/* 서버 유형 선택 */}
         <label>서버 유형</label>
         <select
           value={serverType}
@@ -102,7 +60,6 @@ const AddServerModal = ({ onClose, onSubmit }) => {
           ))}
         </select>
 
-        {/* 서버 유형에 따른 입력 필드 */}
         {serverType === "frontend" && (
           <>
             <label>Team Code</label>
@@ -110,22 +67,23 @@ const AddServerModal = ({ onClose, onSubmit }) => {
               name="teamCode"
               value={formData.teamCode}
               onChange={handleInputChange}
+              readOnly
+              autoComplete="off"
             />
-
             <label>EC2 Host</label>
             <input
               name="ec2Host"
               value={formData.ec2Host}
               onChange={handleInputChange}
+              autoComplete="off"
             />
-
             <label>Auth Token</label>
             <input
               name="auth_token"
               value={formData.auth_token}
               onChange={handleInputChange}
+              autoComplete="off"
             />
-
             <div className="modal-input-row">
               <div className="modal-group">
                 <label>Entry Point</label>
@@ -133,6 +91,7 @@ const AddServerModal = ({ onClose, onSubmit }) => {
                   name="entryPoint"
                   value={formData.entryPoint}
                   onChange={handleInputChange}
+                  autoComplete="off"
                 />
               </div>
               <div className="modal-group">
@@ -141,10 +100,10 @@ const AddServerModal = ({ onClose, onSubmit }) => {
                   name="os"
                   value={formData.os}
                   onChange={handleInputChange}
+                  autoComplete="off"
                 />
               </div>
             </div>
-
             <div className="modal-input-row">
               <div className="modal-group">
                 <label>ENV</label>
@@ -152,6 +111,7 @@ const AddServerModal = ({ onClose, onSubmit }) => {
                   name="env"
                   value={formData.env}
                   onChange={handleInputChange}
+                  autoComplete="off"
                 />
               </div>
               <div className="modal-group">
@@ -160,6 +120,7 @@ const AddServerModal = ({ onClose, onSubmit }) => {
                   name="protocol"
                   value={formData.protocol}
                   onChange={handleInputChange}
+                  autoComplete="off"
                 />
               </div>
             </div>
@@ -173,20 +134,21 @@ const AddServerModal = ({ onClose, onSubmit }) => {
               name="login_path"
               value={formData.login_path}
               onChange={handleInputChange}
+              autoComplete="off"
             />
-
             <label>EC2 URL</label>
             <input
               name="ec2Host"
               value={formData.ec2Host}
               onChange={handleInputChange}
+              autoComplete="off"
             />
-
             <label>Auth Token</label>
             <input
               name="auth_token"
               value={formData.auth_token}
               onChange={handleInputChange}
+              autoComplete="off"
             />
             <div className="modal-input-row">
               <div className="modal-group">
@@ -195,6 +157,7 @@ const AddServerModal = ({ onClose, onSubmit }) => {
                   name="os"
                   value={formData.os}
                   onChange={handleInputChange}
+                  autoComplete="off"
                 />
               </div>
               <div className="modal-group">
@@ -203,6 +166,7 @@ const AddServerModal = ({ onClose, onSubmit }) => {
                   name="env"
                   value={formData.env}
                   onChange={handleInputChange}
+                  autoComplete="off"
                 />
               </div>
             </div>
@@ -216,22 +180,24 @@ const AddServerModal = ({ onClose, onSubmit }) => {
               name="teamCode"
               value={formData.teamCode}
               onChange={handleInputChange}
+              readOnly
+              autoComplete="off"
             />
-
             <label>DB Address</label>
             <input
               name="dbAddress"
               value={formData.dbAddress}
               onChange={handleInputChange}
+              autoComplete="off"
             />
-
             <div className="modal-input-row">
               <div className="modal-group">
                 <label>DB User</label>
                 <input
-                  name="dbuser"
+                  name="dbUser"
                   value={formData.dbUser}
                   onChange={handleInputChange}
+                  autoComplete="off"
                 />
               </div>
               <div className="modal-group">
@@ -240,10 +206,10 @@ const AddServerModal = ({ onClose, onSubmit }) => {
                   name="password"
                   value={formData.password}
                   onChange={handleInputChange}
+                  autoComplete="off"
                 />
               </div>
             </div>
-
             <div className="modal-input-row">
               <div className="modal-group">
                 <label>DB Name</label>
@@ -251,37 +217,39 @@ const AddServerModal = ({ onClose, onSubmit }) => {
                   name="dbName"
                   value={formData.dbName}
                   onChange={handleInputChange}
+                  autoComplete="off"
                 />
               </div>
               <div className="modal-group">
                 <label>DB Port</label>
                 <input
                   name="dbPort"
-                  value={formData.passwdbPortord}
+                  value={formData.dbPort}
                   onChange={handleInputChange}
+                  autoComplete="off"
                 />
               </div>
             </div>
-
             <label>RDS Instance ID</label>
             <input
               name="rdsInstanceId"
               value={formData.rdsInstanceId}
               onChange={handleInputChange}
+              autoComplete="off"
             />
-
             <label>AWS Region</label>
             <input
               name="awsRegion"
               value={formData.awsRegion}
               onChange={handleInputChange}
+              autoComplete="off"
             />
-
             <label>Role ARN</label>
             <input
               name="roleArn"
               value={formData.roleArn}
               onChange={handleInputChange}
+              autoComplete="off"
             />
           </>
         )}

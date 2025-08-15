@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { checkServerStatus } from "../api/apis/server";
 import { useServerActions } from "../api/hooks/server";
 import "../styles/css/ServerManagement.css";
@@ -6,52 +7,69 @@ import ServerCard from "../components/ServerManagement/ServerCard";
 import { Plus } from "lucide-react";
 import AddServerModal from "../components/ServerManagement/AddServerModal";
 
-// 무작위 팀 코드 생성 함수
-const generateRandomTeamCode = () => {
-  return "TEAM-" + Math.random().toString(36).substring(2, 8).toUpperCase();
+// 에러 코드 → 메시지 매핑
+const ERROR_MESSAGES = {
+  40904: "프론트 서버 등록은 팀 당 1번만 가능합니다.",
+  40905: "백엔드 서버 등록은 팀 당 1번만 가능합니다.",
+  40906: "디비 서버 등록은 팀 당 1번만 가능합니다.",
+  default: "서버 등록 중 알 수 없는 오류가 발생했습니다.",
 };
 
 const ServerManagement = () => {
-  const { registerFront, registerBackend, registerDB } = useServerActions();
-  const [servers, setServers] = useState([]);
+  const { teamCode } = useParams();
   const [showModal, setShowModal] = useState(false);
+  const {
+    servers,
+    isLoadingServers,
+    registerFront,
+    registerBackend,
+    registerDB,
+  } = useServerActions();
 
-  // ✅ 서버 추가 핸들러
+  // 💾 URL에서 받은 teamCode를 localStorage에 저장
+  useEffect(() => {
+    if (teamCode) {
+      localStorage.setItem("teamCode", teamCode);
+    }
+  }, [teamCode]);
+
   const handleAddServer = async (newServer) => {
     try {
-      const teamCode = generateRandomTeamCode();
-
       const payload = { ...newServer, teamCode };
+      let registerFn;
 
-      // 1. 서버 유형에 따라 등록
-      if (newServer.type === "frontend") {
-        await registerFront(payload);
-      } else if (newServer.type === "backend") {
-        await registerBackend(payload);
-      } else if (newServer.type === "database") {
-        await registerDB(payload);
-      } else {
-        throw new Error("지원하지 않는 서버 유형입니다.");
-      }
+      if (newServer.type === "frontend") registerFn = registerFront;
+      else if (newServer.type === "backend") registerFn = registerBackend;
+      else if (newServer.type === "database") registerFn = registerDB;
+      else throw new Error("지원하지 않는 서버 유형입니다.");
 
-      // 2. 상태 확인 (url은 EC2 or DB 주소)
+      // 🟢 등록 실행 (mutateAsync 사용 안 했을 경우, 반환값 없음)
+      await new Promise((resolve, reject) => {
+        registerFn(payload, {
+          onSuccess: resolve,
+          onError: reject,
+        });
+      });
+
       const url =
         newServer.type === "database" ? newServer.dbAddress : newServer.ec2Host;
+
       const isOnline = await checkServerStatus(url);
 
-      // 3. 카드용 데이터 구성
-      const newServerCard = {
-        id: Date.now(),
-        name: `${newServer.name}`,
-        url,
-        status: isOnline ? "connected" : "disconnected",
-      };
-
-      setServers((prev) => [...prev, newServerCard]);
+      alert(
+        `서버가 성공적으로 등록되었습니다. 상태: ${
+          isOnline ? "연결됨" : "연결되지 않음"
+        }`
+      );
       setShowModal(false);
     } catch (error) {
       console.error("서버 등록 실패:", error);
-      alert("서버 등록 또는 상태 확인에 실패했습니다.");
+      const errorCode = error?.code;
+      const errorMessage =
+        ERROR_MESSAGES[errorCode] || error?.message || ERROR_MESSAGES.default;
+
+      alert(errorMessage);
+      setShowModal(false);
     }
   };
 
@@ -70,21 +88,34 @@ const ServerManagement = () => {
       </div>
 
       <div className="server-list">
-        {servers.map((server) => (
-          <ServerCard
-            key={server.id}
-            {...server}
-            onDelete={(id) =>
-              setServers((prev) => prev.filter((s) => s.id !== id))
-            }
-          />
-        ))}
-      </div>
+        {isLoadingServers ? (
+          <p>서버 목록을 불러오는 중...</p>
+        ) : (
+          servers &&
+          Object.entries(servers)
+            .filter(([key]) => key !== "teamCode") // teamCode는 제외
+            .map(([type, serverData]) => {
+              if (!serverData) return null;
 
+              const url =
+                type === "database" ? serverData.dbAddress : serverData.ec2Host;
+
+              return (
+                <ServerCard
+                  key={type}
+                  name={`${type} 서버`}
+                  url={url}
+                  status="unknown" // 이후 checkServerStatus(url)로 연결 여부 판단 가능
+                />
+              );
+            })
+        )}
+      </div>
       {showModal && (
         <AddServerModal
           onClose={() => setShowModal(false)}
-          onSubmit={handleAddServer} // ✅ 중요
+          onSubmit={handleAddServer}
+          teamCode={teamCode}
         />
       )}
     </div>
