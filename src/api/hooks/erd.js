@@ -1,18 +1,21 @@
+// src/api/hooks/erd.js
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import * as erdAPI from '../apis/erd';
 
 const erdKey = (teamCode) => ['erd', teamCode];
+const getData = (res) => (res && typeof res === 'object' && 'data' in res ? res.data : res);
 
+// 조회
 export const useGetERD = (teamCode) =>
   useQuery({
     queryKey: erdKey(teamCode),
-    queryFn: () => erdAPI.getERD(teamCode),
-    enabled: !!teamCode,                       // teamCode 있을 때만 호출
-    // 서버가 { success, data } 래핑이면 아래 select가 실제 데이터만 꺼내줌
-    select: (res) => res?.data?.data ?? res?.data,
+    queryFn: () => erdAPI.getERD(teamCode), // client가 이미 data 반환
+    enabled: !!teamCode,
+    select: getData,                         // {success,data}든 원데이터든 커버
     staleTime: 60_000,
   });
 
+// 저장
 export const useSaveERD = (teamCode) => {
   const qc = useQueryClient();
   return useMutation({

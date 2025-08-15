@@ -1,10 +1,12 @@
 import React, { useState } from "react";
+import { useParams } from "react-router-dom";
 import ERDEditor from "../components/DevTools/ERD/ERDEditor";
 import APISpecTable from "../components/DevTools/APISpecTable";
 import "../styles/css/DevTools.css";
 
 export default function DevTools() {
   const [activeTab, setActiveTab] = useState("API 명세");
+  const { teamCode } = useParams(); // ✅ URL에서 teamCode 가져오기
 
   return (
     <div className="development-tools-container">
@@ -29,7 +31,7 @@ export default function DevTools() {
 
       {/* ✅ 탭에 따른 컴포넌트 렌더링 */}
       <div className="devtools-content">
-        {activeTab === "ERD 작성" && <ERDEditor />}
+        {activeTab === "ERD 작성" && <ERDEditor teamCode={teamCode} />}
         {activeTab === "API 명세" && <APISpecTable />}
       </div>
     </div>

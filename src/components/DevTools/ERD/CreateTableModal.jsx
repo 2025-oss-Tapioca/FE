@@ -38,11 +38,20 @@ const COLUMN_TYPES = [
   },
   { group: "bit", options: ["bit", "bit varying"] },
   { group: "boolean", options: ["boolean"] },
-  { group: "geometric", options: ["box", "circle", "line", "lseg", "path", "point", "polygon"] },
+  {
+    group: "geometric",
+    options: ["box", "circle", "line", "lseg", "path", "point", "polygon"],
+  },
   { group: "binary", options: ["bytea"] },
   { group: "character", options: ["varchar", "char", "text"] },
-  { group: "network address", options: ["cidr", "inet", "macaddr", "macaddr8"] },
-  { group: "date/time", options: ["date", "interval", "time", "time with time zone", "timestamp"] },
+  {
+    group: "network address",
+    options: ["cidr", "inet", "macaddr", "macaddr8"],
+  },
+  {
+    group: "date/time",
+    options: ["date", "interval", "time", "time with time zone", "timestamp"],
+  },
   { group: "JSON", options: ["json", "jsonb"] },
   { group: "monetary", options: ["money"] },
   { group: "pg_lsn", options: ["pg_lsn"] },
@@ -51,32 +60,51 @@ const COLUMN_TYPES = [
   { group: "uuid", options: ["uuid"] },
 ];
 
-/** varchar(123) → { base: 'varchar', len: '123' } */
+/** 임의 ID 생성 */
+const genId = () =>
+  typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
+    ? crypto.randomUUID()
+    : `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+
+/** varchar(123) / char(12) → { base, len } */
 const parseVarchar = (t = "") => {
-  const m = /^varchar\((\d+)\)$/i.exec(String(t).trim());
-  return m ? { base: "varchar", len: m[1] } : { base: t, len: "" };
+  const s = String(t).trim();
+  let m = /^varchar\((\d+)\)$/i.exec(s);
+  if (m) return { base: "varchar", len: m[1] };
+  m = /^char\((\d+)\)$/i.exec(s);
+  if (m) return { base: "char", len: m[1] };
+  return { base: s, len: "" };
 };
 
-/** { base:'varchar', len:'120' } → 'varchar(120)' */
-const buildTypeString = (base, len) =>
-  base === "varchar" && len ? `varchar(${len})` : base;
+/** { base:'varchar', len:'120' } → 'VARCHAR(120)' */
+const buildTypeString = (base, len) => {
+  if (base === "varchar" && len) return `varchar(${len})`;
+  if (base === "char" && len) return `char(${len})`;
+  return base;
+};
 
 /** 드래그 핸들만 드래그 시작되도록 하는 Row 래퍼 */
 const SortableRow = ({ id, children }) => {
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id });
   const style = { transform: CSS.Transform.toString(transform), transition };
   const handleProps = { ...attributes, ...listeners };
   return children({ setNodeRef, style, handleProps });
 };
 
-const makeDefaultColumn = () => ({
-  id: crypto.randomUUID(),
-  name: "",
-  type: "",              // UI에는 base type (ex. 'varchar')
-  varcharLength: "",     // 'varchar'일 때만 사용
-  isPrimary: false,
-  isForeign: false,
-});
+/** 기본 컬럼 생성 */
+const makeDefaultColumn = () => {
+  const cid = genId();
+  return {
+    id: cid,
+    clientId: cid,
+    name: "",
+    type: "",
+    varcharLength: "",
+    isPrimary: false,
+    isForeign: false,
+  };
+};
 
 export default function CreateTableModal({ initialTable = null, onClose }) {
   const { isOpen, close } = useTableModalStore();
@@ -85,7 +113,6 @@ export default function CreateTableModal({ initialTable = null, onClose }) {
 
   const isEdit = !!initialTable;
 
-  // ✅ 기존 값으로 상태 초기화
   const [tableId, setTableId] = useState(initialTable?.id ?? null);
   const [tableName, setTableName] = useState(initialTable?.name ?? "");
   const [columns, setColumns] = useState(
@@ -95,19 +122,19 @@ export default function CreateTableModal({ initialTable = null, onClose }) {
           return {
             ...makeDefaultColumn(),
             ...c,
+            id: c.id || genId(),
+            clientId: c.clientId || c.id,
             type: base ?? "",
-            varcharLength: base === "varchar" ? len : "",
+            varcharLength: base === "varchar" || base === "char" ? len : "",
           };
         })
       : [makeDefaultColumn()]
   );
 
-  // DnD sensors: 5px 이상 이동해야 드래그 시작 → 입력 타이핑 보호
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
   );
 
-  // 드래그 종료 시 순서 반영
   const handleDragEnd = (e) => {
     const { active, over } = e;
     if (!over || active.id === over.id) return;
@@ -118,7 +145,6 @@ export default function CreateTableModal({ initialTable = null, onClose }) {
     });
   };
 
-  // 모달이 열릴 때/다른 테이블로 수정 진입할 때 값 갱신
   useEffect(() => {
     if (isEdit) {
       setTableId(initialTable.id ?? null);
@@ -129,8 +155,10 @@ export default function CreateTableModal({ initialTable = null, onClose }) {
           return {
             ...makeDefaultColumn(),
             ...c,
+            id: c.id || genId(),
+            clientId: c.clientId || c.id,
             type: base ?? "",
-            varcharLength: base === "varchar" ? len : "",
+            varcharLength: base === "varchar" || base === "char" ? len : "",
           };
         })
       );
@@ -142,7 +170,8 @@ export default function CreateTableModal({ initialTable = null, onClose }) {
   }, [isEdit, initialTable, isOpen]);
 
   const handleAddColumn = () => setColumns((p) => [...p, makeDefaultColumn()]);
-  const handleRemoveColumn = (id) => setColumns((p) => p.filter((c) => c.id !== id));
+  const handleRemoveColumn = (id) =>
+    setColumns((p) => p.filter((c) => c.id !== id));
   const handleChangeColumn = (id, key, val) =>
     setColumns((p) => p.map((c) => (c.id === id ? { ...c, [key]: val } : c)));
 
@@ -155,8 +184,10 @@ export default function CreateTableModal({ initialTable = null, onClose }) {
           return {
             ...makeDefaultColumn(),
             ...c,
+            id: c.id || genId(),
+            clientId: c.clientId || c.id,
             type: base ?? "",
-            varcharLength: base === "varchar" ? len : "",
+            varcharLength: base === "varchar" || base === "char" ? len : "",
           };
         })
       );
@@ -168,7 +199,6 @@ export default function CreateTableModal({ initialTable = null, onClose }) {
 
   const validate = (name, cols) => {
     const errors = [];
-
     if (!name || !name.toString().trim()) errors.push("Table name");
 
     const colArray = Array.isArray(cols) ? cols : [];
@@ -176,14 +206,18 @@ export default function CreateTableModal({ initialTable = null, onClose }) {
       errors.push("At least 1 column");
     } else {
       colArray.forEach((c, i) => {
-        if (!c.name || !c.name.toString().trim()) errors.push(`Column #${i + 1} name`);
-        if (!c.type || !c.type.toString().trim()) errors.push(`Column #${i + 1} type`);
-        if (c.type === "varchar" && !c.varcharLength) errors.push(`Column #${i + 1} varchar length`);
+        if (!c.name || !c.name.toString().trim())
+          errors.push(`Column #${i + 1} name`);
+        if (!c.type || !c.type.toString().trim())
+          errors.push(`Column #${i + 1} type`);
+        if ((c.type === "varchar" || c.type === "char") && !c.varcharLength) {
+          errors.push(`Column #${i + 1} ${c.type} length`);
+        }
       });
     }
 
     const names = colArray
-      .map((c) => (c.name ? c.name.toString().trim() : ""))
+      .map((c) => c.name?.toString().trim() || "")
       .filter(Boolean);
     const dup = names.find((n, i) => names.indexOf(n) !== i);
     if (dup) errors.push(`Duplicated column name: ${dup}`);
@@ -202,19 +236,30 @@ export default function CreateTableModal({ initialTable = null, onClose }) {
   const handleSave = () => {
     if (!validate(tableName, columns)) return;
 
-    // 저장 시 varchar는 'varchar(길이)'로 합쳐서 전송 + 타입 대문자 변환
     const normalizedColumns = columns.map((c) => {
-      const typeString = buildTypeString(c.type, String(c.varcharLength || "").trim());
+      const typeString = buildTypeString(
+        c.type,
+        String(c.varcharLength || "").trim()
+      );
       return {
         ...c,
+        id: c.id || genId(),
+        clientId: c.clientId || c.id,
         type: (typeString || "").toUpperCase(),
       };
     });
 
-    const dto = { name: tableName, columns: normalizedColumns };
+    const _tid = tableId || genId();
+    const dto = {
+      id: _tid,
+      clientId: initialTable?.clientId || _tid,
+      name: tableName,
+      columns: normalizedColumns,
+      x: initialTable?.x ?? 0,
+      y: initialTable?.y ?? 0,
+    };
 
     if (isEdit) {
-      // id가 있으면 우선 사용, 없으면 이전 name fallback
       updateTable(tableId ?? initialTable.name, dto);
     } else {
       addTable(dto);
@@ -229,8 +274,9 @@ export default function CreateTableModal({ initialTable = null, onClose }) {
   return (
     <div className="modal-backdrop">
       <div className="modal-container">
-        <h2 className="modal-title">{isEdit ? "Edit table" : "Create table"}</h2>
-
+        <h2 className="modal-title">
+          {isEdit ? "Edit table" : "Create table"}
+        </h2>
         <div className="mb-4">
           <label className="modal-label">
             Table name <span className="modal-required">*</span>
@@ -241,123 +287,130 @@ export default function CreateTableModal({ initialTable = null, onClose }) {
             placeholder="Table_name"
             className="modal-input"
           />
-          <small className="modal-subtext">Table Name Can not be change after created</small>
+          <small className="modal-subtext">
+            Table Name Can not be change after created
+          </small>
         </div>
 
-        <button onClick={handleReset} className="btn-reset flex items-center gap-1">
+        <button
+          onClick={handleReset}
+          className="btn-reset flex items-center gap-1"
+        >
           <RotateCcw size={16} /> Reset all
         </button>
 
-        {/* ---------- 드래그 정렬 가능한 컬럼 리스트 ---------- */}
         <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
-          <SortableContext items={columns.map((c) => c.id)} strategy={verticalListSortingStrategy}>
+          <SortableContext
+            items={columns.map((c) => c.id)}
+            strategy={verticalListSortingStrategy}
+          >
             {columns.map((col) => (
               <SortableRow key={col.id} id={col.id}>
-  {({ setNodeRef, style, handleProps }) => (
-    <div ref={setNodeRef} style={style} className="column-row">
-      {/* 드래그 핸들 */}
-      <div
-        className="drag-handle"
-        {...handleProps}
-        style={{ cursor: "grab", userSelect: "none", width: 16, marginRight: 8 }}
-        title="드래그하여 순서 변경"
-      >
-        ⋮⋮
-      </div>
-
-      {/* ── 윗줄: 컬럼명 + 타입(+길이) */}
-      <div className="column-top-row">
-        <div className="column-field">
-          <label className="modal-label">
-            Column name <span className="modal-required">*</span>
-          </label>
-          <input
-            className="column-input"
-            value={col.name}
-            onChange={(e) => handleChangeColumn(col.id, "name", e.target.value)}
-            placeholder="Column name"
-          />
-        </div>
-
-        <div className="column-field">
-          <label className="modal-label">
-            Type <span className="modal-required">*</span>
-          </label>
-
-          <div className="type-line">
-            <select
-              className="column-select"
-              value={col.type}
-              onChange={(e) => {
-                const next = e.target.value;
-                handleChangeColumn(col.id, "type", next);
-                if (next !== "varchar") {
-                  handleChangeColumn(col.id, "varcharLength", "");
-                }
-              }}
-              required
-            >
-              <option value="" disabled>-- Select Type --</option>
-              {COLUMN_TYPES.map((g) => (
-                <optgroup key={g.group} label={g.group}>
-                  {g.options.map((opt) => (
-                    <option key={opt} value={opt}>{opt}</option>
-                  ))}
-                </optgroup>
-              ))}
-            </select>
-
-            {col.type === "varchar" && (
-              <input
-                type="number"
-                min={1}
-                placeholder="Length (e.g 100)"
-                className="column-input varchar-len"
-                value={col.varcharLength}
-                onChange={(e) =>
-                  handleChangeColumn(col.id, "varcharLength", e.target.value.replace(/\D/g, ""))
-                }
-              />
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* ── 아랫줄: PK/FK + 삭제 (항상 아래 고정) */}
-      <div className="column-bottom-row">
-        <div className="column-options">
-          <label>
-            <input
-              type="radio"
-              name={`key-${col.id}`}
-              checked={col.isPrimary}
-              onChange={() => {
-                handleChangeColumn(col.id, "isPrimary", true);
-                handleChangeColumn(col.id, "isForeign", false);
-              }}
-            />{" "}
-            PK
-          </label>
-          <label>
-            <input
-              type="radio"
-              name={`key-${col.id}`}
-              checked={col.isForeign}
-              onChange={() => {
-                handleChangeColumn(col.id, "isForeign", true);
-                handleChangeColumn(col.id, "isPrimary", false);
-              }}
-            />{" "}
-            FK
-          </label>
-        </div>
-
-        <div className="spacer" />
-        <button className="btn-remove" onClick={() => handleRemoveColumn(col.id)}>🗑</button>
-      </div>
-    </div>
-  )}
-</SortableRow>
+                {({ setNodeRef, style, handleProps }) => (
+                  <div ref={setNodeRef} style={style} className="column-row">
+                    <div className="drag-handle" {...handleProps}>
+                      ⋮⋮
+                    </div>
+                    <div className="column-top-row">
+                      <div className="column-field">
+                        <label className="modal-label">
+                          Column name <span className="modal-required">*</span>
+                        </label>
+                        <input
+                          className="column-input"
+                          value={col.name}
+                          onChange={(e) =>
+                            handleChangeColumn(col.id, "name", e.target.value)
+                          }
+                          placeholder="Column name"
+                        />
+                      </div>
+                      <div className="column-field">
+                        <label className="modal-label">
+                          Type <span className="modal-required">*</span>
+                        </label>
+                        <div className="type-line">
+                          <select
+                            className="column-select"
+                            value={col.type}
+                            onChange={(e) => {
+                              const next = e.target.value;
+                              handleChangeColumn(col.id, "type", next);
+                              if (next !== "varchar" && next !== "char") {
+                                handleChangeColumn(col.id, "varcharLength", "");
+                              }
+                            }}
+                          >
+                            <option value="" disabled>
+                              -- Select Type --
+                            </option>
+                            {COLUMN_TYPES.map((g) => (
+                              <optgroup key={g.group} label={g.group}>
+                                {g.options.map((opt) => (
+                                  <option key={opt} value={opt}>
+                                    {opt}
+                                  </option>
+                                ))}
+                              </optgroup>
+                            ))}
+                          </select>
+                          {(col.type === "varchar" || col.type === "char") && (
+                            <input
+                              type="number"
+                              min={1}
+                              placeholder="Length (e.g 100)"
+                              className="column-input varchar-len"
+                              value={col.varcharLength}
+                              onChange={(e) =>
+                                handleChangeColumn(
+                                  col.id,
+                                  "varcharLength",
+                                  e.target.value.replace(/\D/g, "")
+                                )
+                              }
+                            />
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="column-bottom-row">
+                      <div className="column-options">
+                        <label>
+                          <input
+                            type="radio"
+                            name={`key-${col.id}`}
+                            checked={col.isPrimary}
+                            onChange={() => {
+                              handleChangeColumn(col.id, "isPrimary", true);
+                              handleChangeColumn(col.id, "isForeign", false);
+                            }}
+                          />{" "}
+                          PK
+                        </label>
+                        <label>
+                          <input
+                            type="radio"
+                            name={`key-${col.id}`}
+                            checked={col.isForeign}
+                            onChange={() => {
+                              handleChangeColumn(col.id, "isForeign", true);
+                              handleChangeColumn(col.id, "isPrimary", false);
+                            }}
+                          />{" "}
+                          FK
+                        </label>
+                      </div>
+                      <div className="spacer" />
+                      <button
+                        className="btn-remove"
+                        onClick={() => handleRemoveColumn(col.id)}
+                      >
+                        🗑
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </SortableRow>
             ))}
           </SortableContext>
         </DndContext>

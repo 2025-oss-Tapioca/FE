@@ -18,23 +18,23 @@ export function decideLinkTypeByCard(sourceCard, targetCard) {
   return "MANY_TO_MANY";
 }
 
-export function buildAttributeLink(edge) {
-  return {
-    fromClientId: edge?.data?.fromClientId,
-    toClientId: edge?.data?.toClientId,
-    linkType: decideLinkTypeByCard(
-      edge?.data?.sourceCard,
-      edge?.data?.targetCard
-    ),
-    // identifying: !!edge?.data?.identifying, // 필요 시
-  };
-}
+// export function buildAttributeLink(edge) {
+//   return {
+//     fromClientId: edge?.data?.fromClientId,
+//     toClientId: edge?.data?.toClientId,
+//     linkType: decideLinkTypeByCard(
+//       edge?.data?.sourceCard,
+//       edge?.data?.targetCard
+//     ),
+//     // identifying: !!edge?.data?.identifying, // 필요 시
+//   };
+// }
 
-export function buildPayload(edges) {
-  // data가 없는 edge는 제외(방어코드)
-  const attributeLinks = (edges || [])
-    .filter((e) => e?.data && e.data.fromClientId && e.data.toClientId)
-    .map(buildAttributeLink);
+// export function buildPayload(edges) {
+//   // data가 없는 edge는 제외(방어코드)
+//   const attributeLinks = (edges || [])
+//     .filter((e) => e?.data && e.data.fromClientId && e.data.toClientId)
+//     .map(buildAttributeLink);
 
-  return { attributeLinks };
-}
+//   return { attributeLinks };
+// }
