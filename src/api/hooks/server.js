@@ -7,6 +7,9 @@ import {
   deleteFrontServer,
   deleteBackServer,
   deleteDatabaseServer,
+  updateFrontServer,
+  updateBackServer,
+  updateDatabaseServer,
 } from "../apis/server";
 
 export const useServerActions = () => {
@@ -20,88 +23,76 @@ export const useServerActions = () => {
     select: (res) => res?.data,
   });
 
-  // 공통 onSuccess
   const handleSuccess = () => {
     queryClient.invalidateQueries({ queryKey: ["servers", teamCode] });
   };
 
-  // 프론트 서버 등록
-  const { mutate: registerFront, isPending: isRegisteringFront } = useMutation({
-    mutationFn: registerFrontServer,
-    onSuccess: handleSuccess,
-    onError: (err) => {
-      console.error("프론트 등록 실패:", err);
-      alert("프론트 등록에 실패했습니다.");
-    },
-  });
-
-  // 백엔드 서버 등록
-  const { mutate: registerBackend, isPending: isRegisteringBack } = useMutation(
-    {
-      mutationFn: registerBackendServer,
+  const useServerMutation = (mutationFn, type, action) =>
+    useMutation({
+      mutationFn,
       onSuccess: handleSuccess,
       onError: (err) => {
-        console.error("백엔드 등록 실패:", err);
-        alert("백엔드 등록에 실패했습니다.");
+        console.error(`${type} 서버 ${action} 실패:`, err);
+        alert(`${type} 서버 ${action}에 실패했습니다.`);
       },
-    }
+    });
+
+  // 등록
+  const { mutate: registerFront, isPending: isRegisteringFront } =
+    useServerMutation(registerFrontServer, "프론트", "등록");
+  const { mutate: registerBackend, isPending: isRegisteringBack } =
+    useServerMutation(registerBackendServer, "백엔드", "등록");
+  const { mutate: registerDB, isPending: isRegisteringDB } = useServerMutation(
+    registerDatabaseServer,
+    "DB",
+    "등록"
   );
 
-  // DB 서버 등록
-  const { mutate: registerDB, isPending: isRegisteringDB } = useMutation({
-    mutationFn: registerDatabaseServer,
-    onSuccess: handleSuccess,
-    onError: (err) => {
-      console.error("DB 등록 실패:", err);
-      alert("DB 등록에 실패했습니다.");
-    },
-  });
-
-  // 프론트 서버 삭제
+  // 삭제
   const { mutate: removeFrontServer, isPending: isRemovingFrontServer } =
-    useMutation({
-      mutationFn: deleteFrontServer,
-      onSuccess: handleSuccess,
-      onError: (err) => {
-        console.error("프론트 서버 삭제 실패:", err);
-        alert("프론트 서버 삭제에 실패했습니다.");
-      },
-    });
-
-  // 백엔드 서버 삭제
+    useServerMutation(deleteFrontServer, "프론트", "삭제");
   const { mutate: removeBackServer, isPending: isRemovingBackServer } =
-    useMutation({
-      mutationFn: deleteBackServer,
-      onSuccess: handleSuccess,
-      onError: (err) => {
-        console.error("백엔드 서버 삭제 실패:", err);
-        alert("백엔드 서버 삭제에 실패했습니다.");
-      },
-    });
-
-  // DB 서버 삭제
+    useServerMutation(deleteBackServer, "백엔드", "삭제");
   const { mutate: removeDatabaseServer, isPending: isRemovingDatabaseServer } =
-    useMutation({
-      mutationFn: deleteDatabaseServer,
-      onSuccess: handleSuccess,
-      onError: (err) => {
-        console.error("DB 서버 삭제 실패:", err);
-        alert("DB 서버 삭제에 실패했습니다.");
-      },
-    });
+    useServerMutation(deleteDatabaseServer, "DB", "삭제");
+
+  // 수정
+  const { mutate: updateFront, isPending: isUpdatingFront } = useServerMutation(
+    updateFrontServer,
+    "프론트",
+    "수정"
+  );
+  const { mutate: updateBack, isPending: isUpdatingBack } = useServerMutation(
+    updateBackServer,
+    "백엔드",
+    "수정"
+  );
+  const { mutate: updateDB, isPending: isUpdatingDB } = useServerMutation(
+    updateDatabaseServer,
+    "DB",
+    "수정"
+  );
 
   return {
     servers,
     isLoadingServers,
 
+    // 등록
     registerFront,
     registerBackend,
     registerDB,
 
+    // 삭제
     removeFrontServer,
     removeBackServer,
     removeDatabaseServer,
 
+    // 수정
+    updateFront,
+    updateBack,
+    updateDB,
+
+    // 상태
     isRegisteringFront,
     isRegisteringBack,
     isRegisteringDB,
@@ -109,5 +100,9 @@ export const useServerActions = () => {
     isRemovingFrontServer,
     isRemovingBackServer,
     isRemovingDatabaseServer,
+
+    isUpdatingFront,
+    isUpdatingBack,
+    isUpdatingDB,
   };
 };

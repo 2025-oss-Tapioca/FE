@@ -50,6 +50,21 @@ export const deleteDatabaseServer = (teamCode) => {
     data: { teamCode },
   });
 };
+
+/** 프론트 서버 수정 */
+export const updateFrontServer = (payload) => {
+  return client.patch("/api/server/front", payload);
+};
+
+/** 백엔드 서버 수정 */
+export const updateBackServer = (payload) => {
+  return client.patch("/api/server/back", payload);
+};
+
+/** DB 서버 수정 */
+export const updateDatabaseServer = (payload) => {
+  return client.patch("/api/server/db", payload);
+};
 /**
  * 서버 상태 확인 (GET /health)
  * - URL: http://example.com/health

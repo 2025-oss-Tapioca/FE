@@ -6,8 +6,8 @@ import "../styles/css/ServerManagement.css";
 import ServerCard from "../components/ServerManagement/ServerCard";
 import { Plus } from "lucide-react";
 import AddServerModal from "../components/ServerManagement/AddServerModal";
+import EditServerModal from "../components/ServerManagement/EditServerModal";
 
-// 에러 코드 → 메시지 매핑
 const ERROR_MESSAGES = {
   40904: "프론트 서버 등록은 팀 당 1번만 가능합니다.",
   40905: "백엔드 서버 등록은 팀 당 1번만 가능합니다.",
@@ -18,8 +18,9 @@ const ERROR_MESSAGES = {
 const ServerManagement = () => {
   const { teamCode } = useParams();
   const [showModal, setShowModal] = useState(false);
+  const [editTarget, setEditTarget] = useState(null);
+  const [showEditModal, setShowEditModal] = useState(false);
 
-  // ✅ 서버 관련 훅
   const {
     servers,
     isLoadingServers,
@@ -29,16 +30,15 @@ const ServerManagement = () => {
     removeFrontServer,
     removeBackServer,
     removeDatabaseServer,
+    updateFront,
+    updateBack,
+    updateDB,
   } = useServerActions();
 
-  // ✅ teamCode를 localStorage에 저장
   useEffect(() => {
-    if (teamCode) {
-      localStorage.setItem("teamCode", teamCode);
-    }
+    if (teamCode) localStorage.setItem("teamCode", teamCode);
   }, [teamCode]);
 
-  // ✅ 서버 삭제 핸들러
   const handleDelete = (type) => {
     if (!window.confirm(`${type.toUpperCase()} 서버를 삭제하시겠습니까?`))
       return;
@@ -50,26 +50,17 @@ const ServerManagement = () => {
     };
 
     const deleteFn = deleteMap[type];
-    if (!deleteFn) {
-      alert("지원하지 않는 서버 유형입니다.");
-      return;
-    }
+    if (!deleteFn) return alert("지원하지 않는 서버 유형입니다.");
 
     deleteFn(teamCode, {
-      onSuccess: () => {
-        alert(`${type.toUpperCase()} 서버가 삭제되었습니다.`);
-      },
-      onError: () => {
-        alert("서버 삭제에 실패했습니다.");
-      },
+      onSuccess: () => alert(`${type.toUpperCase()} 서버가 삭제되었습니다.`),
+      onError: () => alert("서버 삭제에 실패했습니다."),
     });
   };
 
-  // ✅ 서버 추가 핸들러
   const handleAddServer = async (newServer) => {
     try {
       const payload = { ...newServer, teamCode };
-
       const registerMap = {
         frontend: registerFront,
         backend: registerBackend,
@@ -79,28 +70,58 @@ const ServerManagement = () => {
       const registerFn = registerMap[newServer.type];
       if (!registerFn) throw new Error("지원하지 않는 서버 유형입니다.");
 
-      await new Promise((resolve, reject) => {
-        registerFn(payload, {
-          onSuccess: resolve,
-          onError: reject,
-        });
-      });
+      await new Promise((resolve, reject) =>
+        registerFn(payload, { onSuccess: resolve, onError: reject })
+      );
 
       const url =
         newServer.type === "database" ? newServer.dbAddress : newServer.ec2Host;
+      await checkServerStatus(url);
 
-      await checkServerStatus(url); // 상태 확인은 optional
       alert("서버가 성공적으로 등록되었습니다.");
     } catch (error) {
-      console.error("서버 등록 실패:", error);
       const errorCode = error?.code;
       const errorMessage =
         ERROR_MESSAGES[errorCode] || error?.message || ERROR_MESSAGES.default;
-
       alert(errorMessage);
     } finally {
       setShowModal(false);
     }
+  };
+
+  const handleEditServer = async (editedData) => {
+    try {
+      const payload = { ...editedData, teamCode };
+      const updateMap = {
+        frontend: updateFront,
+        backend: updateBack,
+        database: updateDB,
+      };
+
+      const updateFn = updateMap[editedData.type];
+      if (!updateFn) throw new Error("지원하지 않는 서버 유형입니다.");
+
+      await new Promise((resolve, reject) =>
+        updateFn(payload, { onSuccess: resolve, onError: reject })
+      );
+
+      const url =
+        editedData.type === "database"
+          ? editedData.dbAddress
+          : editedData.ec2Host;
+      await checkServerStatus(url);
+
+      alert("서버 수정이 완료되었습니다.");
+    } catch (error) {
+      alert("서버 수정에 실패했습니다.");
+    } finally {
+      setShowEditModal(false);
+    }
+  };
+
+  const handleModify = ({ type, data }) => {
+    setEditTarget({ ...data, type, teamCode });
+    setShowEditModal(true);
   };
 
   return (
@@ -127,25 +148,35 @@ const ServerManagement = () => {
                 name="프론트 서버"
                 url={servers.front.ec2Host}
                 status="unknown"
+                type="frontend"
                 onDelete={() => handleDelete("front")}
+                onModify={() =>
+                  handleModify({ type: "frontend", data: servers.front })
+                }
               />
             )}
-
             {servers?.back && (
               <ServerCard
                 name="백엔드 서버"
                 url={servers.back.ec2Host}
                 status="unknown"
+                type="backend"
                 onDelete={() => handleDelete("back")}
+                onModify={() =>
+                  handleModify({ type: "backend", data: servers.back })
+                }
               />
             )}
-
             {servers?.db && (
               <ServerCard
                 name="DB 서버"
                 url={servers.db.dbAddress}
                 status="unknown"
+                type="database"
                 onDelete={() => handleDelete("db")}
+                onModify={() =>
+                  handleModify({ type: "database", data: servers.db })
+                }
               />
             )}
           </>
@@ -157,6 +188,15 @@ const ServerManagement = () => {
           onClose={() => setShowModal(false)}
           onSubmit={handleAddServer}
           teamCode={teamCode}
+        />
+      )}
+
+      {showEditModal && editTarget && (
+        <EditServerModal
+          onClose={() => setShowEditModal(false)}
+          onSubmit={handleEditServer}
+          serverType={editTarget.type}
+          initialData={editTarget}
         />
       )}
     </div>
