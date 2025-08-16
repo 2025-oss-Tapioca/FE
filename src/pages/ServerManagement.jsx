@@ -15,7 +15,7 @@ const ERROR_MESSAGES = {
   default: "서버 등록 중 알 수 없는 오류가 발생했습니다.",
 };
 
-const ServerManagement = () => {
+const ServerManagement = ({ onServerChanged }) => {
   const { teamCode } = useParams();
   const [showModal, setShowModal] = useState(false);
   const [editTarget, setEditTarget] = useState(null);
@@ -53,7 +53,10 @@ const ServerManagement = () => {
     if (!deleteFn) return alert("지원하지 않는 서버 유형입니다.");
 
     deleteFn(teamCode, {
-      onSuccess: () => alert(`${type.toUpperCase()} 서버가 삭제되었습니다.`),
+      onSuccess: () => {
+        alert(`${type.toUpperCase()} 서버가 삭제되었습니다.`),
+          onServerChanged();
+      },
       onError: () => alert("서버 삭제에 실패했습니다."),
     });
   };
@@ -94,7 +97,7 @@ const ServerManagement = () => {
       // ✅ 3. 상태 체크 후 성공 처리
       const url =
         newServer.type === "database" ? newServer.dbAddress : newServer.ec2Host;
-
+      onServerChanged();
       await checkServerStatus(url);
 
       alert("서버가 성공적으로 등록되었습니다.");

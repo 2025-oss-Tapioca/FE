@@ -23,6 +23,11 @@ const ERROR_MESSAGES = {
 const Home = () => {
   const [activeTab, setActiveTab] = useState("대시보드");
   const [showAddModal, setShowAddModal] = useState(false);
+  const [refetchTrigger, setRefetchTrigger] = useState(false);
+  const triggerServerRefetch = () => {
+    setRefetchTrigger((prev) => !prev);
+  };
+
   const { teamCode } = useParams();
 
   const { registerFront, registerBackend, registerDB } = useServerActions();
@@ -82,11 +87,17 @@ const Home = () => {
           className="side-bar"
           activeTab={activeTab}
           setActiveTab={setActiveTab}
+          refetchTrigger={refetchTrigger}
           onAddServerClick={() => setShowAddModal(true)}
         />
         <main className="main-content">
           {activeTab === "대시보드" && <Dashboard />}
-          {activeTab === "서버관리" && <ServerManagement teamCode={teamCode} />}
+          {activeTab === "서버관리" && (
+            <ServerManagement
+              teamCode={teamCode}
+              onServerChanged={triggerServerRefetch}
+            />
+          )}
           {activeTab === "개발도구" && <DevTools />}
           {activeTab === "성능 테스트" && <PerformanceTest />}
           {activeTab === "로그 모니터링" && <LogMonitoring />}
