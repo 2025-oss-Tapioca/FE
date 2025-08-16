@@ -162,8 +162,18 @@ const ERDEditor = ({ teamCode }) => {
       return () => cancelAnimationFrame(raf);
   }, [tablesFromServer, initialEdges, setTables]);
 
-  const handleAddTable = () => openModal();
-  const handleEdit = (table) => openModal(table);
+  const [editingTable, setEditingTable] = useState(null);
+
+  const handleAddTable = () => {
+    setEditingTable(null);
+    openModal();
+  };
+
+  const handleEdit = (table) => {
+    setEditingTable(table);
+    openModal();
+  };
+
   const handleDelete = (table) => {
     if (window.confirm(`[${table.name}] 테이블을 삭제할까요?`)) {
       removeTable(table.id ?? table.name);
@@ -277,7 +287,13 @@ const ERDEditor = ({ teamCode }) => {
         />
       </ReactFlowProvider>
 
-      {isOpen && <CreateTableModal initialTable={null} onClose={() => {}} />}
+      {isOpen && (
+        <CreateTableModal
+          initialTable={editingTable}
+          onClose={() => setEditingTable(null)}
+        />
+      )}
+
     </div>
   );
 };

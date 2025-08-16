@@ -118,7 +118,8 @@ export default function CreateTableModal({ initialTable = null, onClose }) {
   const [columns, setColumns] = useState(
     initialTable?.columns?.length
       ? initialTable.columns.map((c) => {
-          const { base, len } = parseVarchar(c.type);
+          const raw = String(c.type || "").toLowerCase();
+          const { base, len } = parseVarchar(raw);
           return {
             ...makeDefaultColumn(),
             ...c,
@@ -151,7 +152,8 @@ export default function CreateTableModal({ initialTable = null, onClose }) {
       setTableName(initialTable.name ?? "");
       setColumns(
         (initialTable.columns ?? [makeDefaultColumn()]).map((c) => {
-          const { base, len } = parseVarchar(c.type);
+          const raw = String(c.type || "").toLowerCase();
+          const { base, len } = parseVarchar(raw);
           return {
             ...makeDefaultColumn(),
             ...c,
@@ -180,7 +182,8 @@ export default function CreateTableModal({ initialTable = null, onClose }) {
       setTableName(initialTable.name ?? "");
       setColumns(
         (initialTable.columns ?? []).map((c) => {
-          const { base, len } = parseVarchar(c.type);
+          const raw = String(c.type || "").toLowerCase();
+          const { base, len } = parseVarchar(raw);
           return {
             ...makeDefaultColumn(),
             ...c,
