@@ -10,13 +10,14 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 // 1. QueryClient 생성
 const queryClient = new QueryClient();
 
+
 function App() {
   return (
     // 2. 최상단에서 Provider로 감싸기
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/team/:teamCode" element={<Home />} />
           <Route path="/team" element={<Team />} />
           <Route path="/team/:teamCode" element={<Home />} />
           <Route path="/auth/login" element={<Login />} />
