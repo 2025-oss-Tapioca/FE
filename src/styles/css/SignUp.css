@@ -141,6 +141,9 @@
   letter-spacing: -2.5%;
   color: #999999;
   cursor: not-allowed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .signup-page .signup-card .signup-form .btn-next:enabled {
   background-color: #3F7FFF;
