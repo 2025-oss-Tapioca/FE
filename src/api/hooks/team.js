@@ -44,11 +44,11 @@ export const useGetTeam = () => {
 /**
  * 새로운 팀을 생성하는 뮤테이션 훅
  */
-export const useCreateTeam = () => {
+export const usePostCreateTeam = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: teamAPI.createTeam,
+        mutationFn: teamAPI.postCreateTeam,
         onSuccess: async (createResponse) => {
             queryClient.invalidateQueries({ queryKey: ['teams'] });
             const newTeamCode = createResponse.data.teamCode;
@@ -98,10 +98,10 @@ export const useDeleteTeam = () => {
 /**
  * 팀에 참가하는 뮤테이션 훅
  */
-export const useJoinTeam = () => {
+export const usePostJoinTeam = () => {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: teamAPI.joinTeam,
+        mutationFn: teamAPI.postJoinTeam,
         onSuccess: (response) => {
             queryClient.invalidateQueries({ queryKey: ['teams'] });
             // 참가 성공 시, 참가한 팀의 정보를 응답으로 받아 활용할 수 있습니다.

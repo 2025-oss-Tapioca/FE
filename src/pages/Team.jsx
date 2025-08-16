@@ -12,9 +12,9 @@ export default function TeamPage() {
   // 각 훅을 호출하여 필요한 데이터, 함수, 상태를 가져옵니다.
   const { data: teams = [], isLoading, error } = team.useGetTeam();
 
-  const { mutate: createTeam, isPending: isCreating } = team.useCreateTeam();
+  const { mutate: postCreateTeam, isPending: isCreating } = team.usePostCreateTeam();
   const { mutate: deleteTeam, isPending: isDeleting } = team.useDeleteTeam();
-  const { mutate: joinTeam, isPending: isJoining } = team.useJoinTeam();
+  const { mutate: postJoinTeam, isPending: isJoining } = team.usePostJoinTeam();
 
 
   console.log('React Query Result:', teams);
@@ -33,8 +33,8 @@ export default function TeamPage() {
         </div>
         <div className="team-header-buttons">
           {/* 각 액션에 맞는 함수와 로딩 상태를 전달합니다. */}
-          <AddTeamDialog onCreate={createTeam} isCreating={isCreating} />
-          <JoinTeamDialog onJoin={joinTeam} isJoining={isJoining} />
+          <AddTeamDialog onCreate={postCreateTeam} isCreating={isCreating} />
+          <JoinTeamDialog onJoin={postJoinTeam} isJoining={isJoining} />
         </div>
       </div>
 

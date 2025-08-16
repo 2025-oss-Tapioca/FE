@@ -1,4 +1,4 @@
-import client from '../utils/axios.jsx';
+import { client } from '../utils/axios.jsx';
 
 export const getTeam = () => {
     return client.get('/api/team');
@@ -8,11 +8,11 @@ export const getTeamByCode = (teamCode) => {
     return client.get(`/api/team/${teamCode}`);
 };
 
-export const createTeam = (teamData) => {
+export const postCreateTeam = (teamData) => {
     return client.post('/api/team/create', teamData);
 };
 
-export const joinTeam = (teamData) => {
+export const postJoinTeam = (teamData) => {
     return client.post('/api/team/join', teamData);
 };
 
