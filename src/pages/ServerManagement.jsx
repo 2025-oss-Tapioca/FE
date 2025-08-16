@@ -61,6 +61,7 @@ const ServerManagement = () => {
   const handleAddServer = async (newServer) => {
     try {
       const payload = { ...newServer, teamCode };
+
       const registerMap = {
         frontend: registerFront,
         backend: registerBackend,
@@ -70,19 +71,42 @@ const ServerManagement = () => {
       const registerFn = registerMap[newServer.type];
       if (!registerFn) throw new Error("지원하지 않는 서버 유형입니다.");
 
-      await new Promise((resolve, reject) =>
-        registerFn(payload, { onSuccess: resolve, onError: reject })
+      // ✅ 1. Mutation 실행 + 응답 받기
+      const res = await new Promise((resolve, reject) =>
+        registerFn(payload, {
+          onSuccess: (data) => resolve(data),
+          onError: (err) => reject(err),
+        })
       );
 
+      // ✅ 2. 응답 내부에서 success 여부 분기
+      if (!res?.success) {
+        const errorCode = res?.error?.code || null;
+        const errorMessage =
+          res?.error.message ||
+          ERROR_MESSAGES[errorCode] ||
+          ERROR_MESSAGES.default;
+
+        alert(errorMessage);
+        return;
+      }
+
+      // ✅ 3. 상태 체크 후 성공 처리
       const url =
         newServer.type === "database" ? newServer.dbAddress : newServer.ec2Host;
+
       await checkServerStatus(url);
 
       alert("서버가 성공적으로 등록되었습니다.");
     } catch (error) {
-      const errorCode = error?.code;
+      // ✅ 4. 네트워크/서버 에러 처리
+      const errorCode = error?.response?.data?.code || error?.code || null;
       const errorMessage =
-        ERROR_MESSAGES[errorCode] || error?.message || ERROR_MESSAGES.default;
+        ERROR_MESSAGES[errorCode] ||
+        error?.response?.data?.message ||
+        error?.message ||
+        ERROR_MESSAGES.default;
+
       alert(errorMessage);
     } finally {
       setShowModal(false);
@@ -158,7 +182,7 @@ const ServerManagement = () => {
             {servers?.back && (
               <ServerCard
                 name="백엔드 서버"
-                url={servers.back.ec2Host}
+                url={servers.back.ec2Url}
                 status="unknown"
                 type="backend"
                 onDelete={() => handleDelete("back")}

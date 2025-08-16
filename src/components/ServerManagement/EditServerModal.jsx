@@ -90,12 +90,14 @@ const EditServerModal = ({ onClose, onSubmit, initialData, serverType }) => {
               name="ec2Host"
               value={formData.ec2Host}
               onChange={handleInputChange}
+              autoComplete="off"
             />
             <label>Auth Token</label>
             <input
               name="authToken"
               value={formData.authToken}
               onChange={handleInputChange}
+              autoComplete="off"
             />
             <div className="modal-input-row">
               <div className="modal-group">
@@ -104,6 +106,7 @@ const EditServerModal = ({ onClose, onSubmit, initialData, serverType }) => {
                   name="entryPoint"
                   value={formData.entryPoint}
                   onChange={handleInputChange}
+                  autoComplete="off"
                 />
               </div>
               <div className="modal-group">
@@ -112,6 +115,7 @@ const EditServerModal = ({ onClose, onSubmit, initialData, serverType }) => {
                   name="os"
                   value={formData.os}
                   onChange={handleInputChange}
+                  autoComplete="off"
                 />
               </div>
             </div>
@@ -122,6 +126,7 @@ const EditServerModal = ({ onClose, onSubmit, initialData, serverType }) => {
                   name="env"
                   value={formData.env}
                   onChange={handleInputChange}
+                  autoComplete="off"
                 />
               </div>
               <div className="modal-group">
@@ -130,6 +135,7 @@ const EditServerModal = ({ onClose, onSubmit, initialData, serverType }) => {
                   name="protocol"
                   value={formData.protocol}
                   onChange={handleInputChange}
+                  autoComplete="off"
                 />
               </div>
             </div>
@@ -145,18 +151,21 @@ const EditServerModal = ({ onClose, onSubmit, initialData, serverType }) => {
               name="loginPath"
               value={formData.loginPath}
               onChange={handleInputChange}
+              autoComplete="off"
             />
             <label>EC2 URL</label>
             <input
               name="ec2Url"
               value={formData.ec2Url}
               onChange={handleInputChange}
+              autoComplete="off"
             />
             <label>Auth Token</label>
             <input
               name="authToken"
               value={formData.authToken}
               onChange={handleInputChange}
+              autoComplete="off"
             />
             <div className="modal-input-row">
               <div className="modal-group">
@@ -165,6 +174,7 @@ const EditServerModal = ({ onClose, onSubmit, initialData, serverType }) => {
                   name="os"
                   value={formData.os}
                   onChange={handleInputChange}
+                  autoComplete="off"
                 />
               </div>
               <div className="modal-group">
@@ -173,6 +183,7 @@ const EditServerModal = ({ onClose, onSubmit, initialData, serverType }) => {
                   name="env"
                   value={formData.env}
                   onChange={handleInputChange}
+                  autoComplete="off"
                 />
               </div>
             </div>
@@ -188,6 +199,7 @@ const EditServerModal = ({ onClose, onSubmit, initialData, serverType }) => {
               name="dbAddress"
               value={formData.dbAddress}
               onChange={handleInputChange}
+              autoComplete="off"
             />
             <div className="modal-input-row">
               <div className="modal-group">
@@ -196,6 +208,7 @@ const EditServerModal = ({ onClose, onSubmit, initialData, serverType }) => {
                   name="dbUser"
                   value={formData.dbUser}
                   onChange={handleInputChange}
+                  autoComplete="off"
                 />
               </div>
               <div className="modal-group">
@@ -204,6 +217,7 @@ const EditServerModal = ({ onClose, onSubmit, initialData, serverType }) => {
                   name="password"
                   value={formData.password}
                   onChange={handleInputChange}
+                  autoComplete="off"
                 />
               </div>
             </div>
@@ -214,6 +228,7 @@ const EditServerModal = ({ onClose, onSubmit, initialData, serverType }) => {
                   name="dbName"
                   value={formData.dbName}
                   onChange={handleInputChange}
+                  autoComplete="off"
                 />
               </div>
               <div className="modal-group">
@@ -222,6 +237,7 @@ const EditServerModal = ({ onClose, onSubmit, initialData, serverType }) => {
                   name="dbPort"
                   value={formData.dbPort}
                   onChange={handleInputChange}
+                  autoComplete="off"
                 />
               </div>
             </div>
@@ -230,18 +246,21 @@ const EditServerModal = ({ onClose, onSubmit, initialData, serverType }) => {
               name="rdsInstanceId"
               value={formData.rdsInstanceId}
               onChange={handleInputChange}
+              autoComplete="off"
             />
             <label>AWS Region</label>
             <input
               name="awsRegion"
               value={formData.awsRegion}
               onChange={handleInputChange}
+              autoComplete="off"
             />
             <label>Role ARN</label>
             <input
               name="roleArn"
               value={formData.roleArn}
               onChange={handleInputChange}
+              autoComplete="off"
             />
           </>
         )}
