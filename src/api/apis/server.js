@@ -1,4 +1,4 @@
-import client from "../utils/axios"; // baseURL 설정된 axios 인스턴스
+import { client } from "../utils/axios"; // baseURL 설정된 axios 인스턴스
 
 /** 서버 조회 */
 export const getServers = (teamCode) => {

@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useParams } from "react-router-dom";
 import {
   registerFrontServer,
   registerBackendServer,
@@ -14,7 +15,7 @@ import {
 
 export const useServerActions = () => {
   const queryClient = useQueryClient();
-  const teamCode = localStorage.getItem("teamCode");
+  const { teamCode } = useParams(); // 팀 코드 가져오기
 
   const { data: servers, isLoading: isLoadingServers } = useQuery({
     queryKey: ["servers", teamCode],

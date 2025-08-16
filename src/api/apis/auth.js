@@ -1,5 +1,5 @@
 // apis/auth.js
-import client from "../utils/axios";
+import { client } from "../utils/axios";
 
 /**
  * 로그인 요청
