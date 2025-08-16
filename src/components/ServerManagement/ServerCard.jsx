@@ -3,7 +3,7 @@ import { Power, Pencil, Trash2 } from "lucide-react";
 import PropTypes from "prop-types";
 
 const ServerCard = ({ name, url, status, type, onDelete, onModify }) => {
-  const isConnected = status === "connected";
+  // const isConnected = status === "connected";
 
   const handleModify = () => {
     onModify({
@@ -18,21 +18,21 @@ const ServerCard = ({ name, url, status, type, onDelete, onModify }) => {
       <div className="server-info">
         <div className="server-info-header">
           <h3 className="server-name">{name}</h3>
-          <span
+          {/* <span
             className={`server-status ${
               isConnected ? "status-connected" : "status-disconnected"
             }`}
           >
             {isConnected ? "연결됨" : "연결 해제됨"}
-          </span>
+          </span> */}
         </div>
         <p className="server-url">{url}</p>
       </div>
 
       <div className="server-controls">
-        <button className="server-icon-button" title="Power">
+        {/* <button className="server-icon-button" title="Power">
           <Power size={20} className="server-icon" />
-        </button>
+        </button> */}
         <button
           className="server-icon-button"
           title="수정"

@@ -1,21 +1,28 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../../styles/css/serverButton.css";
 
-export default function ServerButton({ label }) {
-  const [connected, setConnected] = useState(false); // 초기 false
+export default function ServerButton({ label, url, defaultConnected = false }) {
+  const [connected, setConnected] = useState(defaultConnected);
 
-  const handleToggle = (e) => {
-    e.stopPropagation(); // 버튼 전체 클릭 방지
-    setConnected((prev) => !prev); // true/false 토글
-  };
+  useEffect(() => {
+    setConnected(defaultConnected);
+  }, [defaultConnected]);
+
+  // const handleToggle = (e) => {
+  //   e.stopPropagation(); // 버튼 전체 클릭 방지
+  //   setConnected((prev) => !prev);
+
+  //   // TODO: 연결 상태에 따른 API 호출 or 서버 ping 등 처리하고 싶다면 여기서 가능
+  //   // ex) await toggleServerConnection(url)
+  // };
 
   return (
-    <button className={`server ${connected ? "connected" : "disconnected"}`}>
-      <div className="light"></div>
-      <span>{label}</span>
-      <span className="connect-button" onClick={handleToggle}>
-        연결 {connected ? "해제" : ""}
-      </span>
+    <button
+      className={`server ${connected ? "connected" : "disconnected"}`}
+      title={url}
+    >
+      <div className="light" />
+      <span className="label">{label}</span>
     </button>
   );
 }
