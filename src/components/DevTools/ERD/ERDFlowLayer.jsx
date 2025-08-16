@@ -14,6 +14,7 @@ import { useReactFlow } from "reactflow";
 import TableNode from "./node/TableNode";
 import ErdEdge from "./edge/ErdEdge";
 import EndpointPalette from "./edge/EndpointPalette";
+import { decideLinkTypeByCard } from "./utils/erdUpdateHelpers"; 
 
 const NODE_TYPE = "tableNode";
 const EDGE_TYPE = "erdEdge";
@@ -28,7 +29,6 @@ export default function ERDFlowLayer({
   const nodeTypes = useMemo(() => ({ [NODE_TYPE]: TableNode }), []);
   const edgeTypes = useMemo(() => ({ [EDGE_TYPE]: ErdEdge }), []);
 
-  // ERDFlowLayer.jsx 상단/근처에 추가
   const getTableLabel = useCallback(
     (nodeId) => {
       const t = (tables || []).find(
@@ -142,7 +142,10 @@ export default function ERDFlowLayer({
       const t = (tables || []).find(
         (x) => x?.id === nodeId || x?.clientId === nodeId || x?.name === nodeId
       );
-      return t?.columns?.find((c) => c?.isPrimary)?.id ?? null;
+      //return t?.columns?.find((c) => c?.isPrimary)?.id ?? null;
+      return t?.columns?.find((c) => c?.isPrimary)?.clientId
+      ?? t?.columns?.find((c) => c?.isPrimary)?.id
+      ?? null;
     },
     [tables]
   );
@@ -152,7 +155,10 @@ export default function ERDFlowLayer({
       const t = (tables || []).find(
         (x) => x?.id === nodeId || x?.clientId === nodeId || x?.name === nodeId
       );
-      return t?.columns?.find((c) => c?.isForeign)?.id ?? null;
+      //return t?.columns?.find((c) => c?.isForeign)?.id ?? null;
+      return t?.columns?.find((c) => c?.isForeign)?.clientId
+      ?? t?.columns?.find((c) => c?.isForeign)?.id
+      ?? null;
     },
     [tables]
   );
@@ -219,6 +225,12 @@ export default function ERDFlowLayer({
         "식별 관계로 생성할까요?\n확인=식별(실선), 취소=비식별(점선)"
       );
 
+      // ★ 카드 아이콘 조합으로 linkType 계산
+      const linkType = decideLinkTypeByCard(
+        String(pending.sourceId ? pending.sourceCard : ""), 
+        String(targetCard)
+      );
+
       const newEdge = {
         id: `e-${pending.sourceId}-${targetId}-${Date.now()}`,
         source: pending.sourceId,
@@ -230,6 +242,7 @@ export default function ERDFlowLayer({
           targetCard,
           fromClientId,
           toClientId,
+          linkType,
         },
         style: { stroke: "#f472b6" },
       };

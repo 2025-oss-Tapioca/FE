@@ -193,10 +193,21 @@
 /* 핸들이 세로로 위/아래 두 줄을 모두 차지 */
 .column-row .drag-handle {
   grid-column: 1;
-  grid-row: 1 / span 2;                  /* 윗줄+아랫줄 모두 */
+  grid-row: 1 / span 2;   /* 윗줄+아랫줄 모두 */
   display: flex;
   align-items: center;
   justify-content: center;
+
+  /* ▼ 커서/선택 설정 추가 */
+  cursor: pointer;        /* 손가락 모양 */
+  user-select: none;      /* 텍스트 선택 방지 */
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+
+/* 드래그 중엔 쥔 손 모양(선택사항) */
+.column-row .drag-handle:active {
+  cursor: grabbing;
 }
 
 /* ── 윗줄: 컬럼명/타입(+길이) */

@@ -7,33 +7,31 @@ import CreateTableModal from "./CreateTableModal";
 import ERDFlowLayer from "./ERDFlowLayer";
 import { ReactFlowProvider } from "reactflow";
 import { useGetERD, useSaveERD } from "@/api/hooks/erd";
+import { buildUpdatePayload, getCardsByLinkType, applyServerIdsToState, unwrapErdResponse, ensureValidUpdateRequest } from './utils/erdUpdateHelpers';
 
-/* -------------------- 링크 타입 ↔ 카드 매핑 (파일 내에 포함) -------------------- */
-// 카드 번호 의미: 1=O_Bar_Crow, 2=O_Crow, 3=O_Bar, 4=Bar_Crow, 5=CrowOnly, 6=BarOnly
-function decideLinkTypeByCard(sourceCard, targetCard) {
-  const CARD_MAX = { 1: "N", 2: "N", 3: 1, 4: "N", 5: "N", 6: 1 };
-  const s = CARD_MAX[String(sourceCard)];
-  const t = CARD_MAX[String(targetCard)];
-  if (s === 1 && t === 1) return "ONE_TO_ONE";
-  if (s === 1 && t === "N") return "ONE_TO_MANY";
-  if (s === "N" && t === 1) return "MANY_TO_ONE";
-  return "MANY_TO_MANY";
-}
 
-function getCardsByLinkType(linkType) {
-  switch (linkType) {
-    case "ONE_TO_ONE":
-      return { sourceCard: 3, targetCard: 3 }; // O_Bar, O_Bar
-    case "ONE_TO_MANY":
-      return { sourceCard: 3, targetCard: 1 }; // O_Bar, O_Bar_Crow
-    case "MANY_TO_ONE":
-      return { sourceCard: 1, targetCard: 3 }; // O_Bar_Crow, O_Bar
-    case "MANY_TO_MANY":
-    default:
-      return { sourceCard: 1, targetCard: 1 }; // O_Bar_Crow, O_Bar_Crow
-  }
-}
-/* ------------------------------------------------------------------------------ */
+// === 0) clientId 보정 헬퍼 ===
+const UUID_RE =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+const toClientId = (maybeId, fallback) => {
+  if (maybeId && !UUID_RE.test(maybeId)) return maybeId;
+  const base =
+    maybeId ||
+    fallback ||
+    `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  return `cli-${base}`;
+};
+
+const ensureClientIds = (tables) =>
+  (tables || []).map(t => {
+    const clientId = toClientId(t.clientId, t.serverId || t.id);
+    const columns = (t.columns || []).map(c => ({
+      ...c,
+      clientId: toClientId(c.clientId, c.serverId || c.id),
+    }));
+    return { ...t, clientId, columns };
+  });
 
 const ERDEditor = ({ teamCode }) => {
   const openModal = useTableModalStore((s) => s.open);
@@ -48,10 +46,18 @@ const ERDEditor = ({ teamCode }) => {
 
   // 1) 서버 데이터 -> tables / edges 변환
   const { tablesFromServer, initialEdges } = useMemo(() => {
-    if (!erd?.diagrams) return { tablesFromServer: [], initialEdges: [] };
+    // 훅이 {success, data}를 줄 수도, 생데이터를 줄 수도 있으니 모두 안전 처리
+    const payload = erd?.diagrams ? erd : erd?.data;
+    if (!payload?.diagrams) return { tablesFromServer: [], initialEdges: [] };
 
-    const tablesFromServer = erd.diagrams.map((d, i) => ({
+    const tablesFromServer = payload.diagrams.map((d, i) => ({
+      // 화면/노드 식별은 id(=서버 UUID)로 유지
       id: d.diagramId ?? d.clientId ?? `table-${i}`,
+      // 서버 UUID는 따로 보관
+      serverId: d.diagramId ?? null,
+      // clientId는 반드시 임시값이 되도록 보정
+      clientId: toClientId(d.clientId ?? d.diagramId ?? `table-${i}`),
+
       name: d.diagramName,
       x: d.diagramPosX ?? d.diagram_pos_x ?? 120 + i * 240,
       y: d.diagramPosY ?? d.diagram_pos_y ?? 80 + (i % 2) * 200,
@@ -61,6 +67,8 @@ const ERDEditor = ({ teamCode }) => {
       },
       columns: (d.attributes ?? []).map((a, j) => ({
         id: a.attributeId ?? a.clientId ?? `${d.diagramId}-col-${j}`,
+        serverId: a.attributeId ?? null,
+        clientId: toClientId(a.clientId ?? a.attributeId ?? `${d.diagramId}-col-${j}`),
         name: a.attributeName,
         type: a.attributeType,
         varcharLength: a.varcharLength ?? null,
@@ -71,35 +79,49 @@ const ERDEditor = ({ teamCode }) => {
 
     // attributeId -> diagramId 매핑
     const attrToDiagram = new Map();
-    erd.diagrams.forEach((d) => {
+    payload.diagrams.forEach((d) => {
       (d.attributes ?? []).forEach((a) => {
         if (a?.attributeId) attrToDiagram.set(a.attributeId, d.diagramId);
       });
     });
 
-    // 우선: 서버가 준 attributeLinks 사용
-    let edges = (erd.attributeLinks ?? [])
-      .map((link, idx) => {
-        const source = attrToDiagram.get(link.fromAttributeId);
-        const target = attrToDiagram.get(link.toAttributeId);
-        if (!source || !target) return null;
-        const { sourceCard, targetCard } = getCardsByLinkType(link.linkType);
-        return {
-          id: link.linkId ?? link.id ?? `edge-${idx}`,
-          source,
-          target,
-          type: "erdEdge",
-          data: {
-            identifying: !!link.identifying,
-            sourceCard,
-            targetCard,
-            fromClientId: link.fromAttributeId,
-            toClientId: link.toAttributeId,
-            linkType: link.linkType,
-          },
-        };
+    // 테이블/컬럼 적재 후 바로 추가
+    // server attributeId -> clientId 매핑
+    const srvAttrIdToClientId = new Map();
+    tablesFromServer.forEach(t =>
+      (t.columns ?? []).forEach(c => {
+        if (c.id && c.clientId) srvAttrIdToClientId.set(c.id, c.clientId);
       })
-      .filter(Boolean);
+    );
+
+    let edges = (payload.attributeLinks ?? [])
+   .map((link, idx) => {
+     const source = attrToDiagram.get(link.fromAttributeId);
+     const target = attrToDiagram.get(link.toAttributeId);
+     if (!source || !target) return null;
+     const { sourceCard, targetCard } = getCardsByLinkType(link.linkType);
+
+     // ✅ 서버 attributeId → clientId 매핑이 반드시 성공해야 함
+     const fromCli = srvAttrIdToClientId.get(link.fromAttributeId);
+     const toCli   = srvAttrIdToClientId.get(link.toAttributeId);
+     if (!fromCli || !toCli) return null; // 매핑 안 되면 해당 엣지는 스킵
+
+     return {
+       id: link.linkId ?? link.id ?? `edge-${idx}`,
+       source,
+       target,
+       type: "erdEdge",
+       data: {
+         identifying: !!link.identifying,
+         sourceCard,
+         targetCard,
+         fromClientId: fromCli,  // ✅ clientId 사용
+         toClientId: toCli,      // ✅ clientId 사용
+         linkType: link.linkType,
+       },
+     };
+   })
+   .filter(Boolean);
 
     // fallback: GET 응답에 attributeLinks가 없을 때 FK/PK 이름 매칭으로 추론
     if (!edges.length) {
@@ -180,77 +202,71 @@ const ERDEditor = ({ teamCode }) => {
     }
   };
 
-  // 서버 발급 ID 여부: id !== clientId면 서버 ID
-  const hasServerId = (id, clientId) => !!id && id !== clientId;
-
-  function buildRequestPayload() {
-    const safeTables = Array.isArray(tables) ? tables.filter(Boolean) : [];
-    const safeEdges = Array.isArray(edges) ? edges.filter(Boolean) : [];
-
-    const name = `ERD-${teamCode || "unknown"}`;
-
-    const diagrams = safeTables.map((t) => {
-      const diagramId = hasServerId(t?.id, t?.clientId) ? t.id : null;
-      const clientDiagramId = t?.clientId || t?.id;
-
-      const attributes = Array.isArray(t?.columns)
-        ? t.columns.filter(Boolean).map((c) => {
-            const attributeId = hasServerId(c?.id, c?.clientId) ? c.id : null;
-            const clientAttrId = c?.clientId || c?.id;
-            const type = String(c?.type || "").toUpperCase();
-            const isChar = /^VARCHAR|^CHAR/.test(type);
-            return {
-              clientId: clientAttrId,
-              attributeId,
-              attributeName: c?.name ?? "",
-              attributeType: type,
-              varcharLength: isChar
-                ? c?.varcharLength
-                  ? Number(c.varcharLength)
-                  : null
-                : null,
-              primaryKey: !!c?.isPrimary,
-              foreignKey: !!c?.isForeign,
-            };
-          })
-        : [];
-
-      return {
-        clientId: clientDiagramId,
-        diagramId,
-        diagramName: t?.name ?? "",
-        diagramPosX: Number(t?.x ?? 0),
-        diagramPosY: Number(t?.y ?? 0),
-        attributes,
-      };
-    });
-
-    // 저장 시: edge.data.linkType이 있으면 그대로, 없으면 카드로 계산
-    const attributeLinks = safeEdges
-      .filter((e) => e?.data?.fromClientId && e?.data?.toClientId)
-      .map((e) => ({
-        fromClientId: e.data.fromClientId,
-        toClientId: e.data.toClientId,
-        linkType:
-          e.data.linkType ||
-          decideLinkTypeByCard(e.data.sourceCard, e.data.targetCard),
-        // identifying: !!e.data.identifying,  // 필요하면 포함
-      }));
-
-    return { name, diagrams, attributeLinks };
-  }
-
   const handleSave = () => {
     if (!teamCode) {
-      alert("teamCode가 없습니다. 팀을 먼저 선택하세요.");
+      alert('teamCode가 없습니다. 팀을 먼저 선택하세요.');
       return;
     }
-    const payload = buildRequestPayload();
-    saveERD.mutate(payload, {
-      onSuccess: () => alert("저장되었습니다."),
-      onError: () => alert("저장 중 오류가 발생했습니다."),
+
+    const safeTables = ensureClientIds(tables);
+    const req = buildUpdatePayload(safeTables, edges);
+    // 빠른 확인용 로그
+    const ids = req.diagrams.flatMap(d => d.attributes.map(a => a.attributeId));
+    const linkIds = req.attributeLinks.flatMap(l => [l.fromClientId, l.toClientId]);
+    console.log('[ATTR_IDS]', ids);
+    console.log('[LINK_IDS]', linkIds);
+    ensureValidUpdateRequest(req);
+
+    // ✅ 여기서 점검 로그 추가
+  console.table(
+    tables.flatMap(t => (t.columns ?? []).map(c => ({
+      table: t.name,
+      col: c.name,
+      col_id: c.id,
+      col_clientId: c.clientId,
+      col_serverId: c.serverId,
+    })))
+  );
+
+  console.log(
+    'edges(from/to should be clientId)',
+    edges.map(e => ({
+      id: e.id,
+      from: e.data.fromClientId,
+      to: e.data.toClientId,
+    }))
+  );
+
+    console.log('[ERD UPDATE REQUEST]', JSON.stringify(req, null, 2));
+
+    saveERD.mutate(req, {
+      onSuccess: (res) => {
+        const env = unwrapErdResponse(res);
+        console.log('[ERD UPDATE RESPONSE]', env);
+
+        if (!env.success || !env.data) {
+          alert(env?.error?.message || '저장 실패');  // ← 실패 알림은 여기 딱 한 군데
+          return;
+        }
+
+        const { nextTables, nextEdges } = applyServerIdsToState({
+          req,
+          resData: env.data,
+          tables,
+          edges,
+        });
+
+        setTables(nextTables);
+        setEdges(nextEdges);
+        alert('저장되었습니다.');
+      },
+      onError: (err) => {
+        console.error('[ERD UPDATE ERROR]', err?.response?.data || err);
+        alert('저장 중 오류가 발생했습니다.');
+      },
     });
   };
+
 
   if (isLoading) return <div>불러오는 중…</div>;
   if (error) return <div>로드 실패: {String(error?.message || error)}</div>;
@@ -293,7 +309,21 @@ const ERDEditor = ({ teamCode }) => {
           onClose={() => setEditingTable(null)}
         />
       )}
-
+      {/* PK/FK 설명 */}
+        <div className="erd-legend">
+          <img
+            src="/assets/icons/primary_key.svg"
+            alt="Primary"
+            className="icon"
+          />
+          <span>Primary Key</span>
+          <img
+            src="/assets/icons/foreign_key.svg"
+            alt="Foreign"
+            className="icon"
+          />
+          <span>Foreign Key</span>
+        </div>
     </div>
   );
 };
