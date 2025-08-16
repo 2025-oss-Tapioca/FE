@@ -33,6 +33,23 @@ export const registerDatabaseServer = (payload) => {
   return client.post("/api/server/db", payload);
 };
 
+export const deleteFrontServer = (teamCode) => {
+  return client.delete("/api/server/front", {
+    data: { teamCode },
+  });
+};
+
+export const deleteBackServer = (teamCode) => {
+  return client.delete("/api/server/back", {
+    data: { teamCode },
+  });
+};
+
+export const deleteDatabaseServer = (teamCode) => {
+  return client.delete("/api/server/db", {
+    data: { teamCode },
+  });
+};
 /**
  * 서버 상태 확인 (GET /health)
  * - URL: http://example.com/health

@@ -18,32 +18,67 @@ const ERROR_MESSAGES = {
 const ServerManagement = () => {
   const { teamCode } = useParams();
   const [showModal, setShowModal] = useState(false);
+
+  // ✅ 서버 관련 훅
   const {
     servers,
     isLoadingServers,
     registerFront,
     registerBackend,
     registerDB,
+    removeFrontServer,
+    removeBackServer,
+    removeDatabaseServer,
   } = useServerActions();
 
-  // 💾 URL에서 받은 teamCode를 localStorage에 저장
+  // ✅ teamCode를 localStorage에 저장
   useEffect(() => {
     if (teamCode) {
       localStorage.setItem("teamCode", teamCode);
     }
   }, [teamCode]);
 
+  // ✅ 서버 삭제 핸들러
+  const handleDelete = (type) => {
+    if (!window.confirm(`${type.toUpperCase()} 서버를 삭제하시겠습니까?`))
+      return;
+
+    const deleteMap = {
+      front: removeFrontServer,
+      back: removeBackServer,
+      db: removeDatabaseServer,
+    };
+
+    const deleteFn = deleteMap[type];
+    if (!deleteFn) {
+      alert("지원하지 않는 서버 유형입니다.");
+      return;
+    }
+
+    deleteFn(teamCode, {
+      onSuccess: () => {
+        alert(`${type.toUpperCase()} 서버가 삭제되었습니다.`);
+      },
+      onError: () => {
+        alert("서버 삭제에 실패했습니다.");
+      },
+    });
+  };
+
+  // ✅ 서버 추가 핸들러
   const handleAddServer = async (newServer) => {
     try {
       const payload = { ...newServer, teamCode };
-      let registerFn;
 
-      if (newServer.type === "frontend") registerFn = registerFront;
-      else if (newServer.type === "backend") registerFn = registerBackend;
-      else if (newServer.type === "database") registerFn = registerDB;
-      else throw new Error("지원하지 않는 서버 유형입니다.");
+      const registerMap = {
+        frontend: registerFront,
+        backend: registerBackend,
+        database: registerDB,
+      };
 
-      // 🟢 등록 실행 (mutateAsync 사용 안 했을 경우, 반환값 없음)
+      const registerFn = registerMap[newServer.type];
+      if (!registerFn) throw new Error("지원하지 않는 서버 유형입니다.");
+
       await new Promise((resolve, reject) => {
         registerFn(payload, {
           onSuccess: resolve,
@@ -54,14 +89,8 @@ const ServerManagement = () => {
       const url =
         newServer.type === "database" ? newServer.dbAddress : newServer.ec2Host;
 
-      const isOnline = await checkServerStatus(url);
-
-      alert(
-        `서버가 성공적으로 등록되었습니다. 상태: ${
-          isOnline ? "연결됨" : "연결되지 않음"
-        }`
-      );
-      setShowModal(false);
+      await checkServerStatus(url); // 상태 확인은 optional
+      alert("서버가 성공적으로 등록되었습니다.");
     } catch (error) {
       console.error("서버 등록 실패:", error);
       const errorCode = error?.code;
@@ -69,6 +98,7 @@ const ServerManagement = () => {
         ERROR_MESSAGES[errorCode] || error?.message || ERROR_MESSAGES.default;
 
       alert(errorMessage);
+    } finally {
       setShowModal(false);
     }
   };
@@ -91,26 +121,37 @@ const ServerManagement = () => {
         {isLoadingServers ? (
           <p>서버 목록을 불러오는 중...</p>
         ) : (
-          servers &&
-          Object.entries(servers)
-            .filter(([key]) => key !== "teamCode") // teamCode는 제외
-            .map(([type, serverData]) => {
-              if (!serverData) return null;
+          <>
+            {servers?.front && (
+              <ServerCard
+                name="프론트 서버"
+                url={servers.front.ec2Host}
+                status="unknown"
+                onDelete={() => handleDelete("front")}
+              />
+            )}
 
-              const url =
-                type === "database" ? serverData.dbAddress : serverData.ec2Host;
+            {servers?.back && (
+              <ServerCard
+                name="백엔드 서버"
+                url={servers.back.ec2Host}
+                status="unknown"
+                onDelete={() => handleDelete("back")}
+              />
+            )}
 
-              return (
-                <ServerCard
-                  key={type}
-                  name={`${type} 서버`}
-                  url={url}
-                  status="unknown" // 이후 checkServerStatus(url)로 연결 여부 판단 가능
-                />
-              );
-            })
+            {servers?.db && (
+              <ServerCard
+                name="DB 서버"
+                url={servers.db.dbAddress}
+                status="unknown"
+                onDelete={() => handleDelete("db")}
+              />
+            )}
+          </>
         )}
       </div>
+
       {showModal && (
         <AddServerModal
           onClose={() => setShowModal(false)}

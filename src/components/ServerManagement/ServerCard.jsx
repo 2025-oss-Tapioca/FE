@@ -1,7 +1,7 @@
 import React from "react";
 import { Power, RefreshCw, Trash2 } from "lucide-react";
 
-const ServerCard = ({ name, url, status }) => {
+const ServerCard = ({ name, url, status, onDelete }) => {
   const isConnected = status === "connected";
 
   return (
@@ -23,7 +23,7 @@ const ServerCard = ({ name, url, status }) => {
       <div className="server-controls">
         <Power size={20} className="server-icon" />
         <RefreshCw size={20} className="server-icon" />
-        <Trash2 size={20} className="server-icon" />
+        <Trash2 size={20} className="server-icon" onClick={onDelete} />{" "}
       </div>
     </div>
   );
