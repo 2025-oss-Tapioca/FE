@@ -2,13 +2,32 @@ import React, { useState } from "react";
 import "../styles/css/Login.css";
 import InputField from "../components/common/InputField";
 import { Link } from "react-router-dom";
+import { useLogin } from "../api/hooks/auth";
 
 const LoginPage = () => {
-  const [password, setPassword] = useState("");
+  const { mutate: loginUser, isPending } = useLogin(); // ✅ 하나만 사용
+  const [form, setForm] = useState({
+    loginId: "",
+    password: "",
+  });
   const [showPassword, setShowPassword] = useState(false);
 
-  const handlePasswordChange = (e) => setPassword(e.target.value);
-  const togglePasswordVisibility = () => setShowPassword((prev) => !prev);
+  // ✅ input 값 변경 핸들러
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  // ✅ 비밀번호 보이기/숨기기
+  const togglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev);
+  };
+
+  // ✅ 로그인 폼 제출
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    loginUser(form); // { loginId, password }
+  };
 
   return (
     <div className="login-page">
@@ -27,14 +46,20 @@ const LoginPage = () => {
         </div>
 
         {/* 폼 */}
-        <form className="login-form">
-          <InputField type="email" placeholder="이메일" name="email" />
+        <form className="login-form" onSubmit={handleSubmit}>
           <InputField
-            type="password"
+            type="login"
+            placeholder="이메일"
+            name="loginId"
+            value={form.loginId} // ✅ 수정
+            onChange={handleChange}
+          />
+          <InputField
+            type={showPassword ? "text" : "password"}
             name="password"
             placeholder="비밀번호"
-            value={password}
-            onChange={handlePasswordChange}
+            value={form.password}
+            onChange={handleChange}
             showPassword={showPassword}
             toggleVisibility={togglePasswordVisibility}
           />
@@ -50,8 +75,9 @@ const LoginPage = () => {
             <span>|</span>
             <a href="#">비밀번호 찾기</a>
           </div>
-          <button type="submit" className="btn-login">
-            로그인
+
+          <button type="submit" className="btn-login" disabled={isPending}>
+            {isPending ? "로그인 중..." : "로그인"}
           </button>
         </form>
 

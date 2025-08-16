@@ -1,6 +1,10 @@
-import { useQuery, useQueries, useMutation, useQueryClient } from '@tanstack/react-query';
-import * as teamAPI from '../apis/team'; // api/index.js 배럴 패턴을 사용한다고 가정
-
+import {
+  useQuery,
+  useQueries,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
+import * as teamAPI from "../apis/team"; // api/index.js 배럴 패턴을 사용한다고 가정
 
 // --- 쿼리 훅 ---
 
@@ -8,42 +12,40 @@ import * as teamAPI from '../apis/team'; // api/index.js 배럴 패턴을 사용
  * 팀 목록을 조회하는 쿼리 훅
  */
 export const useGetTeam = () => {
+  const { data: teamList = [], isSuccess: isListSuccess } = useQuery({
+    queryKey: ["teams"],
+    queryFn: teamAPI.getTeam,
+    select: (response) => response.data,
+  });
 
-    const { data: teamList = [], isSuccess: isListSuccess } = useQuery({
-        queryKey: ['teams'],
-        queryFn: teamAPI.getTeam,
+  const detailQueries = useQueries({
+    queries: teamList.map((team) => {
+      return {
+        queryKey: ["team", team.teamCode],
+        queryFn: () => teamAPI.getTeamByCode(team.teamCode),
+        enabled: isListSuccess,
         select: (response) => response.data,
-    });
+      };
+    }),
+  });
 
-    const detailQueries = useQueries({
-        queries: teamList.map((team) => {
-            return {
-                queryKey: ['team', team.teamCode],
-                queryFn: () => teamAPI.getTeamByCode(team.teamCode),
-                enabled: isListSuccess,
-                select: (response) => response.data,
-            };
-        }),
-    });
+  const isDetailsLoading = detailQueries.some((query) => query.isLoading);
+  const teamDetails = detailQueries
+    .filter((query) => query.isSuccess)
+    .map((query) => query.data);
 
-    const isDetailsLoading = detailQueries.some(query => query.isLoading);
-    const teamDetails = detailQueries
-        .filter(query => query.isSuccess)
-        .map(query => query.data);
-
-    return {
-        isLoading: isListSuccess ? isDetailsLoading : true,
-        data: teamDetails,
-    };
+  return {
+    isLoading: isListSuccess ? isDetailsLoading : true,
+    data: teamDetails,
+  };
 };
-
-
 
 // --- 뮤테이션 훅 (수정 완료) ---
 
 /**
  * 새로운 팀을 생성하는 뮤테이션 훅
  */
+
 export const usePostCreateTeam = () => {
     const queryClient = useQueryClient();
 
@@ -79,25 +81,27 @@ export const usePostCreateTeam = () => {
  * 팀을 삭제하는 뮤테이션 훅
  */
 export const useDeleteTeam = () => {
-    const queryClient = useQueryClient();
-    return useMutation({
-        mutationFn: teamAPI.deleteTeam,
-        // DELETE 요청의 응답 본문(response.data)은 보통 비어있거나 간단한 메시지만 올 수 있습니다.
-        // 두 번째 인자로 mutate 함수에 전달했던 변수(teamId)를 받을 수도 있습니다.
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['teams'] });
-            alert(`팀이 성공적으로 삭제되었습니다.`);
-        },
-        onError: (error) => {
-            const errorMessage = error.response?.data?.message || '팀 삭제에 실패했습니다.';
-            alert(errorMessage);
-        },
-    });
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: teamAPI.deleteTeam,
+    // DELETE 요청의 응답 본문(response.data)은 보통 비어있거나 간단한 메시지만 올 수 있습니다.
+    // 두 번째 인자로 mutate 함수에 전달했던 변수(teamId)를 받을 수도 있습니다.
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["teams"] });
+      alert(`팀이 성공적으로 삭제되었습니다.`);
+    },
+    onError: (error) => {
+      const errorMessage =
+        error.response?.data?.message || "팀 삭제에 실패했습니다.";
+      alert(errorMessage);
+    },
+  });
 };
 
 /**
  * 팀에 참가하는 뮤테이션 훅
  */
+
 export const usePostJoinTeam = () => {
     const queryClient = useQueryClient();
     return useMutation({
