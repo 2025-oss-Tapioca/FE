@@ -7,7 +7,7 @@ import CreateTableModal from "./CreateTableModal";
 import ERDFlowLayer from "./ERDFlowLayer";
 import { ReactFlowProvider } from "reactflow";
 import { useGetERD, useSaveERD } from "@/api/hooks/erd";
-import { buildUpdatePayload, getCardsByLinkType, applyServerIdsToState, unwrapErdResponse, ensureValidUpdateRequest } from './utils/erdUpdateHelpers';
+import { buildUpdatePayload, applyServerIdsToState, unwrapErdResponse, ensureValidUpdateRequest } from './utils/erdUpdateHelpers';
 
 
 // === 0) clientId 보정 헬퍼 ===
@@ -109,7 +109,7 @@ const ERDEditor = ({ teamCode }) => {
      const source = attrToDiagram.get(link.fromAttributeId);
      const target = attrToDiagram.get(link.toAttributeId);
      if (!source || !target) return null;
-     const { sourceCard, targetCard } = getCardsByLinkType(link.linkType);
+     const { sourceCard, targetCard } = link;
 
      // ✅ 서버 attributeId → clientId 매핑이 반드시 성공해야 함
      const fromCli = srvAttrIdToClientId.get(link.fromAttributeId);

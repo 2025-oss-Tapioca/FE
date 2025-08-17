@@ -19,6 +19,20 @@
   border-radius: 8px;
   width: 700px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  max-height: 80vh;
+  display: flex; 
+  flex-direction: column;
+}
+.modal-body {
+  flex: 1 1 auto; 
+  overflow: auto; 
+  -webkit-overflow-scrolling: touch; 
+  cursor: grab; 
+}
+
+.modal-body:active 
+{ 
+  cursor: grabbing; 
 }
 
 .modal-title {

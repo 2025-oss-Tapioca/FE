@@ -30,20 +30,20 @@ export function decideLinkTypeByCard(sourceCard, targetCard) {
   return "MANY_TO_MANY";
 }
 
-export function getCardsByLinkType(linkType) {
-  switch (linkType) {
-    case "ONE_TO_ONE":
-      return { sourceCard: "3", targetCard: "3" };
-    case "ONE_TO_MANY":
-      return { sourceCard: "3", targetCard: "1" };
-    case "MANY_TO_ONE":
-      return { sourceCard: "1", targetCard: "3" };
-    case "MANY_TO_MANY":
-      return { sourceCard: "1", targetCard: "1" };
-    default:
-      return { sourceCard: null, targetCard: null };
-  }
-}
+// export function getCardsByLinkType(linkType) {
+//   switch (linkType) {
+//     case "ONE_TO_ONE":
+//       return { sourceCard: "3", targetCard: "3" };
+//     case "ONE_TO_MANY":
+//       return { sourceCard: "3", targetCard: "1" };
+//     case "MANY_TO_ONE":
+//       return { sourceCard: "1", targetCard: "3" };
+//     case "MANY_TO_MANY":
+//       return { sourceCard: "1", targetCard: "1" };
+//     default:
+//       return { sourceCard: null, targetCard: null };
+//   }
+// }
 
 /* ─────────────────────── 요청 바디 빌더 ───────────────────────
  * ▶ diagrams[].diagramId / attributes[].attributeId 에 '임시 id'를 직접 넣는다
