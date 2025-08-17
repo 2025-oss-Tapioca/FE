@@ -17,7 +17,7 @@ import EndpointPalette from "./edge/EndpointPalette";
 import { decideLinkTypeByCard } from "./utils/erdUpdateHelpers"; 
 
 const NODE_TYPE = "tableNode";
-const EDGE_TYPE = "erdEdge";
+const EDGE_TYPE = "floating";
 
 export default function ERDFlowLayer({
   tables,
@@ -27,7 +27,7 @@ export default function ERDFlowLayer({
   setEdges,
 }) {
   const nodeTypes = useMemo(() => ({ [NODE_TYPE]: TableNode }), []);
-  const edgeTypes = useMemo(() => ({ [EDGE_TYPE]: ErdEdge }), []);
+  const edgeTypes = useMemo(() => ({ floating: ErdEdge, erdEdge: ErdEdge }), []);
 
   const getTableLabel = useCallback(
     (nodeId) => {
@@ -235,7 +235,8 @@ export default function ERDFlowLayer({
         id: `e-${pending.sourceId}-${targetId}-${Date.now()}`,
         source: pending.sourceId,
         target: targetId,
-        type: EDGE_TYPE,
+        //type: EDGE_TYPE,
+        type: 'floating',
         data: {
           identifying,
           sourceCard: pending.sourceCard,
@@ -259,13 +260,18 @@ export default function ERDFlowLayer({
     return () => window.removeEventListener("keydown", onEsc);
   }, []);
 
+  const displayEdges = useMemo(
+    () => (edges ?? []).map(e => (e.type ? e : { ...e, type: 'floating' })),
+    [edges]
+  );
+
   return (
     <div className="erd-canvas rf-container relative">
       <EndpointPalette />
       {/* 변경은 부모 setEdges가 처리 */}
       <ReactFlow
         nodes={nodes}
-        edges={edges}
+        edges={displayEdges}
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
         onNodesChange={onNodesChange}
@@ -273,7 +279,7 @@ export default function ERDFlowLayer({
         fitView
         onDragOver={onDragOver}
         onDrop={onDrop}
-        defaultEdgeOptions={{ selectable: true, interactionWidth: 20 }}
+        defaultEdgeOptions={{ type: 'floating', selectable: true, interactionWidth: 20 }}
         onSelectionChange={onSelectionChange}
       >
         <Background />
