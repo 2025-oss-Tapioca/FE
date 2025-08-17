@@ -4,8 +4,11 @@ import ServerButton from "./serverButton";
 import AddServerButton from "./addServerButton";
 import { useParams } from "react-router-dom";
 import { getServers } from "../../api/apis/server";
+import GithubDelete from "@/components/Github/GithubDelete";
 
 import "../../styles/css/sideBar.css";
+
+
 
 export default function Sidebar({
   activeTab,
@@ -155,6 +158,15 @@ export default function Sidebar({
             />
             GitHub 등록
           </button>
+          <div style={{ marginTop: 8 }}>
+            <GithubDelete
+              teamCode={teamCode}
+              className="modal-danger-button"
+              onSuccess={() => {
+                console.log("GitHub 삭제 완료");
+              }}
+            />
+          </div>
         </div>
       </div>
     </div>

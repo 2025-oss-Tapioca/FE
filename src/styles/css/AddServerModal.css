@@ -119,3 +119,14 @@
   color: white;
   gap: 10px;
 }
+
+.modal-danger-button {
+  width: 100%;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  background-color: red; /* 파란색 */
+  color: white;
+  gap: 10px;
+}

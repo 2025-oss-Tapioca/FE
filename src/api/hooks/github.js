@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import * as githubAPI from '../apis/github';
 
 export function useRegisterGithub() {
@@ -27,3 +27,14 @@ export const useGetGithub = (teamCode) =>
     select: wrap,
     staleTime: 60_000,
   });
+
+  export const useDeleteGithub = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (teamCode) => githubAPI.deleteGithub(teamCode),
+    onSuccess: (_res, teamCode) => {
+      // 조회 캐시 무효화(있으면)
+      if (teamCode) qc.invalidateQueries({ queryKey: ghKey(teamCode) });
+    },
+  });
+};
