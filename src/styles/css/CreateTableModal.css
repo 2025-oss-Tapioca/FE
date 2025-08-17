@@ -19,6 +19,20 @@
   border-radius: 8px;
   width: 700px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  max-height: 80vh;
+  display: flex; 
+  flex-direction: column;
+}
+.modal-body {
+  flex: 1 1 auto; 
+  overflow: auto; 
+  -webkit-overflow-scrolling: touch; 
+  cursor: grab; 
+}
+
+.modal-body:active 
+{ 
+  cursor: grabbing; 
 }
 
 .modal-title {
@@ -64,8 +78,13 @@
   border-bottom: 1px solid #e5e7eb;
 }
 
+/* 기존 .column-input에 height 추가 */
 .column-input {
-  flex: 1 1 140px;
+  height: 36px; /* 원하는 인풋 높이 */
+  min-height: 36px;
+  box-sizing: border-box;
+  flex: 0 0 auto; /* 세로로 늘어나지 않게 */
+  width: 100%; /* 기존처럼 가로는 부모 폭에 맞춤 */
   padding: 6px 10px;
   border-radius: 6px;
   border: 1px solid #d1d5db;
@@ -171,4 +190,92 @@
 
 .spacer {
   flex-grow: 1;
+}
+
+/* ==== 컬럼 행을 2열 그리드(핸들/본문)로 구성 ==== */
+.column-row {
+  display: grid; /* ← flex에서 grid로 변경 */
+  grid-template-columns: 16px 1fr; /* 왼쪽: 드래그 핸들, 오른쪽: 본문 */
+  grid-auto-rows: auto;
+  align-items: start; /* 위쪽 정렬 */
+  gap: 0.5rem 8px; /* 행, 열 간격 */
+  margin-top: 1rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+/* 핸들이 세로로 위/아래 두 줄을 모두 차지 */
+.column-row .drag-handle {
+  grid-column: 1;
+  grid-row: 1/span 2; /* 윗줄+아랫줄 모두 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* ▼ 커서/선택 설정 추가 */
+  cursor: pointer; /* 손가락 모양 */
+  -moz-user-select: none;
+       user-select: none; /* 텍스트 선택 방지 */
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+
+/* 드래그 중엔 쥔 손 모양(선택사항) */
+.column-row .drag-handle:active {
+  cursor: grabbing;
+}
+
+/* ── 윗줄: 컬럼명/타입(+길이) */
+.column-top-row {
+  grid-column: 2; /* 오른쪽 본문 칸 */
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+  flex-wrap: wrap; /* 좁으면 줄바꿈 */
+  margin-bottom: 6px;
+}
+
+/* 타입 셀렉트와 길이 입력을 같은 라인에 */
+.type-line {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+/* varchar 길이 입력 너비 */
+.varchar-len {
+  width: 120px;
+}
+
+/* ── 아랫줄: PK/FK + 삭제 (항상 아래 고정) */
+.column-bottom-row {
+  grid-column: 2; /* 오른쪽 본문 칸 */
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 2px;
+}
+
+/* 오른쪽으로 삭제 버튼 밀기 */
+.column-bottom-row .spacer {
+  flex: 1;
+}
+
+/* 필드 공통 */
+.column-field {
+  display: flex;
+  flex-direction: column;
+  min-width: 240px; /* 필요시 조정 */
+}
+
+/* 반응형 보조 */
+@media (max-width: 640px) {
+  .column-field {
+    min-width: 100%;
+  }
+  .type-line {
+    width: 100%;
+  }
+  .column-select, .varchar-len {
+    flex: 1;
+  }
 }
