@@ -12,6 +12,7 @@ export default function Sidebar({
   setActiveTab,
   refetchTrigger,
   onAddServerClick,
+  onGithubRegisterClick,
 }) {
   const { teamCode } = useParams();
   const [serverData, setServerData] = useState(null);
@@ -142,6 +143,18 @@ export default function Sidebar({
 
           {/* 새 서버 추가 버튼 */}
           <AddServerButton onClick={onAddServerClick} />
+          <button
+            className="modal-primary-button"
+            onClick={onGithubRegisterClick}
+            style={{ marginTop: 8 }}
+          >
+            <img
+              src="/assets/icons/image-github.svg"
+              alt="Github"
+              className="icon"
+            />
+            GitHub 등록
+          </button>
         </div>
       </div>
     </div>
