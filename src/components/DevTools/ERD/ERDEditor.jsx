@@ -65,16 +65,26 @@ const ERDEditor = ({ teamCode }) => {
         x: d.diagramPosX ?? d.diagram_pos_x ?? 120 + i * 240,
         y: d.diagramPosY ?? d.diagram_pos_y ?? 80 + (i % 2) * 200,
       },
-      columns: (d.attributes ?? []).map((a, j) => ({
-        id: a.attributeId ?? a.clientId ?? `${d.diagramId}-col-${j}`,
-        serverId: a.attributeId ?? null,
-        clientId: toClientId(a.clientId ?? a.attributeId ?? `${d.diagramId}-col-${j}`),
-        name: a.attributeName,
-        type: a.attributeType,
-        varcharLength: a.varcharLength ?? null,
-        isPrimary: !!a.primaryKey,
-        isForeign: !!a.foreignKey,
-      })),
+      columns: (d.attributes ?? []).map((a, j) => {
+        // "VARCHAR(100)" → type="VARCHAR", attributeLength=100
+        const m = /^(.+?)\s*\((\d+)\)$/.exec(a.attributeType || '');
+        const type = m ? m[1] : a.attributeType;
+        const attributeLength = m ? Number(m[2]) : (a.attributeLength ?? a.varcharLength ?? null);
+
+        return {
+          id: a.attributeId ?? a.clientId ?? `${d.diagramId}-col-${j}`,
+          serverId: a.attributeId ?? null,
+          clientId: toClientId(a.clientId ?? a.attributeId ?? `${d.diagramId}-col-${j}`),
+
+          name: a.attributeName,
+          type,                    // ← 괄호 제거된 순수 타입
+          attributeLength,         // ← 숫자 길이 (없으면 null)
+          varcharLength: attributeLength, // (호환용, 점진 제거 가능)
+
+          isPrimary: !!a.primaryKey,
+          isForeign: !!a.foreignKey,
+        };
+      }),
     }));
 
     // attributeId -> diagramId 매핑

@@ -4,6 +4,14 @@ import { Handle, Position } from 'reactflow';
 import { Pencil, X } from 'lucide-react';
 import '@/styles/css/ERDEditor.css';
 
+const renderType = (t, len) => {
+  if (!t) return '';
+  if ((t.toLowerCase() === 'varchar' || t.toLowerCase() === 'char') && len) {
+    return `${t.toUpperCase()}(${len})`;
+  }
+  return t.toUpperCase();
+};
+
 const TableNode = ({ data }) => {
   const { table, onEdit, onDelete } = data || {};
   if (!table) return null;
@@ -32,7 +40,7 @@ const TableNode = ({ data }) => {
               <img src='/assets/icons/foreign_key.svg' alt='Foreign-table' className='icon-table' />
             )}
             <span className='column-name'>{col.name}</span>
-            <span className='column-type'>{col.type}</span>
+            <span className='column-type'>{renderType(col.type, col.varcharLength)}</span>
           </li>
         ))}
       </ul>
