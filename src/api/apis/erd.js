@@ -1,4 +1,4 @@
-import client from '../utils/axios.jsx';
+import { client } from "../utils/axios.jsx";
 
 // 조회 (백엔드 스펙에 맞춰 경로 조정: 읽기 전용이면 보통 /api/erd/{teamCode})
 export const getERD = (teamCode) =>
