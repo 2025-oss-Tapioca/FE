@@ -105,32 +105,59 @@
     color: #333;
   }
   
-  .request-url {
+  .request-header{
+    display: flex;
     @include font-style("body1");
     @include text-color("gray-600");
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .request-url {
+    margin-left: 2px;
+    display: flex;
+    align-items: center;
+
+    @include font-style("body1");
+    @include text-color("gray-600");
+    text-decoration: underline;
 
   }
-  
   .response-meta {
     display: flex;
+    flex-wrap: wrap;
     gap: 16px;
-    @include font-style("body2");
-    @include text-color("gray-600");
-  }
+    margin-top: 16px;
   
-  .response-time strong {
-    color: #D4790C;
-    @include font-style("body2");
-  }
-
+    .meta-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
   
-  .status-code strong.code {
-    color: #00B82B;
-    @include font-style("body2");
+    .meta-card {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      background-color: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      min-width: 240px;
+  
+      svg {
+        color: #6b7280;
+      }
+  
+      span {
+        @include font-style("body2");
+        @include text-color("gray-600");
+        flex: 1;
+      }
+  
+      strong {
+        font-weight: 600;
+        color: #111827;
+        @include font-style("body2");
+      }
+    }
   }
-
-  .response-time.error strong,
-  .status-code.error strong.code {
-    color: #E54F47; 
-    @include font-style("body2");
-}
