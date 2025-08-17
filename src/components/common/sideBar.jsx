@@ -5,10 +5,9 @@ import AddServerButton from "./addServerButton";
 import { useParams } from "react-router-dom";
 import { getServers } from "../../api/apis/server";
 import GithubDelete from "@/components/Github/GithubDelete";
+import GithubUpdateModal from "@/components/Github/GithubUpdateModal";
 
 import "../../styles/css/sideBar.css";
-
-
 
 export default function Sidebar({
   activeTab,
@@ -20,6 +19,7 @@ export default function Sidebar({
   const { teamCode } = useParams();
   const [serverData, setServerData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [openUpdate, setOpenUpdate] = useState(false);
 
   // ✅ 서버 정보 불러오기 함수 (useCallback으로 메모이제이션)
   const fetchServers = useCallback(async () => {
@@ -146,8 +146,9 @@ export default function Sidebar({
 
           {/* 새 서버 추가 버튼 */}
           <AddServerButton onClick={onAddServerClick} />
+
           <button
-            className="modal-primary-button"
+            className="modal-add-button"
             onClick={onGithubRegisterClick}
             style={{ marginTop: 8 }}
           >
@@ -158,10 +159,30 @@ export default function Sidebar({
             />
             GitHub 등록
           </button>
+
+          <button className="modal-update-button" 
+          onClick={() => setOpenUpdate(true)} 
+          style={{ marginTop: 8 }}
+          >
+            <img
+              src="/assets/icons/image-github.svg"
+              alt="Github"
+              className="icon"
+            />
+            GitHub 업데이트
+          </button>
+
+          {openUpdate && (
+            <GithubUpdateModal 
+            teamCode={teamCode} 
+            onClose={() => setOpenUpdate(false)} 
+            />
+          )}
+
           <div style={{ marginTop: 8 }}>
             <GithubDelete
               teamCode={teamCode}
-              className="modal-danger-button"
+              className="modal-delete-button"
               onSuccess={() => {
                 console.log("GitHub 삭제 완료");
               }}

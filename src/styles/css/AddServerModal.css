@@ -110,7 +110,7 @@
 
 /* AddServerModal.css */
 
-.modal-primary-button {
+.modal-add-button {
   padding: 0.5rem 1rem;
   border-radius: 6px;
   border: none;
@@ -120,7 +120,18 @@
   gap: 10px;
 }
 
-.modal-danger-button {
+.modal-update-button {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  background-color: white; 
+  color: black;
+  gap: 10px;
+  border: 1px solid #D9D9D9;
+}
+
+.modal-delete-button {
   width: 100%;
   padding: 0.5rem 1rem;
   border-radius: 6px;

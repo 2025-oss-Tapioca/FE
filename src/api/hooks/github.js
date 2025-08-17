@@ -28,6 +28,18 @@ export const useGetGithub = (teamCode) =>
     staleTime: 60_000,
   });
 
+  // ✅ 추가: 업데이트 훅
+export const useUpdateGithub = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (payload) => githubAPI.updateGithub(payload),
+    onSuccess: (res, payload) => {
+      // teamCode 기준으로 캐시 무효화
+      if (payload?.teamCode) qc.invalidateQueries({ queryKey: ghKey(payload.teamCode) });
+    },
+  });
+};
+
   export const useDeleteGithub = () => {
   const qc = useQueryClient();
   return useMutation({
