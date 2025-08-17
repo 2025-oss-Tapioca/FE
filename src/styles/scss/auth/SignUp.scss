@@ -142,6 +142,10 @@
         @include text-color("text-disabled");
         cursor: not-allowed;
 
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
         &:enabled {
           background-color: #3F7FFF;
           cursor: pointer;

@@ -92,6 +92,9 @@
   color: #FFFFFF;
   cursor: pointer;
   transition: background-color 0.2s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .login-page .login-card form .btn-login:hover {
   background-color: #2563eb;

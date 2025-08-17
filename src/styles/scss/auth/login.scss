@@ -80,6 +80,7 @@
       .btn-login {
         width: 100%;
         margin: 4px 0 24px 0;
+      
         background-color: #3F7FFF;
         color: white;
         padding: 12px;
@@ -89,6 +90,10 @@
         @include text-color("white");
         cursor: pointer;
         transition: background-color 0.2s ease;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
 
         &:hover {
           background-color: #2563eb;

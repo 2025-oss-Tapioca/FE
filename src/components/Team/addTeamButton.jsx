@@ -14,18 +14,17 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
-
-
 export default function AddTeamButton({ onCreate, isCreating }) {
 
     const [teamName, setTeamName] = useState("");
     const [teamDesc, setTeamDesc] = useState("");
+    
 
     const handleSubmit = () => {
         if (!teamName.trim()) return;
         onCreate({
-            name: teamName,
-            description: teamDesc
+            teamName:teamName,
+            teamDescription:teamDesc
         });
         setTeamName("");
         setTeamDesc("");

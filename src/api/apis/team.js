@@ -1,17 +1,21 @@
-import client from '../utils/axios.jsx';
+import { client } from '../utils/axios.jsx';
 
 export const getTeam = () => {
-    return client.get('/team');
+    return client.get('/api/team');
 };
 
-export const createTeam = (teamData) => {
-    return client.post('/team/create', teamData);
+export const getTeamByCode = (teamCode) => {
+    return client.get(`/api/team/${teamCode}`);
 };
 
-export const joinTeam = (teamData) => {
-    return client.post('/team/join', teamData);
+export const postCreateTeam = (teamData) => {
+    return client.post('/api/team/create', teamData);
 };
 
-export const deleteTeam = (teamId) => {
-    return client.delete(`/team/leave/${teamId}`);
+export const postJoinTeam = (teamData) => {
+    return client.post('/api/team/join', teamData);
+};
+
+export const deleteTeam = (teamCode) => {
+    return client.delete('/api/team/leave', { data: teamCode });
 };
