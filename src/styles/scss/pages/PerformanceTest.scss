@@ -83,10 +83,29 @@
     align-items: center;
   }
   
-  .badges {
+
+  .badges-left {
     display: flex;
-    gap: 8px;
     align-items: center;
+    gap: 8px;
+  }
+  
+  .badges-right {
+    @include text-color("gray-800");
+    @include font-style("body1");
+    .type-badge-spec {
+      background-color: #74f3f5;
+      padding: 6px 12px;
+      border-radius: 6px;
+      text-transform: uppercase;
+    }
+
+    .type-badge-traffic {
+      background-color: #92fc9b;
+      padding: 6px 12px;
+      border-radius: 6px;
+      text-transform: uppercase;
+    }
   }
   
   
@@ -123,15 +142,23 @@
 
   }
   .response-meta {
+    padding: 0 10px;
     display: flex;
     flex-wrap: wrap;
-    gap: 16px;
-    margin-top: 16px;
+    gap: 48px;
+    flex-direction: row;
   
+    .meta-row {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      align-items: center;
+      flex-direction: column;
+    }
     .meta-group {
       display: flex;
-      flex-direction: column;
       gap: 8px;
+      flex-direction: column;
     }
   
     .meta-card {

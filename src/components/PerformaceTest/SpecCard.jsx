@@ -25,12 +25,18 @@ export default function SpecCard({ method, url, specData }) {
   return (
     <div className={`performance-card ${isSuccess ? "success" : "failure"}`}>
       <div className="card-header">
-        <div className="badges">
+        <div className="badges-left">
           <span className={`badge status ${isSuccess ? "success" : "failure"}`}>
             {isSuccess ? <CheckCircle size={14} /> : <AlertCircle size={14} />}
             <span className="status-text">{isSuccess ? "완료" : "실패"}</span>
           </span>
           <MethodBadge type="method" value={method} />
+        </div>
+
+        <div className="badges-right">
+          <span className="badge type-badge-spec">
+            {/* 예: "SPEC" or "TRAFFIC" */}SPEC
+          </span>
         </div>
       </div>
 
@@ -39,38 +45,42 @@ export default function SpecCard({ method, url, specData }) {
       </span>
 
       <div className="response-meta">
-        <div>
+        <div className="response-meta-row">
           성공률: <strong>{successRatio}</strong>
         </div>
-        <div>
-          평균 응답 시간: <strong>{formatLatency(latencies.mean)}</strong>
+        <div className="response-meta-row">
+          <div>
+            평균 응답 시간: <strong>{formatLatency(latencies.mean)}</strong>
+          </div>
+          <div>
+            지연 시간 P50: <strong>{formatLatency(latencies["50th"])}</strong>
+          </div>
+          <div>
+            지연 시간 P95: <strong>{formatLatency(latencies["95th"])}</strong>
+          </div>
+          <div>
+            지연 시간 Max: <strong>{formatLatency(latencies.max)}</strong>
+          </div>
         </div>
-        <div>
-          지연 시간 P50: <strong>{formatLatency(latencies["50th"])}</strong>
-        </div>
-        <div>
-          지연 시간 P95: <strong>{formatLatency(latencies["95th"])}</strong>
-        </div>
-        <div>
-          지연 시간 Max: <strong>{formatLatency(latencies.max)}</strong>
-        </div>
-        <div>
-          처리량(RPS):{" "}
-          <strong>
-            {typeof throughput === "number" ? throughput.toFixed(2) : "N/A"}
-          </strong>
-        </div>
-        <div>
-          상태코드:{" "}
-          {Object.keys(statusCodes).length > 0 ? (
-            Object.entries(statusCodes).map(([code, count]) => (
-              <span key={code}>
-                {code}({count}){" "}
-              </span>
-            ))
-          ) : (
-            <span>N/A</span>
-          )}
+        <div className="response-meta-row">
+          <div>
+            처리량(RPS):{" "}
+            <strong>
+              {typeof throughput === "number" ? throughput.toFixed(2) : "N/A"}
+            </strong>
+          </div>
+          <div>
+            상태코드:{" "}
+            {Object.keys(statusCodes).length > 0 ? (
+              Object.entries(statusCodes).map(([code, count]) => (
+                <span key={code}>
+                  {code}({count}){" "}
+                </span>
+              ))
+            ) : (
+              <span>N/A</span>
+            )}
+          </div>
         </div>
       </div>
     </div>

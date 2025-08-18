@@ -3,25 +3,24 @@ import "../styles/css/performanceTest.css";
 import PerformanceCard from "../components/PerformaceTest/PerformanceCard";
 import SpecCard from "../components/PerformaceTest/SpecCard";
 import TrafficCard from "../components/PerformaceTest/TrafficCard";
-import { Play } from "lucide-react";
 
 const PerformanceTest = () => {
-  const [results] = useState([
-    {
-      id: 1,
-      method: "GET",
-      url: "https://api.example.com/users",
-      responseTime: 245,
-      statusCode: 200,
-    },
-    {
-      id: 2,
-      method: "POST",
-      url: "https://api.example.com/users",
-      responseTime: 800,
-      statusCode: 500,
-    },
-  ]);
+  // const [results] = useState([
+  //   {
+  //     id: 1,
+  //     method: "GET",
+  //     url: "https://api.example.com/users",
+  //     responseTime: 245,
+  //     statusCode: 200,
+  //   },
+  //   {
+  //     id: 2,
+  //     method: "POST",
+  //     url: "https://api.example.com/users",
+  //     responseTime: 800,
+  //     statusCode: 500,
+  //   },
+  // ]);
 
   const [specData] = useState({
     method: "GET",
@@ -63,21 +62,18 @@ const PerformanceTest = () => {
     <div className="performance-test-container">
       <div className="performance-header">
         <h2 className="performance-title">성능 테스트</h2>
-        <button className="test-button">
-          <Play size={16} /> 테스트 시작
-        </button>
       </div>
 
       <div className="performance-result-list">
-        <h3>요청 결과</h3>
+        {/* <h3>요청 결과</h3>
         {results.map((result) => (
           <PerformanceCard key={result.id} {...result} />
-        ))}
+        ))} */}
 
-        <h3>성능 지표 (Spec)</h3>
+        {/* <h3>성능 지표 (Spec)</h3> */}
         <SpecCard {...specData} />
 
-        <h3>트래픽 지표 (Traffic)</h3>
+        {/* <h3>트래픽 지표 (Traffic)</h3> */}
         <TrafficCard {...trafficData} />
       </div>
     </div>

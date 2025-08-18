@@ -10,8 +10,13 @@ export default function TrafficCard({ method, url, requests, bytes }) {
   return (
     <div className="performance-card">
       <div className="card-header">
-        <div className="badges">
+        <div className="badges-left">
           <MethodBadge type="method" value={method} />
+        </div>
+        <div className="badges-right">
+          <span className="badge type-badge-traffic">
+            {/* 예: "SPEC" or "TRAFFIC" */}Traffic
+          </span>
         </div>
       </div>
       <span className="request-header">
