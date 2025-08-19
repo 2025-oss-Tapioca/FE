@@ -91,7 +91,9 @@ const Home = () => {
           onAddServerClick={() => setShowAddModal(true)}
         />
         <main className="main-content">
-          {activeTab === "대시보드" && <Dashboard />}
+          {activeTab === "대시보드" && (
+            <Dashboard setActiveTab={setActiveTab} />
+          )}
           {activeTab === "서버관리" && (
             <ServerManagement
               teamCode={teamCode}

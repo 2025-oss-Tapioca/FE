@@ -5,23 +5,7 @@ import SpecCard from "../components/PerformaceTest/SpecCard";
 import TrafficCard from "../components/PerformaceTest/TrafficCard";
 
 const PerformanceTest = () => {
-  // const [results] = useState([
-  //   {
-  //     id: 1,
-  //     method: "GET",
-  //     url: "https://api.example.com/users",
-  //     responseTime: 245,
-  //     statusCode: 200,
-  //   },
-  //   {
-  //     id: 2,
-  //     method: "POST",
-  //     url: "https://api.example.com/users",
-  //     responseTime: 800,
-  //     statusCode: 500,
-  //   },
-  // ]);
-
+  //  "type": "traffic_test_result" (raw 데이터 이용)
   const [specData] = useState({
     method: "GET",
     url: "https://api.example.com/users",
@@ -42,6 +26,7 @@ const PerformanceTest = () => {
     },
   });
 
+  //  "type": "traffic_test_result" (raw 데이터 이용)
   const [trafficData] = useState({
     method: "GET",
     url: "https://api.example.com/users",
