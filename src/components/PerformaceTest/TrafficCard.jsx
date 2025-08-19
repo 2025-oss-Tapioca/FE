@@ -23,35 +23,24 @@ export default function TrafficCard({ method, url, requests, bytes }) {
         API URL : <span className="request-url">{url}</span>
       </span>
       <div className="response-meta">
-        <div className="meta-card">
-          <Network size={14} />
-          <span>총 요청 수:</span>
-          <strong>{requests}</strong>
+        <div className="response-meta-row">
+          총 요청 수: <strong>{requests}</strong>
         </div>
-
-        <div className="meta-group">
-          <div className="meta-card">
-            <Download size={14} />
-            <span>평균 수신 바이트:</span>
-            <strong>{bytes?.in?.mean ?? 0}B</strong>
+        <div className="response-meta-row">
+          <div>
+            평균 수신 바이트 : <strong>{bytes?.in?.mean ?? 0}B</strong>
           </div>
-          <div className="meta-card">
-            <Download size={14} />
-            <span>총 수신 바이트:</span>
-            <strong>{bytes?.in?.total ?? 0}B</strong>
+          <div>
+            총 수신 바이트 : <strong>{bytes?.in?.total ?? 0}B</strong>
           </div>
         </div>
 
-        <div className="meta-group">
-          <div className="meta-card">
-            <Upload size={14} />
-            <span>평균 송신 바이트:</span>
-            <strong>{bytes?.out?.mean ?? 0}B</strong>
+        <div className="response-meta-row">
+          <div>
+            평균 송신 바이트 : <strong>{bytes?.out?.mean ?? 0}B</strong>
           </div>
-          <div className="meta-card">
-            <Upload size={14} />
-            <span>총 송신 바이트:</span>
-            <strong>{bytes?.out?.total ?? 0}B</strong>
+          <div>
+            총 송신 바이트 : <strong>{bytes?.out?.total ?? 0}B</strong>
           </div>
         </div>
       </div>
