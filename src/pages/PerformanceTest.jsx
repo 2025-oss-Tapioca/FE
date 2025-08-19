@@ -1,5 +1,5 @@
 import React from "react";
-import "../styles/css/performanceTest.css";
+import "../styles/css/PerformanceTest.css";
 import PerformanceCard from "../components/PerformaceTest/PerformanceCard";
 import SpecCard from "../components/PerformaceTest/SpecCard";
 import TrafficCard from "../components/PerformaceTest/TrafficCard";
