@@ -1,77 +1,85 @@
 import React, { useState, useEffect, useRef } from "react";
+import { ReadyState } from "react-use-websocket";
 import "../styles/css/LogMonitoring.css";
 import { Pause, Play } from "lucide-react";
+import { usePostLogMonitoring } from '../api/hooks/logMonitoring';
+import { useParams } from "react-router-dom";
 
-const mockLogs = [
-  "[INFO] 서버가 시작되었습니다.",
-  "[WARN] 메모리 사용량 증가 감지",
-  "[ERROR] 데이터베이스 연결 실패",
-  "[INFO] 요청이 정상 처리되었습니다.",
-];
+// 2. 컴포넌트는 이제 어떤 로그를 보여줄지 props로 받습니다.
+export default function LogMonitoring( { sourceType = "frontend" }) {
+  // 3. useLogStream 훅을 호출하여 실시간 로그 데이터와 연결 상태를 가져옵니다.
+  const params = useParams();
+  const teamCode = params.teamCode; // URL 파라미터에서 팀 코드를 가져옵니다.
+  const { mutate: requestRegistration } = usePostLogMonitoring();
+  // console.log("Current WebSocket ReadyState:", connectionStatus);
+  // console.log('Received WebSocket Message:', logs);
 
-function LogMonitoring() {
-  const [logs, setLogs] = useState([]);
-  const [isStreaming, setIsStreaming] = useState(true);
+  // '일시정지'는 데이터 수신을 멈추는게 아닌, 자동 스크롤을 멈추는 기능으로 변경합니다.
+  const [isPaused, setIsPaused] = useState(false);
   const [filterLevel, setFilterLevel] = useState("ALL");
   const logEndRef = useRef(null);
 
-  // 실제 API 요청
-  // const fetchLogs = async () => {
-  //   try {
-  //     const res = await fetch("/logging/live");
-  //     if (!res.ok) throw new Error("로그 로딩 실패");
-  //     const data = await res.json();
-  //     setLogs(data);
-  //   } catch (err) {
-  //     console.error("로그 가져오기 실패:", err);
+  // 4. 자동 스크롤 로직: 일시정지 상태가 아닐 때만 맨 아래로 스크롤합니다.
+  // useEffect(() => {
+  //   if (!isPaused && logEndRef.current) {
+  //     logEndRef.current.scrollIntoView({ behavior: "smooth" });
   //   }
-  // };
+  // }, [logs, isPaused]); // logs나 isPaused 상태가 바뀔 때마다 실행
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (!isStreaming) return;
+  // 5. 필터링 로직: 이제 로그는 객체이므로, log.level을 기준으로 필터링합니다.
+  // const filteredLogs = logs.filter((log) => {
+  //   if (log.type === 'system' || log.type === 'system-error') return true; // 시스템 메시지는 항상 표시
+  //   if (filterLevel === "ALL") return true;
+  //   return log.level?.toUpperCase() === filterLevel;
+  // });
 
-      // 모의 로그 추가
-      setLogs((prev) => {
-        const nextLog = mockLogs[Math.floor(Math.random() * mockLogs.length)];
-        return [...prev, nextLog];
-      });
+  // WebSocket 연결 상태를 텍스트로 변환합니다.
+  // const connectionStatusText = {
+  //   [ReadyState.CONNECTING]: '연결 중...',
+  //   [ReadyState.OPEN]: '연결됨',
+  //   [ReadyState.CLOSING]: '종료 중...',
+  //   [ReadyState.CLOSED]: '연결 끊김',
+  //   [ReadyState.UNINSTANTIATED]: '준비 안됨', // 👈 이 부분이 빠졌을 가능성이 높습니다.
+  // }[connectionStatus] || '준비 안됨';
 
-      // 실제 API 요청
-      // fetchLogs();
-    }, 2000);
+  const handleStart = (sourceType) => {
+    requestRegistration({ sourceType, teamCode }, {
+      onSuccess: () => {
+        // 2. 신호 보내기가 성공하면, 부모 컴포넌트에게 알려줍니다.
+      },
+    });
 
-    return () => clearInterval(interval);
-  }, [isStreaming]);
+    setIsPaused((prev) => !prev)
 
-  useEffect(() => {
-    if (logEndRef.current) {
-      logEndRef.current.scrollIntoView({ behavior: "smooth" });
+  };
+
+  // 로그 레벨에 따라 다른 CSS 클래스를 부여하는 헬퍼 함수
+  const getLogLevelClass = (level) => {
+    switch (level?.toUpperCase()) {
+      case 'ERROR': return 'log-entry error';
+      case 'WARN': return 'log-entry warn';
+      case 'INFO': return 'log-entry info';
+      default: return 'log-entry debug';
     }
-  }, [logs]);
-
-  const filteredLogs = logs.filter((log) => {
-    if (filterLevel === "ALL") return true;
-    return log.includes(filterLevel);
-  });
+  };
 
   return (
     <div className="log-monitoring-container">
-      <h1 className="log-title">CLI 로그 모니터링</h1>
+      <h1 className="log-title">
+        CLI 로그 모니터링 ({sourceType} - {teamCode})
+        <span className="connection-status">()</span>
+      </h1>
 
       <div className="log-controls">
         <button
-          onClick={() => setIsStreaming((prev) => !prev)}
+          onClick={() => handleStart('BACKEND')
+            }
           className="toggle-button"
         >
-          {isStreaming ? (
-            <>
-              <Pause size={16} /> 일시정지
-            </>
+          {isPaused ? (
+            <> <Play size={16} /> 자동 스크롤 재시작 </>
           ) : (
-            <>
-              <Play size={16} /> 재시작
-            </>
+            <> <Pause size={16} /> 자동 스크롤 일시정지 </>
           )}
         </button>
 
@@ -87,26 +95,25 @@ function LogMonitoring() {
         </select>
       </div>
 
-      <div className="log-viewer">
-        {filteredLogs.map((log, i) => (
-          <div
-            key={i}
-            className={
-              log.includes("ERROR")
-                ? "log-entry error"
-                : log.includes("WARN")
-                ? "log-entry warn"
-                : "log-entry info"
-            }
-          >
-            {log}
+      <pre className="log-viewer">
+        {/* {filteredLogs.map((log, i) => (
+          // 6. 구조화된 로그 객체의 각 필드를 렌더링합니다.
+          <div key={i} className={getLogLevelClass(log.level)}>
+            {log.type === 'system' || log.type === 'system-error' ? (
+              <span className="log-message">{log.message}</span>
+            ) : (
+              <>
+                <span className="log-timestamp">{new Date(log.timestamp).toLocaleString()}</span>
+                <span className="log-level">{log.level}</span>
+                <span className="log-service">[{log.service || '-'}]</span>
+                <span className="log-message">{log.message}</span>
+              </>
+            )}
           </div>
-        ))}
-        {/* 자동 스크롤 대상 */}
+        ))} */}
+        {/* 자동 스크롤의 기준점이 될 빈 div */}
         <div ref={logEndRef} />
-      </div>
+      </pre>
     </div>
   );
 }
-
-export default LogMonitoring;
