@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-import ERDEditor from "../components/DevTools/ERD/ERDEditor";
-import APISpecTable from "../components/DevTools/APISpecTable";
+import ERDEditor from "../components/DevTools/ERD/ERDEditor.jsx";
+import APISpecTable from "../components/DevTools/APISpecTable.jsx";
 import "../styles/css/DevTools.css";
 
 export default function DevTools() {
