@@ -28,10 +28,10 @@
 }
 
 .message {
-    white-space: pre-wrap;
-    display: flex;
-    width: 100%;
-  }
+  white-space: pre-wrap;
+  display: flex;
+  width: 100%;
+}
 
 .message.user {
   display: flex;
@@ -47,7 +47,6 @@
   background-color: #f1f1f1;
   padding: 8px 12px;
   border-radius: 16px;
-  width: -moz-fit-content;
   width: fit-content;
   max-width: 100%;
 }
