@@ -41,7 +41,7 @@ export default function TeamPage() {
       <div className="team-card-container">
         {/* 배열에 팀이 있을 때만 이 부분이 렌더링됩니다. */}
         {teams.length > 0 && teams.map((team) => (
-          <div key={team.id} className="team-card-wrapper">
+          <div key={team.teamCode} className="team-card-wrapper">
             <TeamCard
               teamCode={team.teamCode}
               name={team.teamName}
