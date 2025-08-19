@@ -19,6 +19,7 @@ export default function GithubUpdateForm({ teamCode, onDone }) {
     setDefaultBranch(d.defaultBranch ?? '');
     setIsPrivate(Boolean(d.isPrivate));
     // 토큰은 보안상 빈칸 유지 권장. 필요 시 별도 UX(“변경 시에만 입력”)로.
+    setAccessToken(d.accessToken ?? '');
   }, [gh]);
 
   const handleSubmit = (e) => {
@@ -46,22 +47,28 @@ export default function GithubUpdateForm({ teamCode, onDone }) {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-3 max-w-xl">
       <label className="flex flex-col gap-1">
-        <span>저장소 URL</span>
+        <span><b>저장소 URL</b></span>
         <input value={repoUrl} onChange={(e) => setRepoUrl(e.target.value)} placeholder="https://github.com/owner/repo" />
       </label>
 
       <label className="flex flex-col gap-1">
-        <span>기본 브랜치</span>
+        <span><b>Default Branch</b></span>
         <input value={defaultBranch} onChange={(e) => setDefaultBranch(e.target.value)} placeholder="main" />
       </label>
 
-      <label className="inline-flex items-center gap-2">
-        <input type="checkbox" checked={isPrivate} onChange={(e) => setIsPrivate(e.target.checked)} />
-        Private 저장소
+      <label className="inline-flex items-center">
+        <input
+          type="checkbox"
+          checked={isPrivate}
+          onChange={(e) => setIsPrivate(e.target.checked)}
+          className="mr-2"   // ✅ 체크박스 오른쪽 간격
+        />
+        <span><b>Private</b></span>
       </label>
 
+
       <label className="flex flex-col gap-1">
-        <span>Personal Access Token (변경 시에만 입력)</span>
+        <span><b>Personal Access Token (변경 시에만 입력)</b></span>
         <input type="password" value={accessToken} onChange={(e) => setAccessToken(e.target.value)} placeholder="ghp_xxx..." />
       </label>
 

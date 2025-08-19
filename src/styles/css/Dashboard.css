@@ -28,9 +28,10 @@
 }
 
 .message {
-  display: flex;
-  width: 100%;
-}
+    white-space: pre-wrap;
+    display: flex;
+    width: 100%;
+  }
 
 .message.user {
   display: flex;

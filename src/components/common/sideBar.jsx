@@ -4,8 +4,7 @@ import ServerButton from "./serverButton";
 import AddServerButton from "./addServerButton";
 import { useParams } from "react-router-dom";
 import { getServers } from "../../api/apis/server";
-import GithubDelete from "@/components/Github/GithubDelete";
-import GithubUpdateModal from "@/components/Github/GithubUpdateModal";
+import GithubManagerModal from "../Github/GithubManagerModal";
 
 import "../../styles/css/sideBar.css";
 
@@ -14,12 +13,11 @@ export default function Sidebar({
   setActiveTab,
   refetchTrigger,
   onAddServerClick,
-  onGithubRegisterClick,
 }) {
   const { teamCode } = useParams();
   const [serverData, setServerData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [openUpdate, setOpenUpdate] = useState(false);
+  const [openGithubManager, setOpenGithubManager] = useState(false);
 
   // ✅ 서버 정보 불러오기 함수 (useCallback으로 메모이제이션)
   const fetchServers = useCallback(async () => {
@@ -147,48 +145,25 @@ export default function Sidebar({
           {/* 새 서버 추가 버튼 */}
           <AddServerButton onClick={onAddServerClick} />
 
+          <div className="connected-github-header">GitHub 관리</div>
+          {/* ✅ GitHub 단일 버튼 */}
           <button
-            className="modal-add-button"
-            onClick={onGithubRegisterClick}
+            className="modal-github-button"
+            onClick={() => setOpenGithubManager(true)}
             style={{ marginTop: 8 }}
           >
-            <img
-              src="/assets/icons/image-github.svg"
-              alt="Github"
-              className="icon"
-            />
-            GitHub 등록
+            <img src="/assets/icons/image-github.svg" alt="Github" className="icon" />
+            GitHub
           </button>
-
-          <button className="modal-update-button" 
-          onClick={() => setOpenUpdate(true)} 
-          style={{ marginTop: 8 }}
-          >
-            <img
-              src="/assets/icons/image-github.svg"
-              alt="Github"
-              className="icon"
-            />
-            GitHub 업데이트
-          </button>
-
-          {openUpdate && (
-            <GithubUpdateModal 
-            teamCode={teamCode} 
-            onClose={() => setOpenUpdate(false)} 
+        </div>
+        
+         {/* ✅ GitHub 관리 모달 */}
+          {openGithubManager && (
+            <GithubManagerModal
+              teamCode={teamCode}
+              onClose={() => setOpenGithubManager(false)}
             />
           )}
-
-          <div style={{ marginTop: 8 }}>
-            <GithubDelete
-              teamCode={teamCode}
-              className="modal-delete-button"
-              onSuccess={() => {
-                console.log("GitHub 삭제 완료");
-              }}
-            />
-          </div>
-        </div>
       </div>
     </div>
   );

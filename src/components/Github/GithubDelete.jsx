@@ -31,11 +31,6 @@ export default function GithubDelete({ teamCode, onSuccess, className = "" }) {
     disabled={isPending}
     className={className || "modal-danger-button"}
     >
-    <img
-        src="/assets/icons/image-github.svg"
-        alt="Github"
-        className="icon"
-    />  
     {isPending ? '삭제 중...' : 'GitHub 삭제'}
   </button>
   );
