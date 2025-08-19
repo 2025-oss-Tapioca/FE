@@ -2,7 +2,7 @@ import React from "react";
 import MethodBadge from "../common/MethodBadge";
 import { Upload, Download, Network } from "lucide-react";
 
-import "../../styles/css/performanceTest.css";
+import "../../styles/css/PerformanceTest.css";
 
 export default function TrafficCard({ method, url, requests, bytes }) {
   console.log("trafficData:", method, url, requests, bytes); // ✅ 여기!

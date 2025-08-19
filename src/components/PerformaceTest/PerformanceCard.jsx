@@ -1,7 +1,7 @@
 import React from "react";
 import MethodBadge from "../common/MethodBadge";
 import { CheckCircle, AlertCircle } from "lucide-react";
-import "../../styles/css/performanceTest.css";
+import "../../styles/css/PerformanceTest.css";
 
 const PerformanceCard = ({ method, url, responseTime, statusCode }) => {
   const isSuccess = statusCode >= 200 && statusCode < 400;

@@ -1,7 +1,7 @@
 import React from "react";
 import MethodBadge from "../common/MethodBadge";
 import { CheckCircle, AlertCircle } from "lucide-react";
-import "../../styles/css/performanceTest.css";
+import "../../styles/css/PerformanceTest.css";
 
 export default function SpecCard({ method, url, specData }) {
   console.log("specData:", method, url, specData); // ✅ 여기!
