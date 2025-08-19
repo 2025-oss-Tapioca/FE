@@ -12,7 +12,7 @@ import ReactFlow, {
 } from "reactflow";
 import { useReactFlow } from "reactflow";
 import TableNode from "./node/TableNode";
-import ErdEdge from "./edge/ErdEdge.jsx";
+import ErdEdge from "./edge/ERDEdge.jsx";
 import EndpointPalette from "./edge/EndpointPalette.jsx";
 import { decideLinkTypeByCard } from "./utils/erdUpdateHelpers"; 
 
