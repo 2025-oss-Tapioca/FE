@@ -1,6 +1,6 @@
 // src/components/DevTools/ERD/edge/ERDEdge.jsx
 import React from 'react';
-import { BaseEdge, EdgeLabelRenderer, getBezierPath, useStore } from 'reactflow';
+import { useStore } from 'reactflow';
 import {
   O_Crow,
   O_Bar,
@@ -24,8 +24,8 @@ const pickIcon = (card) => {
 };
 
 const ICON_HALF = 12;
-const PAD = -14;        // 0~1px 미세조정 (경계 겹침/틈 방지)
-const STUB_INSET = 0;   // 왼쪽 짧은 막대가 아이콘 왼쪽 가장자리에서 안쪽으로 들어온 거리(px)
+const PAD = -15;        // 0~1px 미세조정 (경계 겹침/틈 방지)
+const STUB_INSET = 2;   // 왼쪽 짧은 막대가 아이콘 왼쪽 가장자리에서 안쪽으로 들어온 거리(px)
 
 // 각도(deg)만큼 회전한 아이콘 로컬 좌표를 월드 좌표로 변환
 function rotateLocalToWorld(cx, cy, deg, lx, ly) {
@@ -108,22 +108,6 @@ export default function ErdEdge(props) {
   const sPt = getIntersectionOnRect(sRect, sc, tc);
   const tPt = getIntersectionOnRect(tRect, tc, sc);
 
-  const dx = tPt.x - sPt.x;
-  const dy = tPt.y - sPt.y;
-  const horizontalDominant = Math.abs(dx) >= Math.abs(dy);
-
-  let sourceIconDeg, targetIconDeg;
-  if (horizontalDominant) {
-    // 좌↔우 배치: 서로 마주보게 (←  →)
-    sourceIconDeg = dx >= 0 ? 180 : 0;
-    targetIconDeg = dx >= 0 ?   0 : 180;
-  } else {
-    // 위↕아래 배치: 서로 마주보게 (↑  ↓)
-    // dy>0: 타깃이 아래 => 소스는 ↓(90°), 타깃은 ↑(-90°)
-    sourceIconDeg = dy >= 0 ?  -90 : 90;
-    targetIconDeg = dy >= 0 ? 90 :  -90;
-  }
-
   function whichSide(rect, p) {
   const left   = Math.abs(p.x - rect.x);
   const right  = Math.abs(rect.x + rect.w - p.x);
@@ -136,10 +120,10 @@ export default function ErdEdge(props) {
   return 'B';
 }
 const sideInfo = {
-  L: { nx: -1, ny:  0, deg: 180 },
-  R: { nx:  1, ny:  0, deg:   0 },
-  T: { nx:  0, ny: -1, deg: -90 },
-  B: { nx:  0, ny:  1, deg:  90 },
+  L: { nx: -1, ny:  0, deg: 0 },
+  R: { nx: 1, ny:  0, deg: 180 },
+  T: { nx:  0, ny: -1, deg: 90 },
+  B: { nx:  0, ny:  1, deg: -90 },
 };
 
   // 접점이 위치한 변 구하기
@@ -147,6 +131,10 @@ const sideInfo = {
   const tSide = whichSide(tRect, tPt);
   const sN = sideInfo[sSide];
   const tN = sideInfo[tSide];
+
+  // ✅ 아이콘 회전을 '붙은 변의 각도'로 고정
+  const sourceIconDeg = sN.deg;
+  const targetIconDeg = tN.deg;
 
   // 아이콘 중심 = 접점에서 바깥쪽(법선)으로 ICON_HALF + PAD 만큼
   const sourceIconX = sPt.x + sN.nx * (ICON_HALF + PAD);
