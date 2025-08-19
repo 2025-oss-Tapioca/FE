@@ -26,7 +26,7 @@ export default function GithubInfoPanel({ teamCode, onNeedRegister }) {
         {['40405','40407'].includes(code) && (
           <button onClick={onNeedRegister}>지금 등록하기</button>
         )}
-        <button onClick={() => refetch()}>새로고침</button>
+        <button className="modal-refresh-button" onClick={() => refetch()}>새로고침</button>
       </div>
     );
   }
@@ -37,25 +37,29 @@ export default function GithubInfoPanel({ teamCode, onNeedRegister }) {
       <div className="flex flex-col gap-2">
         <div>등록된 GitHub 정보가 없습니다.</div>
         {onNeedRegister && <button onClick={onNeedRegister}>지금 등록하기</button>}
-        <button onClick={() => refetch()}>새로고침</button>
+        <button className="modal-refresh-button" onClick={() => refetch()}>
+          새로고침
+        </button>
       </div>
     );
   }
 
   // 정상 표시
-  const maskedToken = cfg.accessToken ? '••••••••' : '미설정';
+  const maskedToken = cfg.accessToken 
+  ? `${'•'.repeat(Math.max(0, cfg.accessToken.length - 4))}${cfg.accessToken.slice(-4)}`
+  : '미설정';
 
   return (
     <div className="flex flex-col gap-2 p-3 rounded-lg border">
       <div><b>TeamCode</b>: {cfg.teamCode}</div>
       <div><b>Repo URL</b>: <a href={cfg.repoUrl} target="_blank" rel="noreferrer">{cfg.repoUrl}</a></div>
-      <div><b>Private</b>: {cfg.isPrivate ? '예' : '아니오'}</div>
+      <div><b>Private</b>: {cfg.isPrivate ? 'true' : 'false'}</div>
       <div><b>Default Branch</b>: {cfg.defaultBranch}</div>
       <div><b>Access Token</b>: {maskedToken}</div>
-      <div className="flex gap-8 mt-2">
+      {/* <div className="flex gap-8 mt-2">
         <button onClick={() => refetch()}>새로고침</button>
         {onNeedRegister && <button onClick={onNeedRegister}>다시 등록</button>}
-      </div>
+      </div> */}
     </div>
   );
 }

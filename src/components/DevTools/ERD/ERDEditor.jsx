@@ -289,14 +289,6 @@ const ERDEditor = ({ teamCode }) => {
           <button className="table-button" onClick={handleSave}>
             저장
           </button>
-          <button className="github-btn">
-            <img
-              src="/assets/icons/image-github.svg"
-              alt="Github"
-              className="icon"
-            />
-            Github에 코드 생성
-          </button>
           <button className="table-button" onClick={handleAddTable}>
             + 테이블 추가
           </button>

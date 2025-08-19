@@ -7,6 +7,7 @@ import DevTools from "./DevTools";
 import PerformanceTest from "./PerformanceTest";
 import LogMonitoring from "./LogMonitoring";
 import AddServerModal from "../components/ServerManagement/AddServerModal";
+import GithubRegisterModal from "@/components/Github/GithubRegisterModal";
 
 import { checkServerStatus } from "../api/apis/server";
 import { useServerActions } from "../api/hooks/server";
@@ -23,6 +24,7 @@ const ERROR_MESSAGES = {
 const Home = () => {
   const [activeTab, setActiveTab] = useState("대시보드");
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showGithubModal, setShowGithubModal] = useState(false);
   const [refetchTrigger, setRefetchTrigger] = useState(false);
   const triggerServerRefetch = () => {
     setRefetchTrigger((prev) => !prev);
@@ -89,6 +91,7 @@ const Home = () => {
           setActiveTab={setActiveTab}
           refetchTrigger={refetchTrigger}
           onAddServerClick={() => setShowAddModal(true)}
+          onGithubRegisterClick={() => setShowGithubModal(true)}
         />
         <main className="main-content">
           {activeTab === "대시보드" && <Dashboard />}
@@ -109,6 +112,14 @@ const Home = () => {
             onClose={() => setShowAddModal(false)}
             onSubmit={handleAddServer}
             teamCode={teamCode}
+          />
+        )}
+
+        {/* ✅ GitHub 등록 모달 */}
+        {showGithubModal && (
+          <GithubRegisterModal
+            teamCode={teamCode}
+            onClose={() => setShowGithubModal(false)}
           />
         )}
       </div>

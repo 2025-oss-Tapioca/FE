@@ -8,3 +8,11 @@ export const registerGithub = (payload) =>
 // GitHub 설정 조회
 export const getGithub = (teamCode) =>
   client.get(`/api/github/${encodeURIComponent(teamCode)}`);
+
+// ✅ 추가: 업데이트 (PATCH)
+export const updateGithub = (payload) =>
+  client.patch("/api/github", payload);
+
+// ✅ 추가: 삭제
+export const deleteGithub = (teamCode) =>
+  client.delete("/api/github", { data: { teamCode } });

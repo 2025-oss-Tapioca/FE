@@ -3,7 +3,7 @@ import { useRegisterGithub } from '@/api/hooks/github';
 
 export default function GithubRegisterForm({ teamCode, onDone }) {
   const [repoUrl, setRepoUrl] = useState('');
-  const [defaultBranch, setDefaultBranch] = useState('main');
+  const [defaultBranch, setDefaultBranch] = useState('');
   const [isPrivate, setIsPrivate] = useState(true);
   const [accessToken, setAccessToken] = useState('');
 
@@ -75,9 +75,12 @@ export default function GithubRegisterForm({ teamCode, onDone }) {
         />
       </label>
 
-      <button type="submit" disabled={isPending}>
-        {isPending ? '등록 중...' : '등록'}
-      </button>
+      <div className="modal-actions">
+        <button type="button" onClick={onDone}>취소</button>
+        <button type="submit" disabled={isPending}>
+          {isPending ? '등록 중...' : '등록'}
+        </button>
+      </div>
 
       {/* 실패 메세지 보조 표기 (선택) */}
       {data && !data.success && (
