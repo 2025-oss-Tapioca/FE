@@ -1,9 +1,31 @@
-import { client } from "../utils/axios.jsx";
+const erd = {
+  diagrams: [
+    {
+      name: 'Post',
+      attributes: [
+        { name: 'post_id', type: 'INTEGER', primaryKey: true },
+        { name: 'user_id', type: 'INTEGER', primaryKey: false }
+      ]
+    },
+    {
+      name: 'Get',
+      attributes: [
+        { name: 'user_id', type: 'INTEGER', primaryKey: false },
+        { name: 'get_id', type: 'INTEGER', primaryKey: true }
+      ]
+    },
+    {
+      name: 'User',
+      attributes: [
+        { name: 'user_name', type: 'VARCHAR', primaryKey: false },
+        { name: 'user_id', type: 'INTEGER', primaryKey: true }
+      ]
+    }
+  ],
+  relationships: [
+    { from: 'User.user_id', to: 'Get.user_id', type: 'ONE_TO_MANY' },
+    { from: 'User.user_id', to: 'Post.user_id', type: 'ONE_TO_MANY' }
+  ]
+};
 
-// 조회 (백엔드 스펙에 맞춰 경로 조정: 읽기 전용이면 보통 /api/erd/{teamCode})
-export const getERD = (teamCode) =>
-  client.get(`/api/erd/${encodeURIComponent(teamCode)}`);
-
-// 수정/저장
-export const updateERD = (teamCode, payload) =>
-  client.post(`/api/erd/update/${encodeURIComponent(teamCode)}`, payload);
+export default erd;
