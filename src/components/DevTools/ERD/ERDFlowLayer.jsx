@@ -12,8 +12,8 @@ import ReactFlow, {
 } from "reactflow";
 import { useReactFlow } from "reactflow";
 import TableNode from "./node/TableNode";
-import ErdEdge from "./edge/ErdEdge";
-import EndpointPalette from "./edge/EndpointPalette";
+import ErdEdge from "./edge/ErdEdge.jsx";
+import EndpointPalette from "./edge/EndpointPalette.jsx";
 import { decideLinkTypeByCard } from "./utils/erdUpdateHelpers"; 
 
 const NODE_TYPE = "tableNode";
