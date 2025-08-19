@@ -3,7 +3,88 @@ import "../styles/css/Dashboard.css";
 import { usePostPrompt } from "../api/hooks/dashBoard"; // 1. 훅을 import 합니다.
 import { useParams } from "react-router-dom";
 
-const Dashboard = ({ setActiveTab }) => {
+const Dashboard = ({ setActiveTab, setSpecData, setTrafficData }) => {
+  const handlePerformanceTest = () => {
+    // 예시용 가짜 데이터
+    const specData = {
+      method: "GET",
+      url: "https://api.example.com/users",
+      specData: {
+        latencies: {
+          total: 556136200,
+          mean: 37075746,
+          "50th": 30709700,
+          "95th": 99441250,
+          max: 116905200,
+        },
+        duration: 4666624600,
+        throughput: 3.188636956336336,
+        successRatio: "100.00%",
+        statusCodes: {
+          200: 15,
+        },
+      },
+    };
+
+    const trafficData = {
+      method: "GET",
+      url: "https://api.example.com/users",
+      requests: 15,
+      bytes: {
+        in: {
+          total: 585,
+          mean: 39,
+        },
+        out: {
+          total: 0,
+          mean: 0,
+        },
+      },
+    };
+
+    setSpecData(specData);
+    setTrafficData(trafficData);
+    setActiveTab("성능 테스트");
+  };
+
+  // // 임시 데이터 (실제 API 호출로 대체 예정)
+  // const [specData] = useState({
+  //   method: "GET",
+  //   url: "https://api.example.com/users",
+  //   specData: {
+  //     latencies: {
+  //       total: 556136200,
+  //       mean: 37075746,
+  //       "50th": 30709700,
+  //       "95th": 99441250,
+  //       max: 116905200,
+  //     },
+  //     duration: 4666624600,
+  //     throughput: 3.188636956336336,
+  //     successRatio: "100.00%",
+  //     statusCodes: {
+  //       200: 15,
+  //     },
+  //   },
+  // });
+
+  // //  "type": "traffic_test_result" (raw 데이터 이용)
+  // const [trafficData] = useState({
+  //   method: "GET",
+  //   url: "https://api.example.com/users",
+  //   requests: 15,
+  //   bytes: {
+  //     in: {
+  //       total: 585,
+  //       mean: 39,
+  //     },
+  //     out: {
+  //       total: 0,
+  //       mean: 0,
+  //     },
+  //   },
+  // });
+
   const [messages, setMessages] = useState([
     { role: "bot", text: "안녕하세요! 무엇을 도와드릴까요?" },
   ]);
@@ -92,7 +173,7 @@ const Dashboard = ({ setActiveTab }) => {
         <div className="chat-actions">
           <button
             className="chat-action-button"
-            onClick={() => setActiveTab("성능 테스트")}
+            onClick={handlePerformanceTest}
             disabled={isPending}
           >
             📊 성능 테스트 이동

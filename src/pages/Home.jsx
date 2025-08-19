@@ -31,6 +31,8 @@ const Home = () => {
   const { teamCode } = useParams();
 
   const { registerFront, registerBackend, registerDB } = useServerActions();
+  const [specData, setSpecData] = useState(null); // 성능 데이터 저장
+  const [trafficData, setTrafficData] = useState(null);
 
   const handleAddServer = async (newServer) => {
     try {
@@ -92,7 +94,11 @@ const Home = () => {
         />
         <main className="main-content">
           {activeTab === "대시보드" && (
-            <Dashboard setActiveTab={setActiveTab} />
+            <Dashboard
+              setActiveTab={setActiveTab}
+              setSpecData={setSpecData}
+              setTrafficData={setTrafficData}
+            />
           )}
           {activeTab === "서버관리" && (
             <ServerManagement
@@ -101,7 +107,9 @@ const Home = () => {
             />
           )}
           {activeTab === "개발도구" && <DevTools />}
-          {activeTab === "성능 테스트" && <PerformanceTest />}
+          {activeTab === "성능 테스트" && (
+            <PerformanceTest specData={specData} trafficData={trafficData} />
+          )}{" "}
           {activeTab === "로그 모니터링" && <LogMonitoring />}
         </main>
 
