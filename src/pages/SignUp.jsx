@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import CustomButton from "../components/common/CustomButton";
 import { validatePassword } from "../utils/validator";
 import { useSignup } from "../api/hooks/auth";
-import "../styles/css/Signup.css";
+import "../styles/css/SignUp.css";
 
 const SignupPage = () => {
   const nav = useNavigate();
