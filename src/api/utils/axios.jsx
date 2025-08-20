@@ -7,18 +7,18 @@ const client = axios.create({
 
 const clientAI = axios.create({
   baseURL: import.meta.env.VITE_AI_API_URL,
-  timeout: 50000,
+  timeout: 80000,
 });
 
 // 요청 인터셉터: 모든 API 요청이 서버로 전송되기 전에 특정 작업을 수행합니다.
 client.interceptors.request.use(
   (config) => {
     // 로컬 스토리지에서 액세스 토큰을 가져옵니다.
-    const accessToken = localStorage.getItem('accessToken');
+    const accessToken = localStorage.getItem("accessToken");
 
     // 토큰이 존재하면, 요청 헤더에 'Authorization' 헤더를 추가합니다.
     if (accessToken) {
-        config.headers.Authorization = `Bearer ${accessToken}`;
+      config.headers.Authorization = `Bearer ${accessToken}`;
     }
     return config;
   },
@@ -53,11 +53,11 @@ client.interceptors.response.use(
 clientAI.interceptors.request.use(
   (config) => {
     // 로컬 스토리지에서 액세스 토큰을 가져옵니다.
-    const accessToken = localStorage.getItem('accessToken');
+    const accessToken = localStorage.getItem("accessToken");
 
     // 토큰이 존재하면, 요청 헤더에 'Authorization' 헤더를 추가합니다.
     if (accessToken) {
-        config.headers.Authorization = `Bearer ${accessToken}`;
+      config.headers.Authorization = `Bearer ${accessToken}`;
     }
     return config;
   },
@@ -88,5 +88,5 @@ clientAI.interceptors.response.use(
   }
 );
 
-export default client;        
+export default client;
 export { client, clientAI };
