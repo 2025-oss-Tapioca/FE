@@ -7,7 +7,7 @@ const client = axios.create({
 
 const clientAI = axios.create({
   baseURL: import.meta.env.VITE_AI_API_URL,
-  timeout: 80000,
+  timeout: 800000,
 });
 
 // 요청 인터셉터: 모든 API 요청이 서버로 전송되기 전에 특정 작업을 수행합니다.
