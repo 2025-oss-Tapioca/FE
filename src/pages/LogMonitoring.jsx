@@ -142,6 +142,9 @@ export default function LogMonitoring({ teamCode, defaultSource = "BACKEND" }) {
   const [filterLevel, setFilterLevel] = useState("ALL");
   const [isStreaming, setIsStreaming] = useState(true); // 일시정지/재시작
 
+  // ✅ WS 자동연결 방지: 최초엔 undefined로 두었다가, 수집 시작 후에만 세팅
+  const [wsTeamCode, setWsTeamCode] = useState(undefined);
+
   // 컴포넌트 내부
   const [statusActive, setStatusActive] = useState(null); // true | false | null
   const [statusLoading, setStatusLoading] = useState(false);
@@ -220,7 +223,7 @@ export default function LogMonitoring({ teamCode, defaultSource = "BACKEND" }) {
     );
   };
 
-  // WS 훅: rows는 [{time, level, service, message}, ...] 최신이 앞
+  // ✅ 여기서 teamCode 대신 wsTeamCode를 넘긴다 (undefined면 훅이 connect() 안 함)
   const {
     status,
     rows,
@@ -229,7 +232,7 @@ export default function LogMonitoring({ teamCode, defaultSource = "BACKEND" }) {
     requestLevelContext,
     reconnect,
     disconnect,
-  } = useLogSocket({ teamCode: canConnect ? teamCode : undefined, sourceType });
+  } = useLogSocket({ teamCode: wsTeamCode, sourceType });
 
   const isWsOpen = status === 'open';
 
@@ -264,31 +267,34 @@ export default function LogMonitoring({ teamCode, defaultSource = "BACKEND" }) {
     }
   }, [filteredLogs, isStreaming]);
 
-  // REST: 수집 시작 트리거
+  // REST: 수집 시작 → 성공 시에만 WS 연결 허용
   const onStartCollect = async () => {
+    if (!teamCode) return alert("팀이 선택되지 않았습니다.");
     try {
-      await registerLog(sourceType, teamCode);  // 1) HTTP 등록
-      reconnect();                              // 2) WS 연결
+      await registerLog(sourceType, teamCode);
+      // 1) WS를 열 수 있도록 teamCode 주입
+      setWsTeamCode(teamCode);
+      // 2) 연결 시도
+      reconnect();
     } catch (e) {
-      alert('수집 시작 실패: ' + (e?.response?.data?.message || e.message));
+      alert("수집 시작 실패: " + (e?.response?.data?.message || e.message));
     }
   };
 
-  // REST: 상태
-  const onCheckStatus = async () => {
-    try {
-      const res = await queryStatus(sourceType, teamCode);
-      alert("active: " + (res?.data?.active ? "true" : "false"));
-    } catch {
-      alert("상태 조회 실패");
-    }
+  // WS 수동 연결/해제
+  const onManualReconnect = () => {
+    if (!wsTeamCode) setWsTeamCode(teamCode); // 혹시 비어있으면 채움
+    reconnect();
+  };
+  const onManualDisconnect = () => {
+    disconnect();
+    setWsTeamCode(undefined); // 🔒 자동 재연결 차단
   };
 
   return (
     <div className="log-monitoring-container">
       <h1 className="log-title">CLI 로그 모니터링</h1>
 
-      {/* 상단 컨트롤 */}
       <div className="log-controls" style={{ gap: 8, flexWrap: "wrap" }}>
         <select
           value={sourceType}
@@ -301,48 +307,26 @@ export default function LogMonitoring({ teamCode, defaultSource = "BACKEND" }) {
           <option>RDS</option>
         </select>
 
-        <span className="filter-select">
-          팀: <b>{teamCode || "-"}</b>
-        </span>
+        <span className="filter-select">팀: <b>{teamCode || "-"}</b></span>
 
-        <button className="toggle-button" onClick={onStartCollect}>
+        <button className="toggle-button" onClick={onStartCollect} disabled={!teamCode}>
           수집 시작(REST)
         </button>
-        <StatusBadge
-          active={statusActive}
-          loading={statusLoading}
-          error={statusError}
-        />
+        <StatusBadge active={statusActive} loading={statusLoading} error={statusError} />
 
-        <button
-          onClick={reconnect}
-          className="toggle-button"
-          disabled={!teamCode}
-        >
+        <button onClick={onManualReconnect} className="toggle-button" disabled={!teamCode}>
           WS 연결/재연결
         </button>
-        <button
-          onClick={disconnect}
-          className="toggle-button"
-          disabled={status !== "open"}
-        >
+        <button onClick={onManualDisconnect} className="toggle-button" disabled={status !== "open"}>
           WS 끊기
         </button>
 
         <button
-          onClick={() => setIsStreaming((prev) => !prev)}
+          onClick={() => setIsStreaming(prev => !prev)}
           className="toggle-button"
           title="일시정지/재시작"
         >
-          {isStreaming ? (
-            <>
-              <Pause size={16} /> 일시정지
-            </>
-          ) : (
-            <>
-              <Play size={16} /> 재시작
-            </>
-          )}
+          {isStreaming ? (<><Pause size={16} /> 일시정지</>) : (<><Play size={16} /> 재시작</>)}
         </button>
 
         <select
@@ -351,33 +335,22 @@ export default function LogMonitoring({ teamCode, defaultSource = "BACKEND" }) {
           className="filter-select"
           title="레벨 필터"
         >
-          {LEVELS.map((lv) => (
-            <option key={lv} value={lv}>
-              {lv}
-            </option>
-          ))}
+          {LEVELS.map(lv => <option key={lv} value={lv}>{lv}</option>)}
         </select>
       </div>
 
-      {/* 상태/에러 표시 */}
       <div className="text-sm" style={{ marginBottom: 8 }}>
         <b>WS 상태:</b> {status}
         {lastError ? ` | 에러: [${lastError.code}] ${lastError.message}` : ""}
+        {!wsTeamCode && " ｜ (수집 시작 전이므로 자동 연결 안 함)"}
       </div>
 
-      {/* 로그 뷰어 */}
       <div className="log-viewer">
         {filteredRows.map((row, i) => (
           <div
             key={i}
-            className={
-              row.level === "ERROR"
-                ? "log-entry error"
-                : row.level === "WARN"
-                ? "log-entry warn"
-                : "log-entry info"
-            }
-            title={row.time} // hover 시 로컬시간 확인
+            className={row.level === "ERROR" ? "log-entry error" : row.level === "WARN" ? "log-entry warn" : "log-entry info"}
+            title={row.time}
           >
             {formatLine(row)}
           </div>
@@ -385,32 +358,26 @@ export default function LogMonitoring({ teamCode, defaultSource = "BACKEND" }) {
         <div ref={logEndRef} />
       </div>
 
-      {/* (선택) 하단 빠른 조회 버튼 - WS 쿼리 */}
-      <div
-        className="log-controls"
-        style={{ marginTop: 8, gap: 8, flexWrap: "wrap" }}
-      >
+      <div className="log-controls" style={{ marginTop: 8, gap: 8, flexWrap: "wrap" }}>
         <label className="date-range-label">
-          <span style={{ margin: '0 8px' }}>시작 :</span>
-          <input
-            type="datetime-local"
-            value={rangeStart}
-            onChange={e => setRangeStart(e.target.value)}
-          />
-          <span style={{ margin: '0 8px' }}>종료 :</span>
-          <input
-            type="datetime-local"
-            value={rangeEnd}
-            onChange={e => setRangeEnd(e.target.value)}
-          />
+          <span style={{ margin: "0 8px" }}>시작 :</span>
+          <input type="datetime-local" value={rangeStart} onChange={e => setRangeStart(e.target.value)} />
+          <span style={{ margin: "0 8px" }}>종료 :</span>
+          <input type="datetime-local" value={rangeEnd} onChange={e => setRangeEnd(e.target.value)} />
         </label>
 
-        <button className="toggle-button" onClick={() => requestRange(rangeStart, rangeEnd)} disabled={!isWsOpen}>
+        <button
+          disabled={!isWsOpen}
+          onClick={() => requestRange(rangeStart, rangeEnd)}
+          className="toggle-button"
+        >
           범위 조회(WS)
         </button>
+
         <button
+          disabled={!isWsOpen}
+          onClick={() => requestLevelContext('ERROR', 50)}
           className="toggle-button"
-          onClick={() => requestLevelContext("ERROR", 50)}
         >
           ERROR 컨텍스트(WS)
         </button>

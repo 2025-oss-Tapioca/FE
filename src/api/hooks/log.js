@@ -49,9 +49,8 @@ export default function useLogSocket({ teamCode, sourceType }) {
     wsRef.current = null;
 
     // ★ 계약: 쿼리스트링 방식으로만 연결
-    const url = `${WS_URL}?teamCode=${encodeURIComponent(teamCode)}&sourceType=${encodeURIComponent(toWsParam(sourceType))}`;
-    console.log('[WS URL]', url);
-    const ws = new WebSocket(url);
+    console.log('[WS URL]', WS_URL);
+    const ws = new WebSocket(WS_URL);
     
     wsRef.current = ws;
     setStatus(stateMap[ws.readyState] || 'connecting');
@@ -59,38 +58,51 @@ export default function useLogSocket({ teamCode, sourceType }) {
     ws.onopen = () => {
       backoffRef.current = 1000;
       setStatus('open');
-      // ★ 더 이상 별도 register 메시지 보내지 않음 (쿼리스트링으로 라우팅)
+      // ★ 계약: 연결 직후 register 프레임 전송
+      ws.send(JSON.stringify({
+        type: 'register',
+        sourceType: toWsParam(sourceType), // BACKEND/FRONTEND/RDS 대문자
+        code: teamCode                    // ← 키 이름은 code
+      }));
     };
 
     ws.onmessage = (e) => {
-      let msg; try { msg = JSON.parse(e.data); } catch { msg = e.data; }
+      let msg; try { msg = JSON.parse(e.data); } catch { return; }
       if (!msg || typeof msg !== 'object') return;
 
+      // 1) 등록 ACK 등 제어 프레임은 무시
       if (msg.type === 'ok' || (msg.type === 'ack' && msg.action === 'register')) return;
+      if (msg.type === 'error') { setLastError({ code: msg.code, message: msg.message }); return; }
 
-      if (msg.type === 'log' && msg.data) {
-        const r = msg.data;
-        const local = new Date((r.timestamp || '') + 'Z');
-        setRows(prev => [
-          { time: isNaN(local) ? r.timestamp : local.toLocaleString(), level: r.level, service: r.service || '-', message: r.message },
-          ...prev,
-        ]);
+      // 2) 단일 DTO (ts/level/service/message) 수신
+      if ('ts' in msg || 'timestamp' in msg || 'time' in msg) {
+        const ts = msg.ts ?? msg.timestamp ?? msg.time ?? '';
+        const local = new Date((ts || '') + 'Z');
+        const row = {
+          time: isNaN(local) ? ts : local.toLocaleString(),
+          level: msg.level || 'INFO',
+          service: msg.service || '-',
+          message: msg.message || '',
+        };
+        setRows(prev => [row, ...prev]);
         return;
       }
 
-      if (msg.type === 'filter_between_result' && Array.isArray(msg.data)) {
+      // 3) 배열 응답(과거 로그 묶음)도 지원
+      if (Array.isArray(msg.data)) {
         const list = msg.data.map(r => {
-          const local = new Date((r.timestamp || '') + 'Z');
-          return { time: isNaN(local) ? r.timestamp : local.toLocaleString(), level: r.level, service: r.service || '-', message: r.message };
+          const ts = r.ts ?? r.timestamp ?? r.time ?? '';
+          const local = new Date((ts || '') + 'Z');
+          return {
+            time: isNaN(local) ? ts : local.toLocaleString(),
+            level: r.level || 'INFO',
+            service: r.service || '-',
+            message: r.message || '',
+          };
         });
         setRows(prev => [...list.reverse(), ...prev]);
-        return;
       }
-
-      if (msg.type === 'error') {
-        setLastError({ code: msg.code, message: msg.message });
-      }
-    };
+    };;
 
     ws.onclose = (e) => {
       setStatus("closed");
@@ -120,12 +132,12 @@ export default function useLogSocket({ teamCode, sourceType }) {
 
   const requestRange = useCallback((from, to) => {
     if (!wsRef.current || wsRef.current.readyState !== 1) return;
-    wsRef.current.send(JSON.stringify({ type: 'filter_between', from, to }));
+    wsRef.current.send(JSON.stringify({ type: 'filter', from, to }));
   }, []);
 
   const requestLevelContext = useCallback((level, context = 50) => {
     if (!wsRef.current || wsRef.current.readyState !== 1) return;
-    wsRef.current.send(JSON.stringify({ type: 'level_context', level, context }));
+    wsRef.current.send(JSON.stringify({ type: 'levelFilter', level, context }));
   }, []);
 
   return { status, rows, lastError, requestRange, requestLevelContext, reconnect: connect, disconnect };
