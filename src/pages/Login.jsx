@@ -49,7 +49,7 @@ const LoginPage = () => {
         <form className="login-form" onSubmit={handleSubmit}>
           <InputField
             type="login"
-            placeholder="이메일"
+            placeholder="아이디"
             name="loginId"
             value={form.loginId} // ✅ 수정
             onChange={handleChange}
