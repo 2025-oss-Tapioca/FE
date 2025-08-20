@@ -14,6 +14,13 @@
     height:100%;
     overflow: auto;
     @include bg-color("white");
+    // 스크롤바 숨기기
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    -ms-overflow-style: none;  // IE, Edge
+    scrollbar-width: none;     // Firefox
 
     .header {
         display: flex;
@@ -46,14 +53,17 @@
     .connected-server-header{
         @include text-color("text-sub1");
         @include font-style("headline6");
-        margin: 28px 0 0 8px;
+        margin: 20px 0 0 8px;
     }
     .server-buttons{
       gap: 8px;
       display: flex;
       flex-direction: column;
     }
+  .github-container {
+    margin: 20px 0 0 8px;
 
+  }
 
   .sidebar-footer {
     margin-top: auto;

@@ -12,6 +12,11 @@
   height: 100%;
   overflow: auto;
   background-color: #FFFFFF;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.side-bar::-webkit-scrollbar {
+  display: none;
 }
 .side-bar .header {
   display: flex;
@@ -46,12 +51,15 @@
   line-height: 24px;
   font-weight: 500;
   letter-spacing: -2.5%;
-  margin: 28px 0 0 8px;
+  margin: 20px 0 0 8px;
 }
 .side-bar .server-buttons {
   gap: 8px;
   display: flex;
   flex-direction: column;
+}
+.side-bar .github-container {
+  margin: 20px 0 0 8px;
 }
 .side-bar .sidebar-footer {
   margin-top: auto;
