@@ -122,6 +122,7 @@ const AddServerModal = ({ onClose, onSubmit, teamCode }) => {
             />
             <label>Auth Token</label>
             <input
+              type="password"
               name="authToken"
               value={formData.authToken}
               onChange={handleInputChange}
@@ -196,6 +197,7 @@ const AddServerModal = ({ onClose, onSubmit, teamCode }) => {
             />
             <label>Auth Token</label>
             <input
+              type="password"
               name="authToken"
               value={formData.authToken}
               onChange={handleInputChange}
