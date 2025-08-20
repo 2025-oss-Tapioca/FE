@@ -35,6 +35,8 @@ const Home = () => {
   const { registerFront, registerBackend, registerDB } = useServerActions();
   const [specData, setSpecData] = useState(null); // 성능 데이터 저장
   const [trafficData, setTrafficData] = useState(null);
+  console.log('부모 컴포넌트의 현재 trafficData 상태:', trafficData);
+
 
   const handleAddServer = async (newServer) => {
     try {
