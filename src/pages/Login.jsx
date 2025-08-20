@@ -51,19 +51,19 @@ const LoginPage = () => {
             type="login"
             placeholder="이메일"
             name="loginId"
-            autoComplete="off"
             value={form.loginId} // ✅ 수정
             onChange={handleChange}
+            autoComplete="off"
           />
           <InputField
             type={showPassword ? "text" : "password"}
             name="password"
             placeholder="비밀번호"
             value={form.password}
-            autoComplete="off"
             onChange={handleChange}
             showPassword={showPassword}
             toggleVisibility={togglePasswordVisibility}
+            autoComplete="off"
           />
 
           <div className="login-remember">

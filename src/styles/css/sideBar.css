@@ -58,9 +58,41 @@
   display: flex;
   flex-direction: column;
 }
-
-.side-bar .github-container {
+.side-bar .github-container .connected-github-header {
   margin: 20px 0 0 8px;
+  color: #666666;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 500;
+  letter-spacing: -2.5%;
+}
+.side-bar .github-container .modal-github-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 40px;
+  background-color: #FFFFFF;
+  border-radius: 12px; /* 모서리 둥글게 */
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+.side-bar .github-container .modal-github-button:hover {
+  background-color: #E0E0E0;
+}
+.side-bar .github-container .modal-github-button .github-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px; /* 아이콘과 텍스트 사이의 간격 */
+  fill: #999; /* 아이콘 색상 */
+  transition: fill 0.2s;
+}
+.side-bar .github-container .modal-github-button .github-text {
+  color: #666666;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+  letter-spacing: -2.5%;
 }
 .side-bar .sidebar-footer {
   margin-top: auto;
