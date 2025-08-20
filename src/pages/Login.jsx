@@ -51,7 +51,7 @@ const LoginPage = () => {
             type="login"
             placeholder="아이디"
             name="loginId"
-            value={form.loginId} // ✅ 수정
+            value={form.loginId} 
             onChange={handleChange}
             autoComplete="off"
           />
