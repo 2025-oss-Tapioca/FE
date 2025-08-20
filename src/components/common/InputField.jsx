@@ -23,7 +23,7 @@ const InputField = ({
         value={value}
         onChange={onChange}
         className={`input-field ${hasError ? "input-error" : ""}`}
-        autoComplete={type === "password" ? "current-password" : "off"}
+        autoComplete={type === "password" ? "new-password" : "off"}
       />
       {isPassword && (
         <button
