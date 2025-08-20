@@ -92,6 +92,7 @@ const Dashboard = ({ setActiveTab, setSpecData, setTrafficData }) => {
   const messagesEndRef = useRef(null);
   const params = useParams();
   const teamCode = params.teamCode;
+  const inputRef = useRef(null);
 
   // 2. useSendMessage 훅을 호출하고, mutate 함수와 로딩 상태(isPending)를 가져옵니다.
   const { mutate: postPrompt, isPending } = usePostPrompt();
@@ -149,6 +150,9 @@ const Dashboard = ({ setActiveTab, setSpecData, setTrafficData }) => {
         },
       }
     );
+    if (inputRef.current) {
+      inputRef.current.style.height = "48px";
+    }
   };
 
   return (
@@ -181,14 +185,31 @@ const Dashboard = ({ setActiveTab, setSpecData, setTrafficData }) => {
         </div>
 
         <form className="chat-input" onSubmit={handleSend}>
-          <input
-            type="text"
+          <textarea
             value={input}
+            ref={inputRef}
             onChange={(e) => setInput(e.target.value)}
             placeholder={
               isPending ? "응답을 기다리는 중..." : "메시지를 입력하세요"
             }
             disabled={isPending}
+            rows={1}
+            style={{ overflow: "hidden", resize: "none" }}
+            onInput={(e) => {
+              const textarea = e.target;
+              textarea.style.height = "auto";
+
+              const maxHeight = 4 * 24;
+              const newHeight = Math.min(textarea.scrollHeight, maxHeight);
+
+              textarea.style.height = `${newHeight}px`;
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                handleSend(e);
+              }
+            }}
           />
           <button type="submit" disabled={!input.trim() || isPending}>
             <img
