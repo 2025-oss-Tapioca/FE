@@ -145,50 +145,50 @@ export default function LogMonitoring({ teamCode, defaultSource = "BACKEND" }) {
   // ✅ WS 자동연결 방지: 최초엔 undefined로 두었다가, 수집 시작 후에만 세팅
   const [wsTeamCode, setWsTeamCode] = useState(undefined);
 
-  // 컴포넌트 내부
-  const [statusActive, setStatusActive] = useState(null); // true | false | null
-  const [statusLoading, setStatusLoading] = useState(false);
-  const [statusError, setStatusError] = useState(null);
+  // // 컴포넌트 내부
+  // const [statusActive, setStatusActive] = useState(null); // true | false | null
+  // const [statusLoading, setStatusLoading] = useState(false);
+  // const [statusError, setStatusError] = useState(null);
 
-  useEffect(() => {
-    if (!teamCode || !sourceType) {
-      setStatusActive(null);
-      setStatusError(null);
-      setStatusLoading(false);
-      return;
-    }
+  // useEffect(() => {
+  //   if (!teamCode || !sourceType) {
+  //     setStatusActive(null);
+  //     setStatusError(null);
+  //     setStatusLoading(false);
+  //     return;
+  //   }
 
-    let stop = false;
-    const tick = async () => {
-      // 첫 로딩에만 로딩 표시
-      setStatusLoading((prev) => (statusActive === null ? true : prev));
-      try {
-        const { data } = await queryStatus(sourceType, teamCode);
-        if (stop) return;
-        setStatusActive(!!data?.active); // true면 "수집 중", false면 "대기"
-        setStatusError(null);
-      } catch (err) {
-        if (stop) return;
-        const code = err?.response?.data?.code;
-        if (code === "40710") {
-          // 서버 약속: 수집 미시작
-          setStatusActive(false);
-          setStatusError(null);
-        } else {
-          setStatusError("error");
-        }
-      } finally {
-        if (!stop) setStatusLoading(false);
-      }
-    };
+  //   let stop = false;
+  //   const tick = async () => {
+  //     // 첫 로딩에만 로딩 표시
+  //     setStatusLoading((prev) => (statusActive === null ? true : prev));
+  //     try {
+  //       const { data } = await queryStatus(sourceType, teamCode);
+  //       if (stop) return;
+  //       setStatusActive(!!data?.active); // true면 "수집 중", false면 "대기"
+  //       setStatusError(null);
+  //     } catch (err) {
+  //       if (stop) return;
+  //       const code = err?.response?.data?.code;
+  //       if (code === "40710") {
+  //         // 서버 약속: 수집 미시작
+  //         setStatusActive(false);
+  //         setStatusError(null);
+  //       } else {
+  //         setStatusError("error");
+  //       }
+  //     } finally {
+  //       if (!stop) setStatusLoading(false);
+  //     }
+  //   };
 
-    tick(); // 즉시 한 번
-    const id = setInterval(tick, 15000); // 15초마다
-    return () => {
-      stop = true;
-      clearInterval(id);
-    };
-  }, [teamCode, sourceType]);
+  //   tick(); // 즉시 한 번
+  //   const id = setInterval(tick, 15000); // 15초마다
+  //   return () => {
+  //     stop = true;
+  //     clearInterval(id);
+  //   };
+  // }, [teamCode, sourceType]);
 
   const StatusBadge = ({ active, loading, error }) => {
     let label = "대기";
@@ -310,13 +310,13 @@ export default function LogMonitoring({ teamCode, defaultSource = "BACKEND" }) {
         <span className="filter-select">팀: <b>{teamCode || "-"}</b></span>
 
         <button className="toggle-button" onClick={onStartCollect} disabled={!teamCode}>
-          수집 시작(REST)
+          수집 시작, WS 연결
         </button>
-        <StatusBadge active={statusActive} loading={statusLoading} error={statusError} />
+        {/* <StatusBadge active={statusActive} loading={statusLoading} error={statusError} /> */}
 
-        <button onClick={onManualReconnect} className="toggle-button" disabled={!teamCode}>
+        {/* <button onClick={onManualReconnect} className="toggle-button" disabled={!teamCode}>
           WS 연결/재연결
-        </button>
+        </button> */}
         <button onClick={onManualDisconnect} className="toggle-button" disabled={status !== "open"}>
           WS 끊기
         </button>
@@ -342,7 +342,14 @@ export default function LogMonitoring({ teamCode, defaultSource = "BACKEND" }) {
       <div className="text-sm" style={{ marginBottom: 8 }}>
         <b>WS 상태:</b> {status}
         {lastError ? ` | 에러: [${lastError.code}] ${lastError.message}` : ""}
-        {!wsTeamCode && " ｜ (수집 시작 전이므로 자동 연결 안 함)"}
+
+        <span style={{ marginLeft: 12 }}>
+          {status === 'open' ? '✅ 연결됨' :
+          status === 'connecting' ? '⏳ 연결 중...' :
+          status === 'closed' ? '❌ 끊김' :
+          status === 'closing' ? '🔒 닫는 중...' :
+          ''}
+        </span>
       </div>
 
       <div className="log-viewer">

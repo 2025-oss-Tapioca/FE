@@ -56,15 +56,20 @@ export default function useLogSocket({ teamCode, sourceType }) {
     setStatus(stateMap[ws.readyState] || 'connecting');
 
     ws.onopen = () => {
+      console.log('[WS OPENED]');
       backoffRef.current = 1000;
       setStatus('open');
-      // ★ 계약: 연결 직후 register 프레임 전송
-      ws.send(JSON.stringify({
+
+      const frame = {
         type: 'register',
-        sourceType: toWsParam(sourceType), // BACKEND/FRONTEND/RDS 대문자
-        code: teamCode                    // ← 키 이름은 code
-      }));
+        sourceType: toWsParam(sourceType), // ex: "BACKEND"
+        code: teamCode,                    // ex: "28a00517"
+      };
+
+      console.log('[WS SEND REGISTER]', frame);
+      ws.send(JSON.stringify(frame));
     };
+
 
     ws.onmessage = (e) => {
       let msg; try { msg = JSON.parse(e.data); } catch { return; }
