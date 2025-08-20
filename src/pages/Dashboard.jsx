@@ -88,20 +88,37 @@ const Dashboard = ({ setActiveTab, setSpecData, setTrafficData }) => {
   const [messages, setMessages] = useState([
     { role: "bot", type: "text", content: "안녕하세요! 무엇을 도와드릴까요?" },
   ]);
+
   const [input, setInput] = useState("");
   const messagesEndRef = useRef(null);
   const params = useParams();
   const teamCode = params.teamCode;
+  const inputRef = useRef(null);
+  // ✅ 팀코드 기반 저장된 메시지 불러오기
+  const STORAGE_KEY = `chat_messages_${teamCode}`;
+
+  const [messages, setMessages] = useState(() => {
+    const saved = sessionStorage.getItem(STORAGE_KEY);
+    return saved
+      ? JSON.parse(saved)
+      : [{ role: "bot", text: "안녕하세요! 무엇을 도와드릴까요?" }];
+  });
 
   // 2. useSendMessage 훅을 호출하고, mutate 함수와 로딩 상태(isPending)를 가져옵니다.
   const { mutate: postPrompt, isPending } = usePostPrompt();
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
+  // const scrollToBottom = () => {
+  //   messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  // };
 
+  // ✅ 메시지 저장
   useEffect(() => {
-    scrollToBottom();
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
+  }, [messages, STORAGE_KEY]);
+
+  // ✅ 스크롤 항상 아래로
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
   const handleNavigateToTest = (data) => {
@@ -182,6 +199,9 @@ const Dashboard = ({ setActiveTab, setSpecData, setTrafficData }) => {
         },
       }
     );
+    if (inputRef.current) {
+      inputRef.current.style.height = "48px";
+    }
   };
 
   return (
@@ -214,14 +234,31 @@ const Dashboard = ({ setActiveTab, setSpecData, setTrafficData }) => {
         </div>
 
         <form className="chat-input" onSubmit={handleSend}>
-          <input
-            type="text"
+          <textarea
             value={input}
+            ref={inputRef}
             onChange={(e) => setInput(e.target.value)}
             placeholder={
               isPending ? "응답을 기다리는 중..." : "메시지를 입력하세요"
             }
             disabled={isPending}
+            rows={1}
+            style={{ overflow: "hidden", resize: "none" }}
+            onInput={(e) => {
+              const textarea = e.target;
+              textarea.style.height = "auto";
+
+              const maxHeight = 4 * 24;
+              const newHeight = Math.min(textarea.scrollHeight, maxHeight);
+
+              textarea.style.height = `${newHeight}px`;
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                handleSend(e);
+              }
+            }}
           />
           <button type="submit" disabled={!input.trim() || isPending}>
             <img

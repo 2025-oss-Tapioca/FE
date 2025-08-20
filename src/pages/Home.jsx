@@ -73,6 +73,8 @@ const Home = () => {
 
       await checkServerStatus(url);
       alert("서버가 성공적으로 등록되었습니다.");
+
+      triggerServerRefetch();
     } catch (error) {
       const errorCode = error?.response?.data?.code || error?.code || null;
       const errorMessage =
