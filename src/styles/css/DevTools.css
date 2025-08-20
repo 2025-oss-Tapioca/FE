@@ -39,6 +39,10 @@
   letter-spacing: -2.5%;
   color: #111111;
 }
+.tab-button:disabled {
+  background-color: #E5E5EC;
+  color: #999999;
+}
 
 .tab-button.active {
   background: #3F7FFF;

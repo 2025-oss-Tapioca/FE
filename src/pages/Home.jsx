@@ -35,6 +35,8 @@ const Home = () => {
   const { registerFront, registerBackend, registerDB } = useServerActions();
   const [specData, setSpecData] = useState(null); // 성능 데이터 저장
   const [trafficData, setTrafficData] = useState(null);
+  console.log('부모 컴포넌트의 현재 trafficData 상태:', trafficData);
+
 
   const handleAddServer = async (newServer) => {
     try {
@@ -71,6 +73,8 @@ const Home = () => {
 
       await checkServerStatus(url);
       alert("서버가 성공적으로 등록되었습니다.");
+
+      triggerServerRefetch();
     } catch (error) {
       const errorCode = error?.response?.data?.code || error?.code || null;
       const errorMessage =

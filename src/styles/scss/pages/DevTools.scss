@@ -39,6 +39,11 @@
     @include bg-color("bg-basic");
     @include font-style("gray-600");
     @include text-color("text-main");
+
+    &:disabled {
+      @include bg-color("bg-disabled");
+      @include text-color("text-disabled");
+    }
   }
   
   .tab-button.active {

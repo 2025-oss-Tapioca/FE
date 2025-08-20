@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../styles/css/Login.css";
+import "../styles/css/login.css";
 import InputField from "../components/common/InputField";
 import { Link } from "react-router-dom";
 import { useLogin } from "../api/hooks/auth";
@@ -51,6 +51,7 @@ const LoginPage = () => {
             type="login"
             placeholder="이메일"
             name="loginId"
+            autoComplete="off"
             value={form.loginId} // ✅ 수정
             onChange={handleChange}
           />
@@ -59,6 +60,7 @@ const LoginPage = () => {
             name="password"
             placeholder="비밀번호"
             value={form.password}
+            autoComplete="off"
             onChange={handleChange}
             showPassword={showPassword}
             toggleVisibility={togglePasswordVisibility}

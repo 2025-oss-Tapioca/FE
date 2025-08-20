@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-import ERDEditor from "../components/DevTools/ERD/ERDEditor";
-import APISpecTable from "../components/DevTools/APISpecTable";
+import ERDEditor from "../components/DevTools/ERD/ERDEditor.jsx";
+import APISpecTable from "../components/DevTools/APISpecTable.jsx";
 import "../styles/css/DevTools.css";
 
 export default function DevTools() {
-  const [activeTab, setActiveTab] = useState("API 명세");
+  const [activeTab, setActiveTab] = useState("ERD 작성");
   const { teamCode } = useParams(); // ✅ URL에서 teamCode 가져오기
 
   return (
@@ -23,6 +23,7 @@ export default function DevTools() {
           <button
             className={`tab-button ${activeTab === "API 명세" ? "active" : ""}`}
             onClick={() => setActiveTab("API 명세")}
+            disabled={true} // ✅ API 명세 탭은 현재 비활성화 상태
           >
             API 명세
           </button>

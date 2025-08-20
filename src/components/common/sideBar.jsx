@@ -5,6 +5,8 @@ import AddServerButton from "./addServerButton";
 import { useParams } from "react-router-dom";
 import { getServers } from "../../api/apis/server";
 import GithubManagerModal from "../Github/GithubManagerModal";
+import { useNavigate } from "react-router-dom";
+import { LogOut } from "lucide-react";
 
 import "../../styles/css/sideBar.css";
 
@@ -18,6 +20,10 @@ export default function Sidebar({
   const [serverData, setServerData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [openGithubManager, setOpenGithubManager] = useState(false);
+  const navigate = useNavigate();
+  const handleBackToTeamSelect = () => {
+    navigate("/team"); // 팀 선택 화면의 경로로 이동
+  };
 
   // ✅ 서버 정보 불러오기 함수 (useCallback으로 메모이제이션)
   const fetchServers = useCallback(async () => {
@@ -109,61 +115,70 @@ export default function Sidebar({
       </div>
 
       {/* 서버 목록 영역 */}
-      <div>
-        <div className="connected-server-header">연결된 서버</div>
-        <div className="server-buttons">
-          {isLoading ? (
-            <p>서버 불러오는 중...</p>
-          ) : serverData ? (
-            <>
-              {serverData.front && (
-                <ServerButton
-                  label="프론트 서버"
-                  url={serverData.front.ec2Host}
-                  defaultConnected={true}
-                />
-              )}
-              {serverData.back && (
-                <ServerButton
-                  label="백엔드 서버"
-                  url={serverData.back.ec2Url}
-                  defaultConnected={true}
-                />
-              )}
-              {serverData.db && (
-                <ServerButton
-                  label="DB 서버"
-                  url={serverData.db.dbAddress}
-                  defaultConnected={true}
-                />
-              )}
-            </>
-          ) : (
-            <p>등록된 서버가 없습니다.</p>
-          )}
+      <div className="connected-server-header">연결된 서버</div>
+      <div className="server-buttons">
+        {isLoading ? (
+          <p>서버 불러오는 중...</p>
+        ) : serverData ? (
+          <>
+            {serverData.front && (
+              <ServerButton
+                label="프론트 서버"
+                url={serverData.front.ec2Host}
+                defaultConnected={true}
+              />
+            )}
+            {serverData.back && (
+              <ServerButton
+                label="백엔드 서버"
+                url={serverData.back.ec2Url}
+                defaultConnected={true}
+              />
+            )}
+            {serverData.db && (
+              <ServerButton
+                label="DB 서버"
+                url={serverData.db.dbAddress}
+                defaultConnected={true}
+              />
+            )}
+          </>
+        ) : (
+          <p>등록된 서버가 없습니다.</p>
+        )}
 
-          {/* 새 서버 추가 버튼 */}
-          <AddServerButton onClick={onAddServerClick} />
+        {/* 새 서버 추가 버튼 */}
+        <AddServerButton onClick={onAddServerClick} />
+      </div>
+      {/* 서버 목록 영역 */}
+      <div className="github-container">
+        <div className="connected-github-header">GitHub 관리</div>
+        {/* ✅ GitHub 단일 버튼 */}
+        <button
+          className="modal-github-button"
+          onClick={() => setOpenGithubManager(true)}
+          style={{ marginTop: 8 }}
+        >
+          <img
+            src="/assets/icons/image-github.svg"
+            alt="Github"
+            className="icon"
+          />
+          GitHub
+        </button>
+      </div>
 
-          <div className="connected-github-header">GitHub 관리</div>
-          {/* ✅ GitHub 단일 버튼 */}
-          <button
-            className="modal-github-button"
-            onClick={() => setOpenGithubManager(true)}
-            style={{ marginTop: 8 }}
-          >
-            <img src="/assets/icons/image-github.svg" alt="Github" className="icon" />
-            GitHub
-          </button>
-        </div>
-        
-         {/* ✅ GitHub 관리 모달 */}
-          {openGithubManager && (
-            <GithubManagerModal
-              teamCode={teamCode}
-              onClose={() => setOpenGithubManager(false)}
-            />
-          )}
+      {/* ✅ GitHub 관리 모달 */}
+      {openGithubManager && (
+        <GithubManagerModal
+          teamCode={teamCode}
+          onClose={() => setOpenGithubManager(false)}
+        />
+      )}
+      <div className="sidebar-footer">
+        <button className="exit-button" onClick={handleBackToTeamSelect}>
+          <LogOut size={24} />
+        </button>
       </div>
     </div>
   );

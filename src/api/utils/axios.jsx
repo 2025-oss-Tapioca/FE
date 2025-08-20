@@ -2,28 +2,24 @@ import axios from "axios";
 
 const client = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
-  timeout: 10000,
+  timeout: 20000,
 });
 
 const clientAI = axios.create({
   baseURL: import.meta.env.VITE_AI_API_URL,
-  timeout: 10000,
+  timeout: 50000,
 });
 
 // 요청 인터셉터: 모든 API 요청이 서버로 전송되기 전에 특정 작업을 수행합니다.
 client.interceptors.request.use(
   (config) => {
     // 로컬 스토리지에서 액세스 토큰을 가져옵니다.
-    // const accessToken = localStorage.getItem('accessToken');
+    const accessToken = localStorage.getItem('accessToken');
 
-    // // 토큰이 존재하면, 요청 헤더에 'Authorization' 헤더를 추가합니다.
-    // if (accessToken) {
-    //     config.headers.Authorization = `Bearer ${accessToken}`;
-    // }
-
-    config.headers.Authorization =
-      "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0ZjlhMTIzZC02Yzk4LTQ3MWUtODUzNi0wNDA0YWI5ODhmOTUiLCJsb2dpbklkIjoic29ubnkiLCJwYXNzd29yZCI6IntiY3J5cHR9JDJhJDEwJEhoSEJTS1c4LkUzOFplUW9YaVp1Li5OYTJuWDhra1NaS3dueVV1QnRWTmhOaHpobk1BS3RtIiwiYXV0aCI6IlJPTEVfVVNFUiIsImV4cCI6MTc1Nzc3NzgyNX0.3C7ekn4qdGrxTfQjL1FvNH6AWL_vjbSnNHbid13LsII";
-
+    // 토큰이 존재하면, 요청 헤더에 'Authorization' 헤더를 추가합니다.
+    if (accessToken) {
+        config.headers.Authorization = `Bearer ${accessToken}`;
+    }
     return config;
   },
   (error) => {
@@ -57,16 +53,12 @@ client.interceptors.response.use(
 clientAI.interceptors.request.use(
   (config) => {
     // 로컬 스토리지에서 액세스 토큰을 가져옵니다.
-    // const accessToken = localStorage.getItem('accessToken');
+    const accessToken = localStorage.getItem('accessToken');
 
-    // // 토큰이 존재하면, 요청 헤더에 'Authorization' 헤더를 추가합니다.
-    // if (accessToken) {
-    //     config.headers.Authorization = `Bearer ${accessToken}`;
-    // }
-
-    config.headers.Authorization =
-      "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0ZjlhMTIzZC02Yzk4LTQ3MWUtODUzNi0wNDA0YWI5ODhmOTUiLCJsb2dpbklkIjoic29ubnkiLCJwYXNzd29yZCI6IntiY3J5cHR9JDJhJDEwJEhoSEJTS1c4LkUzOFplUW9YaVp1Li5OYTJuWDhra1NaS3dueVV1QnRWTmhOaHpobk1BS3RtIiwiYXV0aCI6IlJPTEVfVVNFUiIsImV4cCI6MTc1Nzc3NzgyNX0.3C7ekn4qdGrxTfQjL1FvNH6AWL_vjbSnNHbid13LsII";
-
+    // 토큰이 존재하면, 요청 헤더에 'Authorization' 헤더를 추가합니다.
+    if (accessToken) {
+        config.headers.Authorization = `Bearer ${accessToken}`;
+    }
     return config;
   },
   (error) => {

@@ -1,5 +1,5 @@
 import React from "react";
-import "../styles/css/performanceTest.css";
+import "../styles/css/PerformanceTest.css";
 import PerformanceCard from "../components/PerformaceTest/PerformanceCard";
 import SpecCard from "../components/PerformaceTest/SpecCard";
 import TrafficCard from "../components/PerformaceTest/TrafficCard";
@@ -43,7 +43,7 @@ const PerformanceTest = ({ specData, trafficData }) => {
   //   },
   // });
 
-  if (!specData || !trafficData) return <div>데이터가 없습니다.</div>;
+  //if (!specData || !trafficData) return <div>데이터가 없습니다.</div>;
 
   return (
     <div className="performance-test-container">
@@ -52,11 +52,8 @@ const PerformanceTest = ({ specData, trafficData }) => {
       </div>
 
       <div className="performance-result-list">
-        {/* <h3>성능 지표 (Spec)</h3> */}
-        <SpecCard {...specData} />
-
-        {/* <h3>트래픽 지표 (Traffic)</h3> */}
-        <TrafficCard {...trafficData} />
+        <SpecCard specData={specData} />
+        <TrafficCard trafficData={trafficData} />
       </div>
     </div>
   );

@@ -2,13 +2,21 @@
 .side-bar {
   width: 250px;
   background-color: #FFFFFF;
-  padding: 20px;
+  padding: 16px 16px 0 16px !important;
   border-radius: 12px; /* 모서리 둥글게 */
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05); /* 부드러운 그림자 */
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
   gap: 28px;
-  overflow: hidden;
+  height: 100%;
+  overflow: auto;
+  background-color: #FFFFFF;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.side-bar::-webkit-scrollbar {
+  display: none;
 }
 .side-bar .header {
   display: flex;
@@ -43,18 +51,30 @@
   line-height: 24px;
   font-weight: 500;
   letter-spacing: -2.5%;
-  margin: 28px 0 16px 8px;
+  margin: 20px 0 0 8px;
 }
 .side-bar .server-buttons {
   gap: 8px;
   display: flex;
   flex-direction: column;
 }
-.side-bar .connected-github-header {
+
+.side-bar .github-container {
+  margin: 20px 0 0 8px;
+}
+.side-bar .sidebar-footer {
+  margin-top: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px 0;
+  border-top: 1px solid #E0E0E0;
+  position: sticky;
+  bottom: 0;
+  background-color: #FFFFFF;
   color: #666666;
-  font-size: 16px;
-  line-height: 24px;
-  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
   letter-spacing: -2.5%;
-  margin: 28px 0 -9px 8px;
 }
