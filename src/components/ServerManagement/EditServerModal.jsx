@@ -98,6 +98,7 @@ const EditServerModal = ({ onClose, onSubmit, initialData, serverType }) => {
               value={formData.authToken}
               onChange={handleInputChange}
               autoComplete="off"
+              type="password"
             />
             <div className="modal-input-row">
               <div className="modal-group">
@@ -165,6 +166,7 @@ const EditServerModal = ({ onClose, onSubmit, initialData, serverType }) => {
               name="authToken"
               value={formData.authToken}
               onChange={handleInputChange}
+              type="password"
               autoComplete="off"
             />
             <div className="modal-input-row">
