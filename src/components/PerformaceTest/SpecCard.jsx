@@ -5,14 +5,13 @@ import "../../styles/css/PerformanceTest.css";
 
 // 1. 이제 props로 받는 specData는 API 응답의 results 배열에 있는 객체 하나입니다.
 export default function SpecCard({ specData }) {
-
   // 2. 데이터가 없거나, 필요한 summary, raw, inputs 객체가 없는 경우를 위한 방어 코드
   if (!specData || !specData.summary || !specData.raw || !specData.inputs) {
     return <div>스펙 데이터를 표시할 수 없습니다.</div>;
   }
 
   // 3. API 응답 구조에 맞게 필요한 값들을 올바른 위치에서 추출합니다.
-  const { inputs, summary, raw } = specData;
+  const { inputs, summary } = specData;
   const { method, url } = inputs;
   const { successRatioPct, latencyMs, rpsMean, byStatus } = summary;
 
@@ -51,22 +50,34 @@ export default function SpecCard({ specData }) {
         </div>
         <div className="response-meta-row">
           {/* summary.latencyMs 객체에서 값을 가져와 표시합니다. */}
-          <div>평균 응답 시간: <strong>{formatLatencyMs(latencyMs.mean)}</strong></div>
-          <div>지연 시간 P50: <strong>{formatLatencyMs(latencyMs.p50)}</strong></div>
-          <div>지연 시간 P95: <strong>{formatLatencyMs(latencyMs.p95)}</strong></div>
-          <div>지연 시간 Max: <strong>{formatLatencyMs(latencyMs.max)}</strong></div>
+          <div>
+            평균 응답 시간: <strong>{formatLatencyMs(latencyMs.mean)}</strong>
+          </div>
+          <div>
+            지연 시간 P50: <strong>{formatLatencyMs(latencyMs.p50)}</strong>
+          </div>
+          <div>
+            지연 시간 P95: <strong>{formatLatencyMs(latencyMs.p95)}</strong>
+          </div>
+          <div>
+            지연 시간 Max: <strong>{formatLatencyMs(latencyMs.max)}</strong>
+          </div>
         </div>
         <div className="response-meta-row">
           <div>
             {/* summary 객체에서 rpsMean 값을 가져옵니다. */}
-            처리량(RPS): <strong>{typeof rpsMean === "number" ? rpsMean.toFixed(2) : "N/A"}</strong>
+            처리량(RPS):{" "}
+            <strong>
+              {typeof rpsMean === "number" ? rpsMean.toFixed(2) : "N/A"}
+            </strong>
           </div>
           <div>
-            상태코드:{" "}
-            {/* summary.byStatus 객체를 사용합니다. */}
+            상태코드: {/* summary.byStatus 객체를 사용합니다. */}
             {Object.keys(byStatus).length > 0 ? (
               Object.entries(byStatus).map(([code, count]) => (
-                <span key={code}>{code}({count}) </span>
+                <span key={code}>
+                  {code}({count}){" "}
+                </span>
               ))
             ) : (
               <span>N/A</span>
