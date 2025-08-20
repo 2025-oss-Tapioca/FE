@@ -96,4 +96,5 @@ clientAI.interceptors.response.use(
   }
 );
 
+export default client;        
 export { client, clientAI };

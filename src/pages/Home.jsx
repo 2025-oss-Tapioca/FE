@@ -113,7 +113,7 @@ const Home = () => {
           {activeTab === "성능 테스트" && (
             <PerformanceTest specData={specData} trafficData={trafficData} />
           )}{" "}
-          {activeTab === "로그 모니터링" && <LogMonitoring />}
+          {activeTab === "로그 모니터링" && <LogMonitoring teamCode={teamCode} defaultSource="BACKEND"/>}
         </main>
 
         {/* ✅ 모달은 여기에서 관리 */}
