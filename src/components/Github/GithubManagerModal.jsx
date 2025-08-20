@@ -114,7 +114,7 @@ export default function GithubManagerModal({ teamCode, onClose }) {
           )}
           {tab === 'delete' && (
             <div className="flex flex-col gap-3">
-              <p>현재 등록된 GitHub 설정을 삭제합니다. 이 작업은 되돌릴 수 없습니다.</p>
+              <p><strong>현재 등록된 GitHub 설정을 삭제합니다. 이 작업은 되돌릴 수 없습니다.</strong></p>
               <GithubDelete
                 teamCode={teamCode}
                 className="modal-delete-button"
